@@ -14,6 +14,8 @@ Write-Host "Items count in this folder: Directories - $($directory2.length) and 
 Write-Host "               "
 Write-Host "----------------------------------------------"
 
+
+if ($directory2.Length -gt 0) {
 foreach ($subfolder in $directory2) {
     Write-Host "Folder name: $($subfolder.FullName)"
     
@@ -31,6 +33,9 @@ foreach ($subfolder in $directory2) {
     Write-Host "               "
     Write-Host "---------------"    
 }
+} else {
+    Write-host "No Folders in this directory"
+}
 
 if ($files.Length -gt 0) {
     Write-Host "This is folder has below files: "
@@ -41,6 +46,8 @@ if ($files.Length -gt 0) {
         $usagesize = $usagesize + $filesizeinMB
         Write-Host $file.FullName " : " $([math]::Round($filesizeinMB, 2)) "MB"
     }
+} else {
+    Write-host "No Files in this directory"
 }
 
 Write-Host "               " 
