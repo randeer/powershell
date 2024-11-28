@@ -1,6 +1,10 @@
-$directory2 = Get-ChildItem "C:\Users\Randeer Lalanga\Desktop\Esoft" -Directory 
+$path = "D:\"
 
-$files = Get-ChildItem "C:\Users\Randeer Lalanga\Desktop\Esoft" -File 
+$directory2 = Get-ChildItem $path -Directory 
+
+$files = Get-ChildItem $path -File
+
+$usagesize
 
 Write-Host "Items count in this folder: Directories - $($directory2.length) and other files - $($files.length)" 
 Write-Host "               "
@@ -18,6 +22,7 @@ foreach ($subfolder in $directory2) {
     # Folder size in MB
     $foldersizeInBytes = (Get-ChildItem $subfolder.FullName -Recurse | Measure-Object -Property Length -Sum).Sum
     $foldersizeinMB = $foldersizeInBytes / 1048576  # Convert bytes to MB
+    $usagesize = $usagesize + $foldersizeinMB
     Write-Host "Folder size: $([math]::Round($foldersizeinMB, 2)) MB"  # Corrected variable name
     Write-Host "               "
     Write-Host "---------------"    
@@ -29,6 +34,12 @@ if ($files.Length -gt 0) {
         # Files size in MB
         $filesizeInBytes = $file.Length  # Directly use the Length property
         $filesizeinMB = $filesizeInBytes / 1048576  # Convert bytes to MB
+        $usagesize = $usagesize + $filesizeinMB
         Write-Host $file.FullName " : " $([math]::Round($filesizeinMB, 2)) "MB"
     }
 }
+
+Write-Host "               " 
+Write-Host "---------------" 
+Write-Host "               " 
+Write-Host "Full Data Usage size in the folder is: "$([math]::Round($usagesize, 2)) "MB"
