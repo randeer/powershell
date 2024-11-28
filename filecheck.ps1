@@ -1,10 +1,14 @@
-$path = "D:\"
+$userinput = Read-Host "Please enter the directory path"
+
+Write-host $userinput
+
+$path = $userinput
 
 $directory2 = Get-ChildItem $path -Directory 
 
 $files = Get-ChildItem $path -File
 
-$usagesize
+$usagesize = 0
 
 Write-Host "Items count in this folder: Directories - $($directory2.length) and other files - $($files.length)" 
 Write-Host "               "
