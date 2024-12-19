@@ -34,3 +34,11 @@ catch {
     Write-Error "Failed to download script: $_"
     exit 1
 }
+
+I want to add another thing to script, it is to create a task scheduler job.
+
+Job name is WinStore update
+Job should be run with highest privilleges and run the wther useris logged on or not,  and do not store password.
+triegger motly last week firday at 7:00 PM
+Action is povershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Temp\scripts\appstoreupdaternew.ps1
+Other task scheduler job setings should be default
