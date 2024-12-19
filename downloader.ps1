@@ -28,3 +28,6 @@ catch {
     Write-Error "Failed to download script: $_"
     exit 1
 }
+
+
+#-NoProfile -ExecutionPolicy Bypass -File C:\Temp\update_store.ps1
