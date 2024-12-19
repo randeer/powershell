@@ -1,10 +1,9 @@
 <#
-
 .DESCRIPTION
     Script will uninstall Sophos Endpoint agent
 
 .SCRIPT VERSION 
-    1.0
+    1.3 (Updated for silent updates)
 
 .NAME 
     Uninstall_Sophos.ps1
@@ -17,7 +16,6 @@
 
 .DEVELOPED ON 
     12/18/2024
-
 #>
 
 $ErrorActionPreference = 'Stop'
@@ -36,6 +34,12 @@ if (-not (Test-Path -Path $logFolder)) {
 function Log {
     $message = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $($args -join ' ')"
     Add-Content -Path $logFile -Value $message
+}
+
+# Ensure script runs with elevation
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+    exit
 }
 
 # Find Winget executable
@@ -67,27 +71,39 @@ try {
     # Checking for available upgrades
     Write-output "Checking for available upgrades..." -ForegroundColor Cyan
     Log "Checking for available upgrades..."
-    $upgrades = & $wingetPath upgrade --include-unknown | Out-String
-    
+    $upgrades = & $wingetPath upgrade --include-unknown 2>&1
+    Log "Raw Upgrade Output: $upgrades"
+
     if ($upgrades -match "No available upgrades found.") {
         Write-output "No upgrades available." -ForegroundColor Yellow
+        Log "No upgrades available."
     } else {
         Write-output "Available upgrades found:" -ForegroundColor Green
         Write-output $upgrades
+
+        # Automatically updating available upgrades without popups
+        Write-output "Updating all identified packages quietly..." -ForegroundColor Cyan
+        Log "Starting silent automatic update for all packages."
+
+        $upgradeResult = & $wingetPath upgrade --all --include-unknown --accept-source-agreements --accept-package-agreements --silent 2>&1
+
+        if ($upgradeResult -match "No installed package found matching input criteria") {
+            Write-output "No matching packages were found for update." -ForegroundColor Yellow
+            Log "No matching packages were found for update."
+        } elseif ($upgradeResult -match "Error") {
+            Write-output "Errors occurred during the update process:" -ForegroundColor Red
+            Write-output $upgradeResult
+            Log "Errors during update process: $upgradeResult"
+        } else {
+            Write-output "Packages updated successfully without triggering popups." -ForegroundColor Green
+            Log "Package updates completed successfully and silently: $upgradeResult"
+        }
     }
-    Log "Available upgrades: `n$upgrades"
 
-    # Updating Microsoft Store apps
-    Write-output "Updating Microsoft Store apps..." -ForegroundColor Cyan
-    Log "Updating Microsoft Store apps..."
-    & $wingetPath upgrade --all --include-unknown --source msstore --accept-source-agreements --silent
-    Write-output "Microsoft Store app updates completed." -ForegroundColor Green
-    Log "Microsoft Store app updates completed."
-
-    # Improved App Registration
+    # Repair Microsoft Store registration
     Write-output "Repairing Microsoft Store registration..." -ForegroundColor Cyan
     Log "Repairing Microsoft Store registration..."
-    
+
     $registrationErrors = 0
     $successfulRegistrations = 0
 
@@ -96,13 +112,10 @@ try {
     Where-Object { $_.DirectoryName -notlike "*\*\*" } | # Avoid nested directories
     ForEach-Object {
         try {
-            # Only attempt to register manifests in the root package directory
             $manifestPath = $_.FullName
             $packageDirectory = $_.Directory.FullName
 
             Write-output "Attempting to register: $manifestPath" -ForegroundColor Cyan
-
-            # Specific registration command with more detailed error handling
             $result = Start-Process powershell -ArgumentList "Add-AppxPackage -Register '$manifestPath' -ErrorAction Stop" -Wait -PassThru -NoNewWindow
 
             if ($result.ExitCode -eq 0) {
