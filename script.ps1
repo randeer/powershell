@@ -43,9 +43,9 @@ try {
         -Settings $settingsSystem `
         -Force
 
-    # Task 2: User-level task
+    # Task 2: User-level task (without highest privileges)
     Write-Output "Creating scheduled task 'WinStore Update User'"
-    $principalUser = New-ScheduledTaskPrincipal -GroupId "Users" -RunLevel Highest
+    $principalUser = New-ScheduledTaskPrincipal -GroupId "Users" -RunLevel Limited
     $settingsUser = New-ScheduledTaskSettingsSet
 
     Register-ScheduledTask -TaskName "WinStore Update User" `
