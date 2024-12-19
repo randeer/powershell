@@ -147,3 +147,9 @@ try {
     Log "An unexpected error occurred: $_"
     exit 1
 }
+
+
+------------
+The NT AUTHORITY\SYSTEM account is a highly privileged system account with access to most parts of the operating system.
+
+Some parts of Windows, especially app data and user-specific configurations, are tied to a specific user profile. The SYSTEM account does not have direct access to user-specific directories or resources unless explicitly granted.
