@@ -1,1 +1,123 @@
 $UserContext = ([System.Security.Principal.WindowsIdentity]::GetCurrent()).Name
+
+-----------------
+#without component user;
+
+# Ensure all errors will be captured
+$ErrorActionPreference = "Stop"
+try {
+    # Define the temp path and create if it doesn't exist
+    $tempPath = "C:\Temp\scripts"
+    if (-not (Test-Path $tempPath)) {
+        Write-Output "Creating directory: $tempPath"
+        New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
+    }
+    
+    # Define the source and destination paths
+    $scriptSourcePath = "./appstoreupdaternew.ps1"  # Source file path (local)
+    $scriptPath = Join-Path $tempPath "appstoreupdaternew.ps1"  # Destination path
+
+    # Check if the script file already exists in the destination, and if so, delete it
+    if (Test-Path $scriptPath) {
+        Write-Output "Script file already exists, deleting: $scriptPath"
+        Remove-Item $scriptPath -Force
+    }
+
+    # Copy the script from the local directory to the temp directory
+    Write-Output "Copying script from $scriptSourcePath to $scriptPath"
+    Copy-Item $scriptSourcePath -Destination $scriptPath -Force
+
+    Write-Output "Script copied successfully to $scriptPath"
+
+    # Create scheduled task
+    Write-Output "Creating scheduled task 'WinStore Update'"
+
+    # Create task action
+    $action = New-ScheduledTaskAction -Execute "powershell.exe" `
+        -Argument "-NoProfile -ExecutionPolicy Bypass -File $scriptPath"
+
+    # Create monthly trigger for last Friday at 7:00 PM
+    $trigger = New-ScheduledTaskTrigger -Weekly -WeeksInterval 4 -DaysOfWeek Friday -At "19:00"
+
+    # Create principal (run with highest privileges)
+    $principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccount -RunLevel Highest
+
+    # Create the task settings
+    $settings = New-ScheduledTaskSettingsSet -DontStopIfGoingOnBatteries -AllowStartIfOnBatteries
+
+    # Register the scheduled task
+    Register-ScheduledTask -TaskName "WinStore Update" `
+        -Action $action `
+        -Trigger $trigger `
+        -Principal $principal `
+        -Settings $settings `
+        -Force
+
+    Write-Output "Scheduled task created successfully"
+}
+catch {
+    Write-Error "Failed to execute script: $_"
+    exit 1
+}
+---------------------------------------------------
+#with component user;
+
+$ErrorActionPreference = "Stop"
+try {
+    # Define the temp path and create if it doesn't exist
+    $tempPath = "C:\Temp\scripts"
+    if (-not (Test-Path $tempPath)) {
+        Write-Output "Creating directory: $tempPath"
+        New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
+    }
+    
+    # Define the source and destination paths
+    $scriptSourcePath = "./appstoreupdaternew.ps1"  # Source file path (local)
+    $scriptPath = Join-Path $tempPath "appstoreupdaternew.ps1"  # Destination path
+
+    # Check if the script file already exists in the destination, and if so, delete it
+    if (Test-Path $scriptPath) {
+        Write-Output "Script file already exists, deleting: $scriptPath"
+        Remove-Item $scriptPath -Force
+    }
+
+    # Copy the script from the local directory to the temp directory
+    Write-Output "Copying script from $scriptSourcePath to $scriptPath"
+    Copy-Item $scriptSourcePath -Destination $scriptPath -Force
+
+    Write-Output "Script copied successfully to $scriptPath"
+
+    # Create scheduled task
+    Write-Output "Creating scheduled task 'WinStore Update'"
+
+    # Capture the current user context
+    $UserContext = ([System.Security.Principal.WindowsIdentity]::GetCurrent()).Name
+
+    # Create task action
+    $action = New-ScheduledTaskAction -Execute "powershell.exe" `  
+        -Argument "-NoProfile -ExecutionPolicy Bypass -File $scriptPath"
+
+    # Create monthly trigger for last Friday at 7:00 PM
+    $trigger = New-ScheduledTaskTrigger -Weekly -WeeksInterval 4 -DaysOfWeek Friday -At "19:00"
+
+    # Create principal (run with highest privileges)
+    $principal = New-ScheduledTaskPrincipal -UserId $UserContext -LogonType Interactive -RunLevel Highest
+
+    # Create the task settings
+    $settings = New-ScheduledTaskSettingsSet -DontStopIfGoingOnBatteries -AllowStartIfOnBatteries
+
+    # Register the scheduled task
+    Register-ScheduledTask -TaskName "WinStore Update" `  
+        -Action $action `  
+        -Trigger $trigger `  
+        -Principal $principal `  
+        -Settings $settings `  
+        -Force
+
+    Write-Output "Scheduled task created successfully"
+}
+catch {
+    Write-Error "Failed to execute script: $_"
+    exit 1
+}
+
