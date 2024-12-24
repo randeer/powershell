@@ -1,14 +1,11 @@
 # Get the current user context
 $UserContext = ([System.Security.Principal.WindowsIdentity]::GetCurrent()).Name
-
 # Split the UserContext by backslash and get the second part (the username)
 $username = ($UserContext.Split('\'))[1]
-
 # Initialize $wingetPath variable
 $wingetPath = ""
 
 Write-Output "Current UserContext: $UserContext"
-
 if($UserContext -ne "NT AUTHORITY\SYSTEM"){
     Write-Output "Copying script from winget.exe"
     # Copy winget.exe for non-SYSTEM users
@@ -34,38 +31,33 @@ if (-not (Test-Path "C:\Temp")) {
     New-Item -Path "C:\" -Name "Temp" -ItemType "Directory" -Force
 }
 
-# Run the winget upgrade command and capture both the StandardOutput and StandardError
+# Run the winget upgrade command and capture output using PowerShell redirection
 Write-Output "Running winget upgrade..."
+try {
+    # Capture both output and errors
+    $output = & $wingetPath upgrade 2>&1 | Out-String
 
-$process = Start-Process -FilePath $wingetPath -ArgumentList "upgrade" -PassThru -Wait
+    # Prepare the log content
+    $logContent = @"
+Winget upgrade completed at $(Get-Date)
+Command Output:
+$output
+"@
 
-# Capture the standard output and standard error
-$standardOutput = $process.StandardOutput.ReadToEnd()
-$standardError = $process.StandardError.ReadToEnd()
-
-# Prepare the log content
-$logContent = "Winget upgrade completed. Output:`r`n"
-
-if ($standardOutput) {
-    $logContent += $standardOutput
-} else {
-    $logContent += "No output from StandardOutput.`r`n"
+    # Write the log content to the file
+    Set-Content -Path $logFilePath -Value $logContent -Force
+    
+    Write-Output "Upgrade process finished."
+    Write-Output "Log written to: $logFilePath"
+    
+    # Display the output in console as well
+    Write-Output $output
 }
-
-if ($standardError) {
-    $logContent += "Error Output:`r`n$standardError"
-} else {
-    $logContent += "No errors detected in StandardError.`r`n"
+catch {
+    $errorMessage = "Error occurred: $($_.Exception.Message)"
+    Write-Output $errorMessage
+    Add-Content -Path $logFilePath -Value $errorMessage
 }
-
-# Write the log content to the file
-Set-Content -Path $logFilePath -Value $logContent -Force
-
-Write-Output "Upgrade process finished."
-Write-Output "Log written to: $logFilePath"
-
-
-
 
 ------------------------------------------------
 Winget upgrade completed. Output:
