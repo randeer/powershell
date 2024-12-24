@@ -253,19 +253,16 @@ try {
     $trigger = New-ScheduledTaskTrigger -Weekly -WeeksInterval 4 -DaysOfWeek Friday -At "19:00"
     
     # Create principal (run with highest privileges under specified user)
-    # Changed LogonType to S4U to allow running without user logged in
     $principal = New-ScheduledTaskPrincipal -UserId $UserContext `
         -LogonType S4U `
         -RunLevel Highest
     
-    # Create the task settings with extended options
+    # Create the task settings with basic options
     $settings = New-ScheduledTaskSettingsSet `
         -DontStopIfGoingOnBatteries `
         -AllowStartIfOnBatteries `
         -ExecutionTimeLimit (New-TimeSpan -Hours 2) `
-        -Hidden `  # Hide the window when running
-        -RestartCount 3 `  # Attempt to restart up to 3 times if fails
-        -RestartInterval (New-TimeSpan -Minutes 1)  # Wait 1 minute between restart attempts
+        -Hidden
     
     # Register the scheduled task
     Register-ScheduledTask -TaskName "WinStore Update" `
