@@ -1,5 +1,9 @@
 # Get the current user context
 $UserContext = ([System.Security.Principal.WindowsIdentity]::GetCurrent()).Name
+
+#Get user profile
+$userProfile = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::UserProfile)
+
 # Split the UserContext by backslash and get the second part (the username)
 $username = ($UserContext.Split('\'))[1]
 
@@ -8,6 +12,7 @@ $wingetPath = ""
 
 Write-Output "Current User: $env:USERNAME"
 Write-Output "Current UserContext: $UserContext"
+Write-Output "Current User Profile: $userProfile"
 
 if ($UserContext -ne "NT AUTHORITY\SYSTEM") {
     # For non-SYSTEM users, copy winget.exe to the user's WindowsApps folder
