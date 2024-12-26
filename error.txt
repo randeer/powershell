@@ -1,17 +1,28 @@
-# Capture the current user's context
-$UserContext = ([System.Security.Principal.WindowsIdentity]::GetCurrent()).Name
+try {
+    # Capture the current user's context
+    $UserContext = ([System.Security.Principal.WindowsIdentity]::GetCurrent()).Name
 
-# Set the paths
-$msixBundlePath = "C:\Temp\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
-$taskName = "InstallMSIXDesktopAppInstaller"
+    # Set the paths
+    $msixBundlePath = "C:\Temp\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
+    $taskName = "InstallMSIXDesktopAppInstaller"
 
-# Create the Task Action
-$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-Command Add-AppxPackage -Path '$msixBundlePath'"
+    # Create the Task Action
+    $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-Command Add-AppxPackage -Path '$msixBundlePath'"
 
-# Set the Task Trigger for a one-time task
-$trigger = New-ScheduledTaskTrigger -At (Get-Date).AddMinutes(1)
+    # Set the Task Trigger for a one-time task
+    $trigger = New-ScheduledTaskTrigger -At (Get-Date).AddMinutes(1)
 
-# Register the task and complete
-Register-ScheduledTask -Action $action -Trigger $trigger -TaskName $taskName -RunLevel Highest -User $UserContext
+    # Create the principal (to specify run level)
+    $principal = New-ScheduledTaskPrincipal -UserId $UserContext -RunLevel Highest
 
-Write-Host "Task has been created successfully."
+    # Register the task with explicit credentials
+    Register-ScheduledTask -TaskName $taskName `
+                          -Action $action `
+                          -Trigger $trigger `
+                          -Principal $principal `
+                          -Force
+
+    Write-Host "Task has been created successfully."
+} catch {
+    Write-Error "An error occurred: $_"
+}
