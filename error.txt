@@ -9,3 +9,7 @@ $task = New-ScheduledTask -Action $actions -Principal $principal -Trigger $trigg
 Register-ScheduledTask 'baznewsystem' -InputObject $task
 
 Start-ScheduledTask -TaskName 'baznewsystem'
+--------------------
+Add-AppxPackage -Path C:\Temp\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
+
+New-Item -Path C:\Temp\testrash.txt -ItemType File
