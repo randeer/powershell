@@ -1,20 +1,17 @@
-# Capture the current user's context (username)
+# Capture the current user's context
 $UserContext = ([System.Security.Principal.WindowsIdentity]::GetCurrent()).Name
 
-# Set the path to the MSIX bundle in the Temp folder
+# Set the paths
 $msixBundlePath = "C:\Temp\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
-
-# Set the Task Scheduler job name
 $taskName = "InstallMSIXDesktopAppInstaller"
 
-# Create the Task Action to run the PowerShell command to install the MSIX bundle
+# Create the Task Action
 $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-Command Add-AppxPackage -Path '$msixBundlePath'"
 
-# Set the Task Trigger for a one-time task (this example runs in 1 minute from now)
+# Set the Task Trigger for a one-time task
 $trigger = New-ScheduledTaskTrigger -At (Get-Date).AddMinutes(1)
 
-# Create a Task Scheduler registration to execute the task as the current user
+# Register the task and complete
 Register-ScheduledTask -Action $action -Trigger $trigger -TaskName $taskName -RunLevel Highest -User $UserContext
 
-# Optionally, to clean up the task after it's completed, you can include:
-# Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
+Write-Host "Task has been created successfully."
