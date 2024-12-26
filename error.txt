@@ -1,8 +1,20 @@
-C:\ProgramData\CentraStage\Packages\0761ffac-d95f-44ec-b030-51eb4b4c3b09#\command.ps1 : Failed to execute script: The 
-term '-RestartCount' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
-spelling of the name, or if a path was included, verify that the path is correct and try again.
-At line:1 char:1
-+ & 'C:\ProgramData\CentraStage\Packages\0761ffac-d95f-44ec-b030-51eb4b ...
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
-    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,command.ps1
+# Capture the current user's context (username)
+$UserContext = ([System.Security.Principal.WindowsIdentity]::GetCurrent()).Name
+
+# Set the path to the MSIX bundle in the Temp folder
+$msixBundlePath = "C:\Temp\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
+
+# Set the Task Scheduler job name
+$taskName = "InstallMSIXDesktopAppInstaller"
+
+# Create the Task Action to run the PowerShell command to install the MSIX bundle
+$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-Command Add-AppxPackage -Path '$msixBundlePath'"
+
+# Set the Task Trigger for a one-time task (this example runs in 1 minute from now)
+$trigger = New-ScheduledTaskTrigger -At (Get-Date).AddMinutes(1)
+
+# Create a Task Scheduler registration to execute the task as the current user
+Register-ScheduledTask -Action $action -Trigger $trigger -TaskName $taskName -RunLevel Highest -User $UserContext
+
+# Optionally, to clean up the task after it's completed, you can include:
+# Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
