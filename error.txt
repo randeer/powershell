@@ -1,31 +1,65 @@
-#https://learn.microsoft.com/en-us/windows/msix/app-installer/install-update-app-installer
-
-
 try {
-    # Capture the current user's context
-    $UserContext = ([System.Security.Principal.WindowsIdentity]::GetCurrent()).Name
-
     # Set the paths
     $msixBundlePath = "C:\Temp\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
     $taskName = "InstallMSIXDesktopAppInstaller"
+    $logPath = "C:\Temp\InstallLog.txt"
 
-    # Create the Task Action
-    $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-Command Add-AppxPackage -Path '$msixBundlePath'"
+    # Create more detailed PowerShell command with logging
+    $commandScript = @"
+        Start-Transcript -Path '$logPath' -Force
+        Write-Output "Starting installation at $(Get-Date)"
+        try {
+            Add-AppxPackage -Path '$msixBundlePath' -Verbose
+            Write-Output "Installation completed successfully"
+        } catch {
+            Write-Output "Error during installation: `$_"
+        }
+        Stop-Transcript
+"@
 
-    # Set the Task Trigger for a one-time task
-    $trigger = New-ScheduledTaskTrigger -At (Get-Date).AddMinutes(1)
+    # Create the Task Action with the enhanced logging
+    $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -Command `"$commandScript`""
 
-    # Create the principal (to specify run level)
-    $principal = New-ScheduledTaskPrincipal -UserId $UserContext -RunLevel Highest
+    # Set the Task Trigger to run immediately
+    $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Minutes 1) -RepetitionDuration (New-TimeSpan -Minutes 5)
 
-    # Register the task with explicit credentials
+    # Create the principal for SYSTEM account
+    $principal = New-ScheduledTaskPrincipal -UserID "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount -RunLevel Highest
+
+    # Create task settings
+    $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
+
+    # Register the task with all components
     Register-ScheduledTask -TaskName $taskName `
                           -Action $action `
                           -Trigger $trigger `
                           -Principal $principal `
+                          -Settings $settings `
                           -Force
 
-    Write-Host "Task has been created successfully."
+    Write-Host "Task has been created successfully. Checking status..."
+
+    # Start the task immediately
+    Start-ScheduledTask -TaskName $taskName
+
+    # Wait a moment and get the task status
+    Start-Sleep -Seconds 10
+    $taskInfo = Get-ScheduledTaskInfo -TaskName $taskName
+    Write-Host "Task Last Run Time: $($taskInfo.LastRunTime)"
+    Write-Host "Task Last Result: $($taskInfo.LastTaskResult)"
+
+    # Check if log file exists and show contents
+    if (Test-Path $logPath) {
+        Write-Host "`nInstallation Log Contents:"
+        Get-Content $logPath
+    } else {
+        Write-Host "No log file found at $logPath"
+    }
+
 } catch {
     Write-Error "An error occurred: $_"
 }
+
+# Additional status check
+Write-Host "`nCurrent Task Status:"
+Get-ScheduledTask -TaskName $taskName | Select-Object TaskName, State
