@@ -1,0 +1,151 @@
+$oldPackages = 0
+
+$oldPackages = @(
+    "Microsoft .NET AppHost Pack - 6.0.12 (x64)",
+    "Microsoft .NET AppHost Pack - 6.0.12 (x64_arm)",
+    "Microsoft .NET AppHost Pack - 6.0.12 (x64_arm64)",
+    "Microsoft .NET AppHost Pack - 6.0.12 (x64_x86)",
+    "Microsoft .NET Host - 5.0.17 (x86)",
+    "Microsoft .NET Host - 5.0.7 (x86)",
+    "Microsoft .NET Host - 6.0.12 (x64)",
+    "Microsoft .NET Host - 6.0.25 (x86)",
+    "Microsoft .NET Host - 6.0.36 (x64)",
+    "Microsoft .NET Host - 6.0.36 (x86)",
+    "Microsoft .NET Host FX Resolver - 5.0.17 (x86)",
+    "Microsoft .NET Host FX Resolver - 5.0.7 (x86)",
+    "Microsoft .NET Runtime - 5.0.17 (x86)",
+    "Microsoft .NET Runtime - 5.0.7 (x86)",
+    "Microsoft .NET Runtime - 6.0.12 (x64)",
+    "Microsoft .NET Runtime - 6.0.25 (x86)",
+    "Microsoft .NET Runtime - 6.0.36 (x64)",
+    "Microsoft .NET Runtime - 6.0.36 (x86)",
+    "Microsoft ASP.NET Core 6.0.12 Shared Framework (x64)",
+    "Microsoft ASP.NET Core 6.0.12 Targeting Pack (x64)",
+    "Microsoft Visual C++ 2012 Redistributable (x64) - 11.0.61030",
+    "Microsoft Visual C++ 2012 Redistributable (x86) - 11.0.61030",
+    "Microsoft Visual C++ 2012 x64 Additional Runtime - 11.0.61030",
+    "Microsoft Visual C++ 2012 x64 Minimum Runtime - 11.0.61030",
+    "Microsoft Visual C++ 2012 x86 Additional Runtime - 11.0.61030",
+    "Microsoft Visual C++ 2012 x86 Minimum Runtime - 11.0.61030",
+    "Microsoft Visual C++ 2013 Redistributable (x64) - 12.0.30501",
+    "Microsoft Visual C++ 2013 Redistributable (x64) - 12.0.40660",
+    "Microsoft Visual C++ 2013 Redistributable (x64) - 12.0.40664",
+    "Microsoft Visual C++ 2013 Redistributable (x86) - 12.0.40664",
+    "Microsoft Visual C++ 2013 x64 Additional Runtime - 12.0.21005",
+    "Microsoft Visual C++ 2013 x64 Additional Runtime - 12.0.40660",
+    "Microsoft Visual C++ 2013 x64 Additional Runtime - 12.0.40664",
+    "Microsoft Visual C++ 2013 x64 Minimum Runtime - 12.0.21005",
+    "Microsoft Visual C++ 2013 x64 Minimum Runtime - 12.0.40660",
+    "Microsoft Visual C++ 2013 x64 Minimum Runtime - 12.0.40664",
+    "Microsoft Visual C++ 2013 x86 Additional Runtime - 12.0.40664",
+    "Microsoft Visual C++ 2013 x86 Minimum Runtime - 12.0.40664"
+)
+
+
+
+function Get-InstalledSoftware {
+    param (
+        [array]$softwareList
+    )
+
+    # Initialize an empty array to store the matching software
+    $installedSoftware = @()
+
+    # Loop through each software in the list and check if it's installed
+    foreach ($software in $softwareList) {
+        # Use Get-Package to check if the software is installed on the machine
+        $installed = Get-Package -Name $software -ErrorAction SilentlyContinue
+        
+        if ($installed) {
+            # If the software is found, add it to the result array
+            $installedSoftware += $software
+        }
+    }
+
+    # Return the array of installed software
+    return $installedSoftware
+}
+
+
+# Get the installed software that matches the list
+$installedOldSoftware = Get-InstalledSoftware -softwareList $oldPackages
+
+# Function to get the QuietUninstallString
+function Get-QuietUninstallString {
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$PackageName
+    )
+
+    # Get the package information
+    $package = Get-Package -Name $PackageName -ErrorAction SilentlyContinue
+
+    # Check if the package has metadata and retrieve the SwidTagText
+    if ($package.SwidTagText) {
+        # Load the XML from the SwidTagText
+        [xml]$swidTag = $package.SwidTagText
+
+        # Try to find the QuietUninstallString in the XML metadata
+        $quietUninstallString = $swidTag.SoftwareIdentity.Meta.QuietUninstallString
+
+        if ($quietUninstallString) {
+            # Remove the "&quot;" and return the cleaned uninstall string
+            $quietUninstallString = $quietUninstallString -replace "&quot;", '"'
+            return $quietUninstallString
+        } else {
+            return $null  # Return null if no QuietUninstallString is found
+        }
+    } else {
+        return $null  # Return null if SwidTagText is unavailable
+    }
+}
+
+# Function to check installed software and classify based on QuietUninstallString
+function Get-InstalledSoftwareWithQuietUninstall {
+    param (
+        [array]$softwareList
+    )
+
+    # Initialize empty arrays for software with and without QuietUninstallString
+    $softwareWithQuietUninstall = @()
+    $softwareWithoutQuietUninstall = @()
+
+    # Loop through each software in the list and check if it's installed and has a QuietUninstallString
+    foreach ($software in $softwareList) {
+        # Check if the software is installed
+        $installed = Get-Package -Name $software -ErrorAction SilentlyContinue
+
+        if ($installed) {
+            # Get the QuietUninstallString for the installed software
+            $quietUninstallString = Get-QuietUninstallString -PackageName $software
+
+            # Classify the software based on whether it has a QuietUninstallString
+            if ($quietUninstallString) {
+                $softwareWithQuietUninstall += $software
+            } else {
+                $softwareWithoutQuietUninstall += $software
+            }
+        }
+    }
+
+    # Return both arrays: software with and without QuietUninstallString
+    return @{
+        WithQuietUninstall  = $softwareWithQuietUninstall
+        WithoutQuietUninstall = $softwareWithoutQuietUninstall
+    }
+}
+
+# Example usage
+$oldPackages = @(
+    "Microsoft .NET AppHost Pack - 6.0.12 (x64)",
+    "Microsoft .NET AppHost Pack - 6.0.12 (x64_arm)",
+    "Microsoft .NET Host - 5.0.17 (x86)",
+    "Microsoft Visual C++ 2012 Redistributable (x64) - 11.0.61030"
+)
+
+# Get the installed software and classify them
+$softwareClassification = Get-InstalledSoftwareWithQuietUninstall -softwareList $installedOldSoftware
+
+# Output the results
+$softwareClassification.WithQuietUninstall
+$softwareClassification.WithoutQuietUninstall
