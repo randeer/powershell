@@ -3,3 +3,7 @@ Write-output "started............"
 Add-AppxPackage -Path "C:\Temp\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -ForceApplicationShutdown *> $null
 
 Write-output "completed"
+
+
+
+-Argument "-NoProfile -ExecutionPolicy Bypass -File $scriptPath"
