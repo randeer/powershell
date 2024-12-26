@@ -1,9 +1,11 @@
-Write-output "started............"
+$actions = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument "-NoProfile -ExecutionPolicy Bypass -File C:\Temp\createfile.ps1"
+$trigger = New-ScheduledTaskTrigger -Daily -At '9:15 AM'
+$principal = New-ScheduledTaskPrincipal -GroupId "BUILTIN\Users" -RunLevel Highest
 
-Add-AppxPackage -Path "C:\Temp\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -ForceApplicationShutdown *> $null
+$settings = New-ScheduledTaskSettingsSet
 
-Write-output "completed"
+$task = New-ScheduledTask -Action $actions -Principal $principal -Trigger $trigger -Settings $settings
 
+Register-ScheduledTask 'baznewsystem' -InputObject $task
 
-
--Argument "-NoProfile -ExecutionPolicy Bypass -File $scriptPath"
+Start-ScheduledTask -TaskName 'baznewsystem'
