@@ -1,6 +1,3 @@
-$oldPackages = 0
-$oldPackages = 0
-
 $oldPackages = @(
     "Microsoft .NET AppHost Pack - 6.0.12 (x64)",
     "Microsoft .NET AppHost Pack - 6.0.12 (x64_arm)",
@@ -42,40 +39,29 @@ $oldPackages = @(
     "Microsoft Visual C++ 2013 x86 Minimum Runtime - 12.0.40664"
 )
 
-
-
 function Get-InstalledSoftware {
     param (
         [array]$softwareList
     )
-
-    # Initialize an empty array to store the matching software
+    
     $installedSoftware = @()
-
-    # Loop through each software in the list and check if it's installed
+    
     foreach ($software in $softwareList) {
-        # Use Get-Package to check if the software is installed on the machine
         $installed = Get-Package -Name $software -ErrorAction SilentlyContinue
-        
         if ($installed) {
-            # If the software is found, add it to the result array
             $installedSoftware += $software
         }
     }
-
-    # Return the array of installed software
+    
     return $installedSoftware
 }
-
-
-# Get the installed software that matches the list
-$installedOldSoftware = Get-InstalledSoftware -softwareList $oldPackages
 
 function Get-QuietUninstallString {
     param (
         [Parameter(Mandatory=$true)]
         [string]$PackageName
     )
+    
     $package = Get-Package -Name $PackageName -ErrorAction SilentlyContinue
     if ($package.SwidTagText) {
         [xml]$swidTag = $package.SwidTagText
@@ -88,7 +74,10 @@ function Get-QuietUninstallString {
 }
 
 function Get-InstalledSoftwareWithQuietUninstall {
-    param ([array]$softwareList)
+    param (
+        [array]$softwareList
+    )
+    
     $softwareWithQuietUninstall = @()
     $softwareWithoutQuietUninstall = @()
     
@@ -110,57 +99,55 @@ function Get-InstalledSoftwareWithQuietUninstall {
     }
 }
 
-# New function to get product code
 function Get-ProductCode {
     param (
         [string]$PackageName
     )
-    $product = Get-WmiObject Win32_Product | Where-Object { $_.Name -eq $PackageName }
+    
+    $product = Get-CimInstance Win32_Product | Where-Object { $_.Name -eq $PackageName }
     return $product.IdentifyingNumber
 }
+
+# Get installed software
+$installedOldSoftware = Get-InstalledSoftware -softwareList $oldPackages
 
 # Display installed old software
 Write-Host "`nOld installed software on this machine:" -ForegroundColor Yellow
 Write-Host "----------------------------------------"
 
-
-if ($installedOldSoftware -eq $null){
-    Write-Host "No old software are found" -ForegroundColor Cyan
+if ($installedOldSoftware.Count -eq 0) {
+    Write-Host "No old software found" -ForegroundColor Cyan
 } else {
-    $installedOldSoftware = Get-InstalledSoftware -softwareList $oldPackages
-$installedOldSoftware | ForEach-Object { Write-Host $_ }
-
-# Ask for user confirmation
-$response = Read-Host "`nDo you want to uninstall these old software packages? (yes/no)"
-
-if ($response.ToLower() -eq 'yes') {
-    $softwareClassification = Get-InstalledSoftwareWithQuietUninstall -softwareList $installedOldSoftware
+    $installedOldSoftware | ForEach-Object { Write-Host $_ }
     
-    Write-Host "`nUninstalling software..." -ForegroundColor Yellow
+    # Ask for user confirmation
+    $response = Read-Host "`nDo you want to uninstall these old software packages? (yes/no)"
     
-    # Handle software with QuietUninstallString
-    foreach ($software in $softwareClassification.WithQuietUninstall) {
-        Write-Host "Uninstalling $software using QuietUninstallString..."
-        $uninstallString = Get-QuietUninstallString -PackageName $software
-        if ($uninstallString) {
-            Start-Process cmd -ArgumentList "/c $uninstallString" -Wait -NoNewWindow
+    if ($response.ToLower() -eq 'yes') {
+        $softwareClassification = Get-InstalledSoftwareWithQuietUninstall -softwareList $installedOldSoftware
+        
+        Write-Host "`nUninstalling software..." -ForegroundColor Yellow
+        
+        # Handle software with QuietUninstallString
+        foreach ($software in $softwareClassification.WithQuietUninstall) {
+            Write-Host "Uninstalling $software using QuietUninstallString..."
+            $uninstallString = Get-QuietUninstallString -PackageName $software
+            if ($uninstallString) {
+                Start-Process cmd -ArgumentList "/c $uninstallString" -Wait -NoNewWindow
+            }
         }
-    }
-    
-    # Handle software without QuietUninstallString
-    foreach ($software in $softwareClassification.WithoutQuietUninstall) {
-        Write-Host "Uninstalling $software using product code..."
-        $productCode = Get-ProductCode -PackageName $software
-        if ($productCode) {
-            Start-Process msiexec -ArgumentList "/x $productCode /quiet /norestart" -Wait -NoNewWindow
+        
+        # Handle software without QuietUninstallString
+        foreach ($software in $softwareClassification.WithoutQuietUninstall) {
+            Write-Host "Uninstalling $software using product code..."
+            $productCode = Get-ProductCode -PackageName $software
+            if ($productCode) {
+                Start-Process msiexec -ArgumentList "/x $productCode /quiet /norestart" -Wait -NoNewWindow
+            }
         }
+        
+        Write-Host "`nUninstallation process completed." -ForegroundColor Green
+    } else {
+        Write-Host "`nUninstallation cancelled." -ForegroundColor Red
     }
-    
-    Write-Host "`nUninstallation process completed." -ForegroundColor Green
-} else {
-    Write-Host "`nUninstallation cancelled." -ForegroundColor Red
 }
-}
-
-
-    
