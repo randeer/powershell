@@ -1,75 +1,10 @@
-# Get the current user context
-$UserContext = ([System.Security.Principal.WindowsIdentity]::GetCurrent()).Name
+My wsus server name is STSWSUS-01, it is a workgroup server, The certificate that we bind, its CN is patching.stspartner.com.
 
-#Get user profile
-$userProfile = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::UserProfile)
+So how my wsusutil.exe configuressl <YourWSUSServerName> will be?
 
-# Split the UserContext by backslash and get the second part (the username)
-$username = ($UserContext.Split('\'))[1]
+is it 
+wsusutil.exe configuressl STSWSUS-01
 
-# Initialize $wingetPath variable
-$wingetPath = ""
+or 
 
-Write-Output "Current User: $env:USERNAME"
-Write-Output "Current UserContext: $UserContext"
-Write-Output "Current User Profile: $userProfile"
-
-if ($UserContext -ne "NT AUTHORITY\SYSTEM") {
-    # For non-SYSTEM users, copy winget.exe to the user's WindowsApps folder
-    Write-Output "Copying script from winget.exe"
-    
-    $destinationPath = "C:\Users\$username\AppData\Local\Microsoft\WindowsApps\winget.exe"
-    
-    # Check if winget.exe exists in the current directory before copying
-    if (Test-Path ./winget.exe) {
-        Copy-Item ./winget.exe -Destination $destinationPath -Force
-        $wingetPath = $destinationPath
-        Write-Output "Winget Path for ${username}: $wingetPath"
-    } else {
-        Write-Error "winget.exe not found in the current directory!"
-        exit
-    }
-    
-    Write-Output "Changing directory to: C:\Users\$username\AppData\Local\Microsoft\WindowsApps"
-    Set-Location "C:\Users\$username\AppData\Local\Microsoft\WindowsApps"
-
-    # Ensure winget.exe is now in the current directory before attempting the upgrade
-    if (Test-Path ".\winget.exe") {
-        Write-Output "Running 'winget upgrade'..."
-        .\winget.exe upgrade > C:\Temp\test.txt 2>&1
-        Write-Output "Command executed - winget upgrade"
-    } else {
-        Write-Error "winget.exe not found in the WindowsApps directory!"
-    }
-} else {
-    # For SYSTEM user, find winget.exe in the WindowsApps folder
-    $wingetPath = Get-ChildItem "C:\Program Files\WindowsApps" -Recurse -Filter "winget.exe" | 
-                  Sort-Object FullName -Descending | 
-                  Select-Object -First 1 -ExpandProperty FullName
-    Write-Output "Winget Path for SYSTEM: $wingetPath"
-
-    # Ensure winget.exe exists before running the upgrade
-    if (Test-Path $wingetPath) {
-        Write-Output "Running 'winget upgrade'..."
-        & $wingetPath upgrade
-    } else {
-        Write-Error "winget.exe not found for SYSTEM user!"
-    }
-}
-
-# Output the final winget path
-Write-Output "Final Winget Path: $wingetPath"
-
-
-
-
-Winget Finder
-Current User: WILENE-PC$
-Current UserContext: AOIW\stsadmin01
-Copying script from winget.exe
-Winget Path for stsadmin01: C:\Users\stsadmin01\AppData\Local\Microsoft\WindowsApps\winget.exe
-Changing directory to: C:\Users\stsadmin01\AppData\Local\Microsoft\WindowsApps
-Running 'winget upgrade'...
-Command executed - winget upgrade
-Final Winget Path: C:\Users\stsadmin01\AppData\Local\Microsoft\WindowsApps\winget.exe
- 
+wsusutil.exe configuressl patching.stspartner.com.
