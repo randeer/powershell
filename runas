@@ -1,0 +1,37 @@
+# Ensure running as SYSTEM
+if ($(whoami) -notmatch 'nt authority\\system') {
+    Write-Host "Script must run as SYSTEM"
+    exit 1
+}
+
+# Ensure a user is logged in
+if (!((Get-WmiObject -Class Win32_ComputerSystem).Username)) {
+    Write-Host "No user logged in"
+    exit 1
+}
+
+try {
+    # Load the CPAs.dll
+    Add-Type -Path "CPAs.dll"
+    Write-Host "CPAs.dll loaded successfully"
+
+    # Create the PowerShell command to execute as user
+    $command = @'
+    New-Item -Path "C:\temp" -ItemType Directory -Force
+    Set-Content -Path "C:\temp\test.txt" -Value "Created at $(Get-Date)"
+'@
+
+    # Execute the command as the logged-in user
+    [murrayju.ProcessExtensions.ProcessExtensions]::StartProcessAsCurrentUser(
+        "C:\Windows\System32\WindowsPowerShell\v1.0\Powershell.exe",
+        "-command $command",
+        "C:\Windows\System32\WindowsPowerShell\v1.0\",
+        $false,
+        -1
+    )
+
+    Write-Host "Command executed successfully"
+} catch {
+    Write-Host "Error: $_"
+    exit 1
+}
