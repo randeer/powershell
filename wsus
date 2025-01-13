@@ -1,0 +1,23 @@
+PS C:\Program Files\Update Services> ls
+
+
+    Directory: C:\Program Files\Update Services
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        8/19/2024   3:41 AM                AdministrationSnapin
+d-----        5/17/2022   7:10 AM                Api
+d-----        5/31/2022   6:19 AM                Common
+d-----        5/31/2022   6:19 AM                Database
+d-----        5/31/2022   6:19 AM                Inventory
+d-----       12/30/2024   1:44 AM                LogFiles
+d-----        5/31/2022   6:19 AM                NativeStrings
+d-----        5/17/2022   7:10 AM                Schema
+d-----        5/31/2022   6:19 AM                SelfUpdate
+d-----         6/9/2022   8:41 AM                Services
+d-----        5/31/2022   6:19 AM                Setup
+d-----        5/17/2022   7:10 AM                Tools
+d-----        5/31/2022   6:19 AM                UpdateServicesPackages
+d-----        5/31/2022   6:19 AM                WebServices
+d-----        1/13/2025   7:35 AM                WsusContent
