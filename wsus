@@ -21,3 +21,11 @@ d-----        5/17/2022   7:10 AM                Tools
 d-----        5/31/2022   6:19 AM                UpdateServicesPackages
 d-----        5/31/2022   6:19 AM                WebServices
 d-----        1/13/2025   7:35 AM                WsusContent
+
+
+Compress-Archive -Path "C:\Program Files\Update Services\Database", `
+                       "C:\Program Files\Update Services\LogFiles", `
+                       "C:\Program Files\Update Services\Setup", `
+                       "C:\Program Files\Update Services\Services", `
+                       "C:\Program Files\Update Services\WebServices" `
+                 -DestinationPath "C:\temp\WSUS_Files.zip"
