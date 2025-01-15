@@ -40,25 +40,10 @@ net start WSUSService
 iisreset /start
 
 
-PS C:\Windows\system32> Compress-Archive -Path "C:\Program Files\Update Services\Database", `
->>                        "C:\Program Files\Update Services\LogFiles", `
->>                        "C:\Program Files\Update Services\Setup", `
->>                        "C:\Program Files\Update Services\Services", `
->>                        "C:\Program Files\Update Services\WebServices" `
->>                  -DestinationPath "C:\temp\WSUS_Files.zip"
-ZipArchiveHelper : The process cannot access the file 'C:\Program Files\Update
-Services\Services\en-US\WSusCertServer.exe.mui' because it is being used by another process.
-At C:\Windows\system32\WindowsPowerShell\v1.0\Modules\Microsoft.PowerShell.Archive\Microsoft.PowerShell.Archive.psm1:697
-char:30
-+ ... sArchived = ZipArchiveHelper $subDirFiles.ToArray() $destinationPath  ...
-+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : PermissionDenied: (C:\Program File...tServer.exe.mui:String) [Write-Error], IOException
-    + FullyQualifiedErrorId : CompressArchiveUnauthorizedAccessError,ZipArchiveHelper
+net stop WSUSService
+net stop W3SVC
+net stop BITS
 
-New-Object : Exception calling ".ctor" with "1" argument(s): "Stream was not readable."
-At C:\Windows\system32\WindowsPowerShell\v1.0\Modules\Microsoft.PowerShell.Archive\Microsoft.PowerShell.Archive.psm1:808
-char:38
-+ ...     $srcStream = New-Object System.IO.BinaryReader $currentFileStream
-+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : InvalidOperation: (:) [New-Object], MethodInvocationException
-    + FullyQualifiedErrorId : ConstructorInvokedThrowException,Microsoft.PowerShell.Commands.NewObjectCommand
+net start BITS
+net start W3SVC
+net start WSUSService
