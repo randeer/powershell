@@ -51,3 +51,13 @@ net start WSUSService
 
 C:\Windows\System32\inetsrv
 appcmd add backup "WSUS_Backup"
+
+
+Backup WSUS Configuration and Metadata  - C:\Program Files\Update Services\Database, C:\Program Files\Update Services\LogFiles, C:\Program Files\Update Services\Setup,  C:\Program Files\Update Services\WebServices.
+
+In our case we don't need "WSUS Content Folder", bcause "Store update files locally" is not enabled. clients will download updates directly from Microsoft.
+
+Exported the WSUS-related registry keys - C:\temp\
+
+Backup IIS Configuration - C:\Windows\System32\inetsrv\backup\WSUS_Backup
+
