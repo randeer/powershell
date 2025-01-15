@@ -29,3 +29,12 @@ Compress-Archive -Path "C:\Program Files\Update Services\Database", `
                        "C:\Program Files\Update Services\Services", `
                        "C:\Program Files\Update Services\WebServices" `
                  -DestinationPath "C:\temp\WSUS_Files.zip"
+
+net stop wuauserv
+net stop WSUSService
+iisreset /stop
+
+
+net start wuauserv
+net start WSUSService
+iisreset /start
