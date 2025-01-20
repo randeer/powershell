@@ -1,0 +1,308 @@
+##==Functions==##
+
+#Function to get the FQDN of the computer
+function Get-ComputerName {
+    If ($env:USERDNSDOMAIN)
+        {
+            $ComputerName = $env:COMPUTERNAME+"."+$env:USERDNSDOMAIN
+            $ComputerName
+        }
+    Else
+        {
+            $ComputerName = $env:COMPUTERNAME
+            $ComputerName
+        }
+}
+
+#Function to add/update registry values
+function AddUpdate-RegistryValue {
+	param([string]$Path,
+			[string]$Name,
+			[string]$Type,
+			[string]$Value
+			)
+	if (-not (Get-ItemProperty -Path $Path -Name $Name -ErrorAction SilentlyContinue))
+        {
+		    New-ItemProperty -Path $Path -Name $Name -PropertyType $Type -Value $Value
+	    }
+    else
+        {
+		    Set-ItemProperty -Path $Path -Name $Name -Value $Value
+	    }
+}
+
+#Function to force the computer to check in with the WSUS Server
+function Force-WSUSCheckIn {
+    #Try all methods of reporting to the WSUS server and scanning for updates
+    wuauclt /detectnow
+    (New-Object -ComObject Microsoft.Update.AutoUpdate).DetectNow() | Out-Null
+    wuauclt /reportnow
+    C:\Windows\System32\UsoClient.exe startscan
+}
+
+#Function to Reset the SusClientId
+function Reset-SusClientId {
+    Write-Output "Resetting the SusClientId to a different value..."
+
+    #Stop Windows Update Service
+    If ((Get-Service -Name "Windows Update").Status -eq "Running")
+        {
+            Write-Output "Stopping Windows Update service..."
+            Stop-Service -Name "Windows Update" -Force | Out-Null
+        }
+
+    #Remove SUSClientID and related Registry Keys
+    (Get-ChildItem $SusClientIdRegPath).PsPath | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path $SusClientIdRegPath -Recurse -Force -ErrorAction SilentlyContinue
+
+
+    #Start Windows Update Service
+    If ((Get-Service -Name "Windows Update").Status -ne "Running")
+        {
+            Write-Output "Starting Windows Update service..."
+            Start-Service -Name "Windows Update" | Out-Null
+        }
+
+    #Reset SUSID
+    Write-Output "Regenerating a new SusClientId..."
+    wuauclt /resetauthorization /detectnow | Out-Null
+
+    Start-Sleep -Seconds 30 
+
+}
+
+#Function to read Azure Storage Table 
+function GetTableEntityAll($TableName) {
+    $resource = "$tableName"
+    $table_url = "https://$storageAccount.table.core.windows.net/$tableName$SASToken"
+    $GMTTime = (Get-Date).ToUniversalTime().toString('R')
+
+    $headers = @{
+        'x-ms-date'    = $GMTTime
+        'Accept'       = "application/json;odata=fullmetadata"
+    }
+    $item = Invoke-RestMethod -Method GET -Uri $table_url -Headers $headers -ContentType application/json
+    return $item.value
+}
+
+#Function to write to Azure Storage Table
+function InsertReplaceTableEntity($TableName, $PartitionKey, $RowKey, $entity) {
+    $resource = "$tableName(PartitionKey='$PartitionKey',RowKey='$Rowkey')"
+    $table_url = "https://$storageAccount.table.core.windows.net/$tableName$SASToken"
+    $GMTTime = (Get-Date).ToUniversalTime().toString('R')
+    $stringToSign = "$GMTTime`n/$storageAccount/$resource"
+
+    $headers = @{
+        'x-ms-date'    = $GMTTime
+        'Accept'       = "application/json;odata=fullmetadata"
+    }
+    $body = $entity | ConvertTo-Json
+    $item = Invoke-RestMethod -Method Post -Uri $table_url -Headers $headers -Body $body -ContentType application/json
+    }
+
+##==Static Variables==##
+
+$WU = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
+$AU = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
+$storageAccount = "stspartner"
+$SusClientIdRegPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate"
+$SusClientId = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" -Name "SusClientId").SusClientId
+$DateAndTime = Get-Date
+$DateAndTimeUTC = $DateAndTime.ToUniversalTime().ToString("dd/MM/yyyy HH:mm:ss")
+$TargetGroupName = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "TargetGroup").TargetGroup
+$HostName = Get-ComputerName
+$OSDescription = (Get-CimInstance Win32_OperatingSystem).Caption
+$OSBuildNumber = (Get-CimInstance Win32_OperatingSystem).BuildNumber
+$ExistsInDB = $false
+$DuplicateIDCheck = $true
+$SASToken = "?si=WSUSScriptAccess&sv=2020-02-10&sig=surmXo1e1sfVr5rz7VD%2Bzl2tRfBulYAlIUJJEVh1wS8%3D&tn=centralizedservices"
+
+
+##==Start Script==##
+
+#Force TLS 1.2 for REST calls
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+Write-Output "Windows Update Deployment via WSUS [WIN] version 1.3`r`n"
+Write-Output "Below settings were configured successfully on $env:COMPUTERNAME`:`r`n"
+
+#Check if Registry Keys exists - if not create them
+if (-not (Test-Path $WU -PathType Container)) {New-Item -Path $WU}
+if (-not (Test-Path $AU -PathType Container)) {New-Item -Path $AU}
+
+#Set Registry Values
+
+#Disable Windows Updates
+AddUpdate-RegistryValue $AU NoAutoUpdate DWord 1 | Out-Null
+
+#Use WSUS Server for Windows Updates
+AddUpdate-RegistryValue $AU UseWUServer DWord 1 | Out-Null
+
+#Windows Updates will not be downloaded automatically
+AddUpdate-RegistryValue $AU AUOptions DWord 2 | Out-Null
+
+#Remove registry key: DisableWindowsUpdateAccess, if found
+if (Get-ItemProperty -Path $WU -Name DisableWindowsUpdateAccess -ErrorAction SilentlyContinue)
+    {
+        Remove-ItemProperty -Path $WU -Name DisableWindowsUpdateAccess -ErrorAction SilentlyContinue | Out-Null
+        Write-Output "Removed registry keys disabling access to Windows Updates"
+    }
+
+#Remove legacy registry keys set for Installation Time, if found
+if ((Get-ItemProperty -Path $AU -Name ScheduledInstallTime -ErrorAction SilentlyContinue))
+            {
+                Remove-ItemProperty -Path $AU -Name ScheduledInstallTime -ErrorAction SilentlyContinue | Out-Null
+                Write-Output "Removed legacy keys specifying the Installation Time"
+            }
+
+#Remove legacy registry keys set for Installation Week, if found
+$keys = @('ScheduledInstallEveryWeek','ScheduledInstallFirstWeek','ScheduledInstallSecondWeek','ScheduledInstallThirdWeek','ScheduledInstallFourthWeek')       
+foreach ($key in $keys)
+    {
+        if ((Get-ItemProperty -Path $AU -Name $key -ErrorAction SilentlyContinue))
+            {
+                Remove-ItemProperty -Path $AU -Name $key -ErrorAction SilentlyContinue | Out-Null
+                Write-Output "Removed legacy keys specifying the Installation Week"
+            }
+    }
+
+#Remove legacy registry keys set for Installation Day, if found
+if ((Get-ItemProperty -Path $AU -Name ScheduledInstallDay -ErrorAction SilentlyContinue))
+            {
+                Remove-ItemProperty -Path $AU -Name ScheduledInstallDay -ErrorAction SilentlyContinue | Out-Null
+                Write-Output "Removed legacy keys specifying the Installation Day"
+            }
+
+#Remove legacy registry keys for Auto Reboot Behavior, if found
+if (Get-ItemProperty -Path $AU -Name AlwaysAutoRebootAtScheduledTime -ErrorAction SilentlyContinue)
+    {
+        Remove-ItemProperty -Path $AU -Name AlwaysAutoRebootAtScheduledTime -ErrorAction SilentlyContinue | Out-Null
+        Write-Output "Removed legacy keys specifying Auto Reboot behavior"
+    }
+
+#Remove legacy registry keys for Auto Reboot delay, if found
+if (Get-ItemProperty -Path $AU -Name AlwaysAutoRebootAtScheduledTimeMinutes -ErrorAction SilentlyContinue)
+    {
+        Remove-ItemProperty -Path $AU -Name AlwaysAutoRebootAtScheduledTimeMinutes -ErrorAction SilentlyContinue | Out-Null
+        Write-Output "Removed legacy keys specifying Auto Reboot delay"
+    }
+
+#Updates for Other MS Products
+if ($env:updatesForOtherMSProducts -eq $true)
+    {
+        AddUpdate-RegistryValue $AU AllowMUUpdateService DWord 1 | Out-Null
+        Write-Output "Updates for other Microsoft products: Enabled"
+    }
+else
+    {
+        Remove-ItemProperty -Path $AU -Name AllowMUUpdateService -ErrorAction SilentlyContinue | Out-Null
+        Write-Output "Updates for other Microsoft products: Disabled"
+    }
+
+#Set WSUS Server
+AddUpdate-RegistryValue $WU WUServer String $env:wsusServer | Out-Null
+Write-Output "WSUS server: $env:wsusServer"
+
+#Set WSUS Statistics Server
+AddUpdate-RegistryValue $WU WUStatusServer String $env:wsusServer | Out-Null
+
+#Set Alternate WU Service URL to Blank
+AddUpdate-RegistryValue $WU UpdateServiceUrlAlternate String "" | Out-Null
+
+#Set Client-side Targeting Group
+AddUpdate-RegistryValue $WU TargetGroupEnabled Dword 1 | Out-Null
+AddUpdate-RegistryValue $WU TargetGroup String $env:targetGroup | Out-Null
+Write-Output "Client-side Targeting Group: $env:targetGroup"
+
+#Disable pause updates option on UI
+AddUpdate-RegistryValue $WU SetDisablePauseUXAccess DWord 1 | Out-Null
+
+#Allow connections to Windows Update Internet Locations
+AddUpdate-RegistryValue $WU DoNotConnectToWindowsUpdateInternetLocations DWord 0 | Out-Null
+
+
+#Sleep for 10 seconds
+Start-Sleep -Seconds 10
+
+#Check for duplicate SusClientId entries on the database and remediate it
+Do
+    {
+        #Retrieve the current SusClientId value from the Registry
+        $SusClientId = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" -Name "SusClientId").SusClientId
+
+        #Check if the current SusClientId has duplicate values
+        $DuplicateEntries = GetTableEntityAll -TableName "centralizedservices" | Where {$_.SUSCLIENTID -match $SusClientId}
+
+        #If duplicate SusClientId entries are found
+        If ($DuplicateEntries)
+            {
+                Foreach ($DuplicateEntry in $DuplicateEntries)
+                    {
+                        Write-Information "Duplicate SusClientId found:"$DuplicateEntry.SUSCLIENTID
+                        $ComputerNameFromDB = $DuplicateEntry.ComputerName
+
+                        #If the duplicate SusClientId is registered under a different hostname, reset the SusClientId
+                        If ($HostName -notmatch $ComputerNameFromDB)
+                            {
+                                Write-Output "Duplicate SusClientId found in the database. Resetting the SusClientId..."
+                                
+                                #Run Reset-SusClientId Function
+                                Reset-SusClientId
+                                
+                                $SusClientId = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" -Name "SusClientId").SusClientId
+                                
+                                Write-Output "SusClientId was reset to $SusClientId on $DateAndTimeUTC UTC."                    
+                            }
+                        
+                        #If the duplicate SusClientId is registered under same hostname, do nothing
+                        Else
+                            {
+                                Write-Output "SusClientId is: $SusClientId"
+                                Write-Output "SusClientId registered under the same Hostname in the database. An ID reset is not required."
+                                $ExistsInDB = $true
+                                $DuplicateIDCheck = $false
+                            }
+                    }
+            }
+        Else
+            {
+                #If no duplicates are found, set the $DuplicateIDCheck as false
+                $DuplicateIDCheck = $false
+            }
+    }
+
+While ($DuplicateIDCheck -eq $true)
+
+#Write the SusClientId to the database if it doesn't exist
+If ($ExistsInDB -eq $false)
+    {
+        Write-Output "SusClientId is: $SusClientId"
+        Write-Output "No matching SusClientId found in the database. Updating it now..."
+
+        #Get all ROWKEYS from the table
+        $AllRowKeys = GetTableEntityAll -TableName "centralizedservices" | Select-Object ROWKEY
+
+
+        #Find the last ROWKEY
+        $LastRowKey = [int]($AllRowKeys.ROWKEY)[-1]
+
+        #Set next ROWKEY
+        $NextRowKey = [string]($LastRowKey+1)
+
+            $body = @{
+            RowKey       = $NextRowKey
+            PartitionKey = "1"
+            ComputerName = $Hostname.ToLower()
+            SusClientId = $SusClientId
+            TargetGroupName = $TargetGroupName
+            OSDescription = $OSDescription
+            OSBuildNumber = $OSBuildNumber
+            }
+
+        #Write the new SusClientId and other information to the Azure Table
+        InsertReplaceTableEntity -TableName "centralizedservices" -RowKey $body.RowKey -PartitionKey $body.PartitionKey -entity $body
+        Write-Output "Successfully updated the database. ROWKEY: $NextRowKey"
+    }
+
+#Run the WSUS check-in function
+Force-WSUSCheckin
