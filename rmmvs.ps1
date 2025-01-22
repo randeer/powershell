@@ -21,8 +21,10 @@ if ($matchingRows) {
     $matchingRows | ForEach-Object {
         $lastSeenDate = [datetime]::Parse($_."Last Seen")  # Parse the actual Last Seen value
         $lastSeenDays = (($today - $lastSeenDate).Days).ToString() + " days ago"
-        if($lastSeenDays -eq "0 days ago"){
-            $lastSeenDays = "Currently Online"
+        if($lastSeenDays -eq "0 days ago" -and $_.status -eq "Online"){
+            $lastSeenDays = "Currently online"
+        } elseif($lastSeenDays -eq "0 days ago" -and $_.status -ne "Online"){
+            $lastSeenDays = "Device was online today before"
         }
         $lastRebootDate = [datetime]::Parse($_."Last Reboot")  # Parse the actual Last Seen value
         $lastRebootDays = (($today - $lastRebootDate).Days).ToString() + " days ago"
