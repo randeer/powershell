@@ -1,1 +1,46 @@
+# Check if 'winget' is installed
+$wingetPath = Get-Command winget -ErrorAction SilentlyContinue
+
+if ($wingetPath -eq $null) {
+    Write-Host "winget not found. Installing winget..."
+
+    # Install winget (Microsoft.DesktopAppInstaller)
+    $msixPath = "C:\temp\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
+
+    if (Test-Path $msixPath) {
+        # Installing MSIX package
+        try {
+            # Run Add-AppxPackage to install winget
+            $installProcess = Start-Process powershell -ArgumentList "Add-AppxPackage -Path '$msixPath'" -PassThru
+            $installProcess.WaitForExit()  # Wait for the installation to complete
+            
+            # Capture output of the installation
+            $installExitCode = $installProcess.ExitCode
+            $logMessage = if ($installExitCode -eq 0) { 
+                "winget installation completed successfully." 
+            } else { 
+                "winget installation failed with exit code $installExitCode." 
+            }
+            Write-Host $logMessage
+            Add-Content -Path "C:\temp\winget_install_log.txt" -Value "$(Get-Date) - $logMessage"
+
+        } catch {
+            Write-Host "An error occurred while installing winget."
+            Add-Content -Path "C:\temp\winget_install_log.txt" -Value "$(Get-Date) - Error: $_"
+        }
+    } else {
+        Write-Host "MSIX bundle for winget not found at $msixPath."
+        Add-Content -Path "C:\temp\winget_install_log.txt" -Value "$(Get-Date) - MSIX bundle not found."
+    }
+} else {
+    Write-Host "winget is already installed."
+    Add-Content -Path "C:\temp\winget_install_log.txt" -Value "$(Get-Date) - winget is already installed."
+}
+
+
+winget --version
+v1.9.25200
+
+
+                                                                                                 PS C:\WINDOWS\system32> winget --version                                                                                v1.3.2091
 
