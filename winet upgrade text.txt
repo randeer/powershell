@@ -44,3 +44,9 @@ if ($wingetPath -eq $null -or $currentVersion -ne "v1.9.25200") {
 } else {
     Add-Content -Path $logPath -Value "$(Get-Date) - winget v1.9.25200 is already installed."
 }
+
+
+
+
+Installing/Updating winget to v1.9.25200...
+02/18/2025 02:22:08 - winget installation failed with exit code 1
