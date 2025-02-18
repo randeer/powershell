@@ -1,12 +1,25 @@
-# Check if 'winget' is installed
+# Check if 'winget' is installed and get its version
+$logPath = "C:\temp\winget_install_log.txt"
 $wingetPath = Get-Command winget -ErrorAction SilentlyContinue
+$currentVersion = if ($wingetPath) {
+    try {
+        $version = (winget --version).Trim()
+        Add-Content -Path $logPath -Value "$(Get-Date) - Current winget version: $version"
+        $version
+    } catch {
+        Add-Content -Path $logPath -Value "$(Get-Date) - Error getting winget version"
+        $null
+    }
+} else {
+    Add-Content -Path $logPath -Value "$(Get-Date) - winget not found"
+    $null
+}
 
-if ($wingetPath -eq $null) {
-    Write-Host "winget not found. Installing winget..."
-
+# Install winget if it's not found or version isn't v1.9.25200
+if ($wingetPath -eq $null -or $currentVersion -ne "v1.9.25200") {
+    Add-Content -Path $logPath -Value "$(Get-Date) - Installing/Updating winget to v1.9.25200..."
     # Install winget (Microsoft.DesktopAppInstaller)
     $msixPath = "C:\temp\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
-
     if (Test-Path $msixPath) {
         # Installing MSIX package
         try {
@@ -21,26 +34,13 @@ if ($wingetPath -eq $null) {
             } else { 
                 "winget installation failed with exit code $installExitCode." 
             }
-            Write-Host $logMessage
-            Add-Content -Path "C:\temp\winget_install_log.txt" -Value "$(Get-Date) - $logMessage"
-
+            Add-Content -Path $logPath -Value "$(Get-Date) - $logMessage"
         } catch {
-            Write-Host "An error occurred while installing winget."
-            Add-Content -Path "C:\temp\winget_install_log.txt" -Value "$(Get-Date) - Error: $_"
+            Add-Content -Path $logPath -Value "$(Get-Date) - Error: $_"
         }
     } else {
-        Write-Host "MSIX bundle for winget not found at $msixPath."
-        Add-Content -Path "C:\temp\winget_install_log.txt" -Value "$(Get-Date) - MSIX bundle not found."
+        Add-Content -Path $logPath -Value "$(Get-Date) - MSIX bundle not found at $msixPath"
     }
 } else {
-    Write-Host "winget is already installed."
-    Add-Content -Path "C:\temp\winget_install_log.txt" -Value "$(Get-Date) - winget is already installed."
+    Add-Content -Path $logPath -Value "$(Get-Date) - winget v1.9.25200 is already installed."
 }
-
-
-winget --version
-v1.9.25200
-
-
-                                                                                                 PS C:\WINDOWS\system32> winget --version                                                                                v1.3.2091
-
