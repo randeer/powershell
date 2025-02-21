@@ -1,0 +1,30 @@
+PS C:\> Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" | Format-List
+
+
+NoAutoUpdate                                 : 1
+DoNotConnectToWindowsUpdateInternetLocations : 0
+WUServer                                     : https://patching.stspartner.com:8531
+WUStatusServer                               : https://patching.stspartner.com:8531
+UpdateServiceUrlAlternate                    : 
+TargetGroupEnabled                           : 1
+TargetGroup                                  : ESWGM-DAAS-SR
+SetDisablePauseUXAccess                      : 1
+DeferFeatureUpdates                          : 1
+DeferFeatureUpdatesPeriodInDays              : 360
+PauseFeatureUpdatesStartTime                 : 
+DeferQualityUpdates                          : 1
+DeferQualityUpdatesPeriodInDays              : 7
+PauseQualityUpdatesStartTime                 : 
+ManagePreviewBuilds                          : 1
+ManagePreviewBuildsPolicyValue               : 1
+SetDisableUXWUAccess                         : 1
+SetUpdateNotificationLevel                   : 1
+UpdateNotificationLevel                      : 2
+TargetReleaseVersion                         : 1
+ProductVersion                               : Windows 10
+TargetReleaseVersionInfo                     : 21H2
+PSPath                                       : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+PSParentPath                                 : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows
+PSChildName                                  : WindowsUpdate
+PSDrive                                      : HKLM
+PSProvider                                   : Microsoft.PowerShell.Core\Registry
