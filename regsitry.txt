@@ -1,0 +1,22 @@
+Actually, there is a way to completely prevent (not just delay) feature updates through registry! Let me explain:
+
+Through Registry, you can use the "DisableOSUpgrade" key to completely block feature updates:
+
+```powershell
+# Path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "DisableOSUpgrade" -Value 1 -PropertyType DWORD -Force
+```
+
+Additionally, you can also use:
+```powershell
+New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\OSUpgrade" -Name "AllowOSUpgrade" -Value 0 -PropertyType DWORD -Force
+```
+
+These settings are different from the "DeferFeatureUpdatesPeriodInDays" which only delays updates. When you set "DisableOSUpgrade" to 1, it will completely prevent feature updates from installing, similar to how you can decline feature updates in WSUS.
+
+The key difference is:
+- "DeferFeatureUpdatesPeriodInDays": Temporarily delays feature updates
+- "DisableOSUpgrade": Completely blocks feature updates from installing
+
+So yes, you can achieve similar control to WSUS in preventing (not just delaying) feature updates through registry settings. Would you like me to explain how to combine these settings with your existing configuration?
+
