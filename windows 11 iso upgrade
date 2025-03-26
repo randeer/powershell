@@ -1,0 +1,449 @@
+<# windows 11 install-from-ISO by seagull :: based on redux i b13 :: build 12, november 2024
+   this script, like all datto RMM Component scripts unless otherwise explicitly stated, is the copyrighted property of Datto, Inc.;
+   it may not be shared, sold, or distributed beyond the Datto RMM product, whole or in part, even with modifications applied, for 
+   any reason. this includes on reddit, on discord, or as part of other RMM tools. PCSM is the one exception to this rule.
+   	
+   the moment you edit this script it becomes your own risk and support will not provide assistance with it. #>
+
+function generateSHA256 ($executable, $storedHash) {
+    $fileBytes = [io.File]::ReadAllBytes("$executable")
+    $bytes = [Security.Cryptography.HashAlgorithm]::Create("SHA256").ComputeHash($fileBytes) 
+    $varCalculatedHash=-Join ($bytes | ForEach {"{0:x2}" -f $_})
+    if ($storedHash -match $varCalculatedHash) {
+        write-host "+ Filehash verified for file $executable`: $storedHash"
+    } else {
+        write-host "! ERROR: Filehash mismatch for file $executable."
+        write-host "  Expected value: $storedHash"
+        write-host "  Received value: $varCalculatedHash"
+        write-host "  Please report this error."
+        exit 1
+    }
+}
+
+function verifyPackage ($file, $certificate, $thumbprint1, $thumbprint2, $name, $url) { #special two-thumbprint edition
+    $varChain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
+    try {
+        $varChain.Build((Get-AuthenticodeSignature -FilePath "$file").SignerCertificate) | out-null
+    } catch [System.Management.Automation.MethodInvocationException] {
+        write-host "- ERROR: $name installer did not contain a valid digital certificate."
+        write-host "  This could suggest a change in the way $name is packaged; it could"
+        write-host "  also suggest tampering in the connection chain."
+        write-host "- Please ensure $url is whitelisted and try again."
+       write-host "  If this issue persists across different devices, please file a support ticket."
+    }
+
+    $varIntermediate=($varChain.ChainElements | ForEach-Object {$_.Certificate} | Where-Object {$_.Subject -match "$certificate"}).Thumbprint
+
+    if ($varIntermediate -ne $thumbprint1 -and $varIntermediate -ne $thumbprint2) {
+        write-host "- ERROR: $file did not pass verification checks for its digital signature."
+        write-host "  This could suggest that the certificate used to sign the $name installer"
+        write-host "  has changed; it could also suggest tampering in the connection chain."
+        write-host `r
+        if ($varIntermediate) {
+            write-host ": We received: $varIntermediate"
+            write-host "  We expected: $thumbprint1"
+            write-host "      -OR-   : $thumbprint2"
+            write-host "  Please report this issue."
+        }
+        write-host "- Installation cannot continue. Exiting."
+        exit 1
+    } else {
+        write-host "+ Digital Signature verification passed."
+    }
+}
+
+function quitOr {
+    if ($env:usrOverrideChecks -match 'true') {
+        write-host "! This is a blocking error and should abort the process; however, the usrOverrideChecks"
+        write-host "  flag has been enabled, and the error will thus be ignored."
+        write-host "  Support will not be able to assist with issues that arise as a consequence of this action."
+    } else {
+        write-host "! This is a blocking error; the operation has been aborted."
+        Write-Host "  If you do not believe the error to be valid, you can re-run this Component with the"
+        write-host "  `'usrOverrideChecks`' flag enabled, which will ignore blocking errors and proceed."
+        write-host "  Support will not be able to assist with issues that arise as a consequence of this action."
+        Stop-Process -name setupHost -ErrorAction SilentlyContinue
+        exit 1
+    }
+}
+
+function makeHTTPRequest ($tempHost) { #makeHTTPRequest v5: make an HTTP request and ensure a status code (any) is returned
+    $tempRequest = [System.Net.WebRequest]::Create($tempHost)
+    try {
+        $tempResponse=$tempRequest.getResponse()
+        $TempReturn=($tempResponse.StatusCode -as [int])
+    } catch [System.Exception] {
+        $tempReturn=$_.Exception.Response.StatusCode.Value__
+    }
+
+    if ($tempReturn -match '200') {
+        write-host "- Confirmed file at $tempHost is ready for download."
+    } else {
+        write-host "! ERROR: No file was found at $temphost."
+        write-host "  If you are downloading from Microsoft, this may mean a bad URL was entered;"
+        write-host "  bear in mind that ISO links generated from Microsoft.com are only valid for"
+        write-host "  24 hours before needing to be re-calculated."
+        write-host "  Generate new links at https://www.microsoft.com/software-download/windows11."
+        exit 1
+    }
+}
+
+#===================================================================================================================================================
+
+#kernel data
+[int]$varKernel=(get-wmiObject win32_operatingSystem buildNumber).buildNumber
+
+#user text
+write-host `r
+write-host "Windows 11 Updater: Update Windows 10 2004+ to the latest build of Windows 11"
+write-host "==============================================================================="
+write-host "`: Upgrading from: Build $varKernel /" (get-WMiObject -Class win32_operatingSystem).caption
+
+############################################### LANGUAGE INFORMATION ###############################################
+
+#language table (for ISO download) :: 2021 seagull/datto, inc.
+$varLCID=(Get-ItemProperty hklm:\system\controlset001\control\nls\language -name InstallLanguage).InstallLanguage
+$arrLCID=@{
+    "0401"=[PSCustomObject]@{Title="Arabic";                  Localisation="Arabic";                  MSKeyword="Arabic";               DattoKeyword="US"}
+    "0416"=[PSCustomObject]@{Title="Brazilian Portuguese";    Localisation="Brazilian Portuguese";    MSKeyword="BrazilianPortuguese";  DattoKeyword="US"}
+    "0402"=[PSCustomObject]@{Title="Bulgarian";               Localisation="Bulgarian";               MSKeyword="Bulgarian";            DattoKeyword="US"}
+    "0804"=[PSCustomObject]@{Title="Chinese (Simplified)";    Localisation="Chinese (Simplified)";    MSKeyword="Chinese(Simplified)";  DattoKeyword="US"}
+    "0004"=[PSCustomObject]@{Title="Chinese (Simplified)";    Localisation="Chinese (Simplified)";    MSKeyword="Chinese(Simplified)";  DattoKeyword="US"}
+    "7804"=[PSCustomObject]@{Title="Chinese (Simplified)";    Localisation="Chinese (Simplified)";    MSKeyword="Chinese(Simplified)";  DattoKeyword="US"}
+    "1004"=[PSCustomObject]@{Title="Chinese (Singapore)";     Localisation="Chinese (Simplified)";    MSKeyword="Chinese(Simplified)";  DattoKeyword="US"}
+    "0C04"=[PSCustomObject]@{Title="Chinese (Hong Kong)";     Localisation="Chinese (Traditional)";   MSKeyword="Chinese(Traditional)"; DattoKeyword="US"}
+    "0404"=[PSCustomObject]@{Title="Chinese (Taiwan)";        Localisation="Chinese (Traditional)";   MSKeyword="Chinese(Traditional)"; DattoKeyword="US"}
+    "7C04"=[PSCustomObject]@{Title="Chinese (Traditional)";   Localisation="Chinese (Traditional)";   MSKeyword="Chinese(Traditional)"; DattoKeyword="US"}
+    "041A"=[PSCustomObject]@{Title="Croatian";                Localisation="Croatian";                MSKeyword="Croatian";             DattoKeyword="US"}
+    "0405"=[PSCustomObject]@{Title="Czech";                   Localisation="Czech";                   MSKeyword="Czech";                DattoKeyword="US"}
+    "0005"=[PSCustomObject]@{Title="Czech";                   Localisation="Czech";                   MSKeyword="Czech";                DattoKeyword="US"}
+    "0006"=[PSCustomObject]@{Title="Danish";                  Localisation="Danish";                  MSKeyword="Danish";               DattoKeyword="US"}
+    "0406"=[PSCustomObject]@{Title="Danish";                  Localisation="Danish";                  MSKeyword="Danish";               DattoKeyword="US"}
+    "0013"=[PSCustomObject]@{Title="Dutch";                   Localisation="Dutch";                   MSKeyword="Dutch";                DattoKeyword="US"}
+    "0813"=[PSCustomObject]@{Title="Dutch (Belgium)";         Localisation="Dutch";                   MSKeyword="Dutch";                DattoKeyword="US"}
+    "0413"=[PSCustomObject]@{Title="Dutch (Netherlands)";     Localisation="Dutch";                   MSKeyword="Dutch";                DattoKeyword="US"}
+    "0009"=[PSCustomObject]@{Title="English (Generic)";       Localisation="English";                 MSKeyword="English";              DattoKeyword="US"}
+    "0409"=[PSCustomObject]@{Title="English (United States)"; Localisation="English";                 MSKeyword="English";              DattoKeyword="US"}
+    "0809"=[PSCustomObject]@{Title="English (UK)";            Localisation="English (International)"; MSKeyword="EnglishInternational"; DattoKeyword="UK"}
+    "0C09"=[PSCustomObject]@{Title="English (Australia)";     Localisation="English (International)"; MSKeyword="EnglishInternational"; DattoKeyword="US"}
+    "1409"=[PSCustomObject]@{Title="English (New Zealand)";   Localisation="English (International)"; MSKeyword="EnglishInternational"; DattoKeyword="US"}
+    "1009"=[PSCustomObject]@{Title="English (Canada)";        Localisation="English (International)"; MSKeyword="EnglishInternational"; DattoKeyword="US"}
+    "1C09"=[PSCustomObject]@{Title="English (South Africa)";  Localisation="English (International)"; MSKeyword="EnglishInternational"; DattoKeyword="US"}
+    "0025"=[PSCustomObject]@{Title="Estonian";                Localisation="Estonian";                MSKeyword="Estonian";             DattoKeyword="US"}
+    "0425"=[PSCustomObject]@{Title="Estonian";                Localisation="Estonian";                MSKeyword="Estonian";             DattoKeyword="US"}
+    "000B"=[PSCustomObject]@{Title="Finnish";                 Localisation="Finnish";                 MSKeyword="Finnish";              DattoKeyword="US"}
+    "040B"=[PSCustomObject]@{Title="Finnish";                 Localisation="Finnish";                 MSKeyword="Finnish";              DattoKeyword="US"}
+    "000C"=[PSCustomObject]@{Title="French";                  Localisation="French";                  MSKeyword="French";               DattoKeyword="US"}
+    "040C"=[PSCustomObject]@{Title="French";                  Localisation="French";                  MSKeyword="French";               DattoKeyword="US"}
+    "080C"=[PSCustomObject]@{Title="French (Belgium)";        Localisation="French";                  MSKeyword="French";               DattoKeyword="US"}
+    "100C"=[PSCustomObject]@{Title="French (Switzerland)";    Localisation="French";                  MSKeyword="French";               DattoKeyword="US"}
+    "0C0C"=[PSCustomObject]@{Title="French Canadian";         Localisation="French Canadian";         MSKeyword="FrenchCanadian";       DattoKeyword="US"}
+    "0007"=[PSCustomObject]@{Title="German";                  Localisation="German";                  MSKeyword="German";               DattoKeyword="US"}
+    "0407"=[PSCustomObject]@{Title="German";                  Localisation="German";                  MSKeyword="German";               DattoKeyword="US"}
+    "0C07"=[PSCustomObject]@{Title="German (Austria)";        Localisation="German";                  MSKeyword="German";               DattoKeyword="US"}
+    "0807"=[PSCustomObject]@{Title="German (Switzerland)";    Localisation="German";                  MSKeyword="German";               DattoKeyword="US"}
+    "0008"=[PSCustomObject]@{Title="Greek";                   Localisation="Greek";                   MSKeyword="Greek";                DattoKeyword="US"}
+    "0408"=[PSCustomObject]@{Title="Greek";                   Localisation="Greek";                   MSKeyword="Greek";                DattoKeyword="US"}
+    "000D"=[PSCustomObject]@{Title="Hebrew";                  Localisation="Hebrew";                  MSKeyword="Hebrew";               DattoKeyword="US"}
+    "040D"=[PSCustomObject]@{Title="Hebrew";                  Localisation="Hebrew";                  MSKeyword="Hebrew";               DattoKeyword="US"}
+    "000E"=[PSCustomObject]@{Title="Hungarian";               Localisation="Hungarian";               MSKeyword="Hungarian";            DattoKeyword="US"}
+    "040E"=[PSCustomObject]@{Title="Hungarian";               Localisation="Hungarian";               MSKeyword="Hungarian";            DattoKeyword="US"}
+    "0010"=[PSCustomObject]@{Title="Italian";                 Localisation="Italian";                 MSKeyword="Italian";              DattoKeyword="US"}
+    "0410"=[PSCustomObject]@{Title="Italian";                 Localisation="Italian";                 MSKeyword="Italian";              DattoKeyword="US"}
+    "0810"=[PSCustomObject]@{Title="Italian (Switzerland)";   Localisation="Italian";                 MSKeyword="Italian";              DattoKeyword="US"}
+    "0011"=[PSCustomObject]@{Title="Japanese";                Localisation="Japanese";                MSKeyword="Japanese";             DattoKeyword="US"}
+    "0411"=[PSCustomObject]@{Title="Japanese";                Localisation="Japanese";                MSKeyword="Japanese";             DattoKeyword="US"}
+    "0012"=[PSCustomObject]@{Title="Korean";                  Localisation="Korean";                  MSKeyword="Korean";               DattoKeyword="US"}
+    "0412"=[PSCustomObject]@{Title="Korean";                  Localisation="Korean";                  MSKeyword="Korean";               DattoKeyword="US"}
+    "0026"=[PSCustomObject]@{Title="Latvian";                 Localisation="Latvian";                 MSKeyword="Latvian";              DattoKeyword="US"}
+    "0426"=[PSCustomObject]@{Title="Latvian";                 Localisation="Latvian";                 MSKeyword="Latvian";              DattoKeyword="US"}
+    "0027"=[PSCustomObject]@{Title="Lithuanian";              Localisation="Lithuanian";              MSKeyword="Lithuanian";           DattoKeyword="US"}
+    "0427"=[PSCustomObject]@{Title="Lithuanian";              Localisation="Lithuanian";              MSKeyword="Lithuanian";           DattoKeyword="US"}
+    "0014"=[PSCustomObject]@{Title="Norwegian (Bokm?l)";      Localisation="Norwegian";               MSKeyword="Norwegian";            DattoKeyword="US"}
+    "7C14"=[PSCustomObject]@{Title="Norwegian (Bokm?l)";      Localisation="Norwegian";               MSKeyword="Norwegian";            DattoKeyword="US"}
+    "0414"=[PSCustomObject]@{Title="Norwegian (Bokm?l)";      Localisation="Norwegian";               MSKeyword="Norwegian";            DattoKeyword="US"}
+    "7814"=[PSCustomObject]@{Title="Norwegian (Nynorsk)";     Localisation="Norwegian";               MSKeyword="Norwegian";            DattoKeyword="US"}
+    "0814"=[PSCustomObject]@{Title="Norwegian (Nynorsk)";     Localisation="Norwegian";               MSKeyword="Norwegian";            DattoKeyword="US"}
+    "0015"=[PSCustomObject]@{Title="Polish";                  Localisation="Polish";                  MSKeyword="Polish";               DattoKeyword="US"}
+    "0415"=[PSCustomObject]@{Title="Polish";                  Localisation="Polish";                  MSKeyword="Polish";               DattoKeyword="US"}
+    "0816"=[PSCustomObject]@{Title="Portuguese";              Localisation="Portuguese";              MSKeyword="Portuguese";           DattoKeyword="US"}
+    "0018"=[PSCustomObject]@{Title="Romanian";                Localisation="Romanian";                MSKeyword="Romanian";             DattoKeyword="US"}
+    "0418"=[PSCustomObject]@{Title="Romanian";                Localisation="Romanian";                MSKeyword="Romanian";             DattoKeyword="US"}
+    "0818"=[PSCustomObject]@{Title="Moldovan";                Localisation="Romanian";                MSKeyword="Romanian";             DattoKeyword="US"}
+    "0019"=[PSCustomObject]@{Title="Russian";                 Localisation="Russian";                 MSKeyword="Russian";              DattoKeyword="US"}
+    "0419"=[PSCustomObject]@{Title="Russian";                 Localisation="Russian";                 MSKeyword="Russian";              DattoKeyword="US"}
+    "0819"=[PSCustomObject]@{Title="Russian (Moldova)";       Localisation="Russian";                 MSKeyword="Russian";              DattoKeyword="US"}
+    "701A"=[PSCustomObject]@{Title="Serbian (Latin)";         Localisation="Serbian Latin";           MSKeyword="SerbianLatin";         DattoKeyword="US"}
+    "7C1A"=[PSCustomObject]@{Title="Serbian (Latin)";         Localisation="Serbian Latin";           MSKeyword="SerbianLatin";         DattoKeyword="US"}
+    "181A"=[PSCustomObject]@{Title="Serbian (Latin, BO/HE)";  Localisation="Serbian Latin";           MSKeyword="SerbianLatin";         DattoKeyword="US"}
+    "2C1A"=[PSCustomObject]@{Title="Serbian (Latin, MO)";     Localisation="Serbian Latin";           MSKeyword="SerbianLatin";         DattoKeyword="US"}
+    "241A"=[PSCustomObject]@{Title="Serbian (Latin)";         Localisation="Serbian Latin";           MSKeyword="SerbianLatin";         DattoKeyword="US"}
+    "081A"=[PSCustomObject]@{Title="Serbian (Latin, SR/MO)";  Localisation="Serbian Latin";           MSKeyword="SerbianLatin";         DattoKeyword="US"}
+    "001B"=[PSCustomObject]@{Title="Slovak";                  Localisation="Slovak";                  MSKeyword="Slovak";               DattoKeyword="US"}
+    "041B"=[PSCustomObject]@{Title="Slovak";                  Localisation="Slovak";                  MSKeyword="Slovak";               DattoKeyword="US"}
+    "0024"=[PSCustomObject]@{Title="Slovenian";               Localisation="Slovenian";               MSKeyword="Slovenian";            DattoKeyword="US"}
+    "0424"=[PSCustomObject]@{Title="Slovenian";               Localisation="Slovenian";               MSKeyword="Slovenian";            DattoKeyword="US"}
+    "000A"=[PSCustomObject]@{Title="Spanish (Spain)";         Localisation="Spanish";                 MSKeyword="Spanish";              DattoKeyword="US"}
+    "040A"=[PSCustomObject]@{Title="Spanish (Spain)";         Localisation="Spanish";                 MSKeyword="Spanish";              DattoKeyword="US"}
+    "0C0A"=[PSCustomObject]@{Title="Spanish (Spain)";         Localisation="Spanish";                 MSKeyword="Spanish";              DattoKeyword="US"}
+    "2C0A"=[PSCustomObject]@{Title="Spanish (Argentina)";     Localisation="Spanish (Mexico)";        MSKeyword="Spanish(Mexico)";      DattoKeyword="US"}
+    "340A"=[PSCustomObject]@{Title="Spanish (Chile)";         Localisation="Spanish (Mexico)";        MSKeyword="Spanish(Mexico)";      DattoKeyword="US"}
+    "580A"=[PSCustomObject]@{Title="Spanish (Latin America)"; Localisation="Spanish (Mexico)";        MSKeyword="Spanish(Mexico)";      DattoKeyword="US"}
+    "080A"=[PSCustomObject]@{Title="Spanish (M?xico)";        Localisation="Spanish (Mexico)";        MSKeyword="Spanish(Mexico)";      DattoKeyword="US"}
+    "001D"=[PSCustomObject]@{Title="Swedish";                 Localisation="Swedish";                 MSKeyword="Swedish";              DattoKeyword="US"}
+    "041D"=[PSCustomObject]@{Title="Swedish";                 Localisation="Swedish";                 MSKeyword="Swedish";              DattoKeyword="US"}
+    "001E"=[PSCustomObject]@{Title="Thai";                    Localisation="Thai";                    MSKeyword="Thai";                 DattoKeyword="US"}
+    "041E"=[PSCustomObject]@{Title="Thai";                    Localisation="Thai";                    MSKeyword="Thai";                 DattoKeyword="US"}
+    "001F"=[PSCustomObject]@{Title="Turkish";                 Localisation="Turkish";                 MSKeyword="Turkish";              DattoKeyword="US"}
+    "041F"=[PSCustomObject]@{Title="Turkish";                 Localisation="Turkish";                 MSKeyword="Turkish";              DattoKeyword="US"}
+    "0022"=[PSCustomObject]@{Title="Ukrainian";               Localisation="Ukrainian";               MSKeyword="Ukrainian";            DattoKeyword="US"}
+    "0422"=[PSCustomObject]@{Title="Ukrainian";               Localisation="Ukrainian";               MSKeyword="Ukrainian";            DattoKeyword="US"}
+}
+
+#if they're running something we don't understand...
+if (!($($arrLCID[$varLCID].DattoKeyword))) {
+    $arrLCID[$varLCID]=[PSCustomObject]@{Title="Unknown";Localisation="English";MSKeyword="English";DattoKeyword="US"}
+}
+
+#output this information
+write-host ": Device language:     $($arrLCID[$varLCID].Title)"
+write-host ": Suggested carryover: $($arrLCID[$varLCID].Localisation)"
+
+############################################### ISO COMPATIBILITY ###############################################
+
+#define an early SKU list and add to it depending on user choice
+$arrGoodSKU=@(48,49,98,99,100,101)
+
+if (($env:usrImagePath -as [string]).Length -lt 2 -or $env:usrImagePath -eq 'Supply URI here') {
+    #nothing
+    write-host "! ERROR: No image path defined."
+    write-host "  The Component works by downloading a Windows 11 ISO from the Internet"
+    write-host "  (or a local share), mounting it and installing from it."
+    write-host "  Without a link to an ISO, nothing can be downloaded."
+    write-host `r
+    write-host "  Generate a Windows 11 ISO download link good for 24 hours at:"
+    write-host "  https://www.microsoft.com/software-download/windows11"
+    exit 1    
+} elseif ($env:usrImagePath -match 'software-download.microsoft.com') {
+    #microsoft
+    write-host ": ISO Download location: Microsoft servers."
+    write-host "  Please be aware that Microsoft's ISO download links expire after 24 hours."
+    write-host "  If the download fails, your link may need to be re-generated."
+    makeHTTPRequest $env:usrImagePath
+
+    #compare ISO region to device region
+    $varISOLang=$env:usrImagePath.split('_')[1]
+    write-host ": MS ISO Language: $varISOLang"
+    if ($varISOLang -ne $($arrLCID[$varLCID].MSKeyword)) {
+        write-host "! ERROR: Mismatch between device language and Microsoft ISO."
+        write-host "  The languages must match up as closely as possible otherwise the installation will fail."
+        write-host "  This error can be overridden if you are certain this will not pose an issue."
+        quitOr
+    }
+} else {
+    #custom
+    write-host ": ISO location set by user. Edition, Language &c. defined by image."
+    $arrGoodSKU+=4,27,84,161,162 #add valid SKUs beyond our/MS's reach
+}
+
+#separate check: check SKU if the user is not supplying their own ISO
+[int]$varSKU=(Get-WmiObject -Class win32_operatingsystem -Property OperatingSystemSKU).OperatingSystemSKU
+if ($arrGoodSKU | ? {$_ -eq $varSKU}) {
+    write-host "+ Device Windows SKU ($varSKU) is supported."
+} else {
+    write-host "! ERROR: Device Windows SKU ($varSKU) not supported."
+    write-host "  Windows 11 can only be installed on devices running Windows 10 2004 onward;"
+    write-host "  meaning devices with SKUs discontinued by Microsoft are not compatible."
+    write-host "  Enterprise, Pro-for-Workstations and Education edition ISOs are not supplied"
+    write-host "  from Microsoft and thus, these cannot be updated from a Microsoft URL."
+    write-host "  This error can be overridden if you are certain the SKU will not pose an issue."
+    quitOr
+}
+
+write-host "`: ISO download path: $env:usrImagePath"
+
+############################################### HARDWARE COMPAT ###############################################
+
+#architecture
+if ((Get-WMIObject -Class Win32_Processor).Architecture -ne 9) {
+    write-host "! ERROR: This device does not have an AMD64/EM64T-capable processor."
+    write-host "  Windows 11 will not run on 32-bit devices."
+    write-host "  Installation cancelled; exiting."
+    exit 1
+} elseif ([intptr]::Size -eq 4) {
+    write-host ": 32-bit Windows detected, but device processor is AMD64/EM64T-capable."
+    write-host "  An architecture upgrade will be attempted; the device will lose"
+    write-host "  the ability to run 16-bit programs, but 32-bit programs will"
+    write-host "  continue to work using Windows-on-Windows (WOW) emulation."
+} else {
+    write-host "+ 64-bit architecture checks passed."
+}
+
+#minimum W10-04
+if ($varKernel -lt 19041) {
+    write-host "! ERROR: Windows 10 version 2004 or higher is required to proceed."
+    quitOr
+}
+
+#services pipe timeout
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control" /v ServicesPipeTimeout /t REG_DWORD /d "300000" /f 2>&1>$null
+write-host ": Device service timeout period configured to five minutes."
+
+write-host "+ Target device OS is Windows 10 2004 or greater."
+
+#make sure it's licensed (v3)
+if (!(Get-WmiObject SoftwareLicensingProduct | ? { $_.LicenseStatus -eq 1 } | select -ExpandProperty Description | select-string "Windows" -Quiet)) {
+    write-host "! ERROR: Windows 10 can only be installed on devices with an active Windows licence."
+    quitOr
+}
+
+write-host "+ Target device has a valid Windows licence."
+
+#make sure we have enough disk space - installation plus iso hosting
+$varSysFree = [Math]::Round((Get-WMIObject -Class Win32_Volume |Where-Object {$_.DriveLetter -eq $env:SystemDrive} | Select -expand FreeSpace) / 1GB)
+if ($varSysFree -lt 20) {
+    write-host "! ERROR: System drive requires at least 20GB: 13 for installation, 7 for the disc image."
+    quitOr
+}
+
+write-host "+ Target device has at least 20GB of free hard disk space."
+
+#check for RAM
+if (((Get-WmiObject -class "cim_physicalmemory" | Measure-Object -Property Capacity -Sum).Sum / 1024 / 1024 / 1024) -lt 4) {
+    write-host "! ERROR: This machine may not have enough RAM installed."
+    write-host "  Windows 11 requires at least 4GB of system RAM to be installed."
+    write-host "  In case of errors, please check this device's RAM."
+    quitOr
+} else {
+    write-host "+ Device has at least 4GB of RAM installed."
+}
+
+#TPM check
+$varTPM=@(0,0,0) # present :: enabled :: activated
+if ((Get-WmiObject -Class Win32_TPM -EnableAllPrivileges -Namespace "root\CIMV2\Security\MicrosoftTpm").__SERVER) {               # TPM installed
+    $varTPM[0]=1
+    if ((Get-WmiObject -Namespace ROOT\CIMV2\Security\MicrosoftTpm -Class Win32_Tpm).IsEnabled().isenabled -eq $true) {           # TPM enabled
+        $varTPM[1]=1
+        if ((Get-WmiObject -Namespace ROOT\CIMV2\Security\MicrosoftTpm -Class Win32_Tpm).IsActivated().isactivated -eq $true) {   # TPM activated
+            $varTPM[2]=1
+        } else {
+            $varTPM[2]=0
+        }
+    } else {
+        $varTPM[1]=0
+        $varTPM[2]=0
+    }
+}
+
+switch -Regex ($varTPM -as [string]) {
+    '^0' {
+        write-host "! ERROR: This system does not contain a Trusted Platform Module (TPM)."
+        write-host "  Windows 11 requires the use of a TPM to install."
+        write-host "  Your device may contain a firmware TPM (fTPM) which can be enabled in the BIOS/uEFI settings. More info:"
+        write-host "  https://support.microsoft.com/en-us/windows/enable-tpm-2-0-on-your-pc-1fd5a332-360d-4f46-a1e7-ae6b0c90645c"
+        write-host "- Cannot continue; exiting."
+        quitOr
+    } '0 0$' {
+        write-host "! ERROR: Whilst a TPM was detected in this system, the WMI reports that it is disabled."
+        write-host "  Please re-enable the use of the TPM and try installing again."
+        write-host "- Cannot continue; exiting."
+        quitOr
+    } default {
+        write-host "! ERROR: Whilst a TPM was detected in this system, the WMI reports that it has been deactivated."
+        write-host "  Please re-activate the TPM and try installing again."
+        write-host "- Cannot continue; exiting."
+        quitOr
+    } '1$' {
+        write-host "+ TPM installed and active."
+    } $null {
+        write-host "! ERROR: A fault has occurred during the TPM checking subroutine. Please report this." 
+        quitOr
+    }
+
+    # to those who read my scripts: this logic is taken from the "bitlocker & TPM audit" component, which offers a much more in-depth
+    # look at a device's bitlocker/TPM status than is offered here. grab it from the comstore today! -- seagull nov '21
+}
+
+#download the image
+import-module BitsTransfer -Force
+
+if (!$?) {
+	write-host "! ERROR: Failed to import BitsTransfer module into PowerShell session."
+    write-host "  The command given was: `'import-module BitsTransfer -force`'"
+    write-host "  Please run this command on the local system to see why the module could not be imported."
+    write-host "  Operations aborted: cannot proceed."
+    quitOr
+}
+
+#temporary fix oct 2023
+if ($env:usrImagePath -match 'amp;') {
+    $env:usrImagePath=$env:usrImagePath -replace 'amp;'
+}
+
+write-host "+ BitsTransfer PowerShell module applied; downloading ISO using BITS."
+Start-BitsTransfer "$env:usrImagePath" "$env:PUBLIC\Win11.iso"
+write-host "+ ISO Downloaded to $env:PUBLIC\Win11.iso"
+
+if (test-path "$env:PUBLIC\Win11.iso" -ea 0) {
+    write-host "+ ISO Downloaded to $env:PUBLIC\Win11.iso"
+} else {
+    write-host "! ERROR: Unable to detect Windows 11 ISO in download location."
+    write-host "  This normally means the download failed, which is most likely due to permissions."
+    write-host "  Datto RMM scripts run as NT AUTHORITY\SYSTEM, not the logged-in user; as such, any"
+    write-host "  ISO hosted as part of a network share needs to be accessible by the `'Everyone`'"
+    write-host "  group and not just specific users. Read-only access should be sufficient."
+    write-host "  Ensure this is the case and then re-try the Component."
+    exit 1
+}
+
+#extract the image
+generateSHA256 7z.dll "DB2897EEEA65401EE1BD8FEEEBD0DBAE8867A27FF4575F12B0B8A613444A5EF7"
+generateSHA256 7z.exe "A20D93E7DC3711E8B8A8F63BD148DDC70DE8C952DE882C5495AC121BFEDB749F"
+.\7z.exe x -y "$env:PUBLIC\Win11.iso" `-o"$env:PUBLIC\Win11Extract" -aoa -bsp0 -bso0
+#verify extraction
+if (!(test-path "$env:PUBLIC\Win11Extract\setup.exe" -ErrorAction SilentlyContinue)) {
+    write-host "! ERROR: Extraction of Windows 11 ISO failed."
+    write-host "  Possible causes/fixes:"
+    write-host "    - Download aborted. Check that the ISO can be mounted."
+    write-host "    - Inadequate allowlisting. Ensure the ISO is reachable over the network."
+    write-host "    - Permission issues. On a UNC share, the ISO must be viewable by LocalSystem."
+    write-host "    - Something caused the extraction to fail (very high CPU usage?)"
+    write-host "  Operations aborted: cannot proceed."
+    quitOr
+}
+
+start-sleep -Seconds 15
+Remove-Item "$env:PUBLIC\Win11.iso" -Force
+write-host "+ ISO extracted to $env:PUBLIC\Win11Extract. ISO file deleted."
+
+#make a cleanup script to remove the win11 folder post-install :: ps2 compat
+@"
+@echo off
+REM This is a cleanup script. For more information, consult your systems administrator.
+rd `"$env:PUBLIC\Win11Extract`" /s /q
+del `"$env:PUBLIC\cleanup.bat`" /s /q /f
+"@ | set-content -path "$env:PUBLIC\cleanup.bat" -Force
+
+#verify the windows 11 setup.exe -- just to make sure it's legit
+verifyPackage "$env:PUBLIC\Win11Extract\setup.exe" 'Microsoft Code Signing PCA' "8BFE3107712B3C886B1C96AAEC89984914DC9B6B" "3CAF9BA2DB5570CAF76942FF99101B993888E257" "Windows 11 Setup" "your network location"
+
+#install
+start-sleep -Seconds 30
+if ($env:usrReboot -match 'true') {
+    & "$env:PUBLIC\Win11Extract\setup.exe" /auto upgrade /eula accept /quiet /compat IgnoreWarning /PostOOBE "$env:PUBLIC\cleanup.bat" /showOOBE $env:usrShowOOBE
+} else {
+    & "$env:PUBLIC\Win11Extract\setup.exe" /auto upgrade /eula accept /quiet /compat IgnoreWarning /PostOOBE "$env:PUBLIC\cleanup.bat" /showOOBE $env:usrShowOOBE /NoReboot
+}
+
+#close
+write-host "================================================================"
+write-host "`- The Windows 11 Setup executable has been instructed to begin installation."
+write-host "  This Component has performed its job and will retire, but the task is still ongoing`;"
+write-host "  if errors occur with the installation process, logs will be saved automatically in"
+write-host "  $env:WinDir\logs\SetupDiag\SetupDiagResults.xml after the fact."
+if ($env:usrReboot -match 'true') {
+    write-host "  Please be aware that several hours may pass before the device shows visible signs."
+} else {
+    write-host "  Please allow ~4 hours for the setup preparation step to conclude and then reboot the"
+    write-host "  device to begin the upgrade process."
+}
