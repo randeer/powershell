@@ -447,3 +447,7 @@ if ($env:usrReboot -match 'true') {
     write-host "  Please allow ~4 hours for the setup preparation step to conclude and then reboot the"
     write-host "  device to begin the upgrade process."
 }
+
+
+
+https://www.microsoft.com/en-us/windows/windows-11#pchealthcheck
