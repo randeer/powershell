@@ -1,0 +1,59 @@
+To check
+
+# Define the registry path
+$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppInstaller"
+
+# Define the registry values to check
+$values = @("EnableAppInstaller", "EnableExperimentalFeatures", "EnableMSAppInstallerProtocol")
+
+# Check if the registry path exists
+if (Test-Path $regPath) {
+    foreach ($value in $values) {
+        $regValue = Get-ItemProperty -Path $regPath -Name $value -ErrorAction SilentlyContinue
+        if ($regValue) {
+            Write-Host "$value = $($regValue.$value)" -ForegroundColor Green
+        } else {
+            Write-Host "$value is NOT set" -ForegroundColor Yellow
+        }
+    }
+} else {
+    Write-Host "The registry path does not exist. AppInstaller policies are not configured." -ForegroundColor Red
+}
+
+
+------------------------
+
+to block
+
+# Define the registry path
+$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppInstaller"
+
+# Ensure the registry path exists
+if (!(Test-Path $regPath)) {
+    New-Item -Path $regPath -Force | Out-Null
+}
+
+# Set the registry values to disable winget
+Set-ItemProperty -Path $regPath -Name "EnableAppInstaller" -Value 0 -Type DWord
+Set-ItemProperty -Path $regPath -Name "EnableExperimentalFeatures" -Value 0 -Type DWord
+Set-ItemProperty -Path $regPath -Name "EnableMSAppInstallerProtocol" -Value 0 -Type DWord
+
+Write-Host "winget has been blocked successfully!" -ForegroundColor Green
+--------------------------
+
+enable
+
+# Define the registry path
+$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppInstaller"
+
+# Ensure the registry path exists
+if (!(Test-Path $regPath)) {
+    New-Item -Path $regPath -Force | Out-Null
+}
+
+# Set the registry values to enable winget
+Set-ItemProperty -Path $regPath -Name "EnableAppInstaller" -Value 1 -Type DWord
+Set-ItemProperty -Path $regPath -Name "EnableExperimentalFeatures" -Value 1 -Type DWord
+Set-ItemProperty -Path $regPath -Name "EnableMSAppInstallerProtocol" -Value 1 -Type DWord
+
+Write-Host "winget has been enabled successfully!" -ForegroundColor Green
