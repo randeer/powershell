@@ -1,0 +1,97 @@
+function manuallyPushwinget {
+    # Check if C:\temp exists, create it if it doesn't
+    if (-not (Test-Path "C:\temp")) {
+        New-Item -Path "C:\" -Name "temp" -ItemType "Directory" -Force
+    }
+
+    # Copy winget.zip to C:\temp
+    Copy-Item './winget.zip' -Destination 'C:\Temp\winget.zip' -Force
+
+    # Expand the winget.zip archive to the target directory
+    Expand-Archive -Path "C:\temp\winget.zip" -DestinationPath "C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\" -Force
+
+    # Define the path to the newly expanded winget executable
+    $newwingetpath = "C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\winget.exe"
+
+    # Run the winget upgrade command
+    #& $newwingetpath upgrade --accept-source-agreements --accept-package-agreements --all
+    & $newwingetpath upgrade
+}
+
+
+# Define the registry path and values
+$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppInstaller"
+$regValues = @{
+    EnableAppInstaller            = 1
+    EnableExperimentalFeatures    = 1
+    EnableMSAppInstallerProtocol  = 1
+}
+
+# Check if the registry path exists, and if not, create it
+if (-not (Test-Path $regPath)) {
+    Write-Output "Registry path does not exist. Creating it..."
+    New-Item -Path $regPath -Force
+}
+
+# Update registry values to "1" if they are not already set
+foreach ($valueName in $regValues.Keys) {
+    $currentValue = Get-ItemProperty -Path $regPath -Name $valueName -ErrorAction SilentlyContinue
+
+    # If the registry value doesn't exist or isn't set to 1, set it
+    if ($null -eq $currentValue -or $currentValue.$valueName -ne $regValues[$valueName]) {
+        Write-Output "Setting registry value $valueName to 1"
+        Set-ItemProperty -Path $regPath -Name $valueName -Value $regValues[$valueName]
+    }
+}
+
+# Now proceed with the original winget search and upgrade process
+$wingetPaths = Get-ChildItem -Path "C:\Program Files\WindowsApps" -Recurse -Filter "winget.exe"
+
+# If we find multiple versions, select the one with the highest version based on the folder name
+if ($wingetPaths.Count -gt 0) {
+    # Extract the version numbers from the parent directories
+    $versionedPaths = $wingetPaths | ForEach-Object {
+        $parentDir = $_.DirectoryName
+        # Extract version from the folder name (the last part of the folder path)
+        if ($parentDir -match "Microsoft.DesktopAppInstaller_(\d+\.\d+\.\d+\.\d+)") {
+            [PSCustomObject]@{
+                Path = $_.FullName
+                Version = [version]$matches[1]
+            }
+        }
+    }
+
+    # Find the highest version
+    $latestVersionPath = $versionedPaths | Sort-Object Version -Descending | Select-Object -First 1
+	
+	
+	# Define paths
+$path1 = $latestVersionPath
+$path2 = "C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\winget.exe"
+
+# Extract version numbers from paths
+$version1 = [version]((($path1 -split "_")[1] -split "\.")[0..3] -join ".")
+$version2 = [version]((($path2 -split "_")[1] -split "\.")[0..3] -join ".")
+
+# Compare versions
+if ($version1 -ge $version2) {
+    Write-Host "Functionalble higher version of winget can be find in the system"
+	    # Run winget upgrade with the latest version of winget.exe
+    if ($latestVersionPath) {
+        Write-Output "Using winget version $($latestVersionPath.Version) located at: $($latestVersionPath.Path)"
+        #& $latestVersionPath.Path upgrade --accept-source-agreements --accept-package-agreements --all
+        & $latestVersionPath.Path upgrade
+    } else {
+        Write-Output "No valid winget.exe found!"
+    }
+} else {
+    Write-Host "manuallyPushwinget winget and upgrade"
+	manuallyPushwinget
+}
+
+
+} else {
+    Write-Output "winget.exe not found!"
+	Write-Host "manuallyPushwinget winget and upgrade"
+	manuallyPushwinget
+}
