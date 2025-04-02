@@ -1,36 +1,238 @@
-Winget-Apps Updater
-Configuring winget registry settings...
-No functional winget installation found
+function Install-Winget {
+    param (
+        [string]$ZipPath = './winget.zip',
+        [string]$InstallVersion = '1.25.340.0'
+    )
+    
+    try {
+        # Check if C:\temp exists, create it if it doesn't
+        if (-not (Test-Path "C:\temp")) {
+            New-Item -Path "C:\" -Name "temp" -ItemType "Directory" -Force | Out-Null
+            Write-Output "Created C:\temp directory"
+        }
+        
+        # Verify the zip file exists
+        if (-not (Test-Path $ZipPath)) {
+            Write-Error "Winget ZIP file not found at $ZipPath"
+            return $null
+        }
+        
+        # Target directory for winget installation
+        $targetDir = "C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_${InstallVersion}_x64__8wekyb3d8bbwe\"
+        
+        # Copy winget.zip to C:\temp
+        Write-Output "Copying winget.zip to C:\Temp..."
+        Copy-Item $ZipPath -Destination 'C:\Temp\winget.zip' -Force
+        
+        # Create target directory if it doesn't exist
+        if (-not (Test-Path $targetDir)) {
+            try {
+                New-Item -Path $targetDir -ItemType Directory -Force | Out-Null
+                Write-Output "Created target directory: $targetDir"
+            }
+            catch {
+                Write-Error "Failed to create target directory. You may need administrator privileges: $_"
+                return $null
+            }
+        }
+        
+        # Expand the winget.zip archive to the target directory
+        Write-Output "Extracting winget.zip to $targetDir..."
+        try {
+            Expand-Archive -Path "C:\temp\winget.zip" -DestinationPath $targetDir -Force
+        }
+        catch {
+            Write-Error "Failed to extract winget.zip: $_"
+            return $null
+        }
+        
+        # Define the path to the newly expanded winget executable
+        $newWingetPath = Join-Path $targetDir "winget.exe"
+        
+        # Verify winget executable exists after extraction
+        if (-not (Test-Path $newWingetPath)) {
+            Write-Error "Winget executable not found after extraction"
+            return $null
+        }
+        
+        Write-Output "Successfully installed winget to $newWingetPath"
+        return $newWingetPath
+    }
+    catch {
+        Write-Error "Error in Install-Winget function: $_"
+        return $null
+    }
+}
 
+function Set-WingetRegistrySettings {
+    # Define the registry path and values
+    $regPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppInstaller"
+    $regValues = @{
+        EnableAppInstaller            = 1
+        EnableExperimentalFeatures    = 1
+        EnableMSAppInstallerProtocol  = 1
+    }
+    
+    try {
+        # Check if the registry path exists, and if not, create it
+        if (-not (Test-Path $regPath)) {
+            Write-Output "Registry path does not exist. Creating it..."
+            New-Item -Path $regPath -Force | Out-Null
+        }
+        
+        # Update registry values to "1" if they are not already set
+        foreach ($valueName in $regValues.Keys) {
+            $currentValue = Get-ItemProperty -Path $regPath -Name $valueName -ErrorAction SilentlyContinue
+            # If the registry value doesn't exist or isn't set to 1, set it
+            if ($null -eq $currentValue -or $currentValue.$valueName -ne $regValues[$valueName]) {
+                Write-Output "Setting registry value $valueName to 1"
+                Set-ItemProperty -Path $regPath -Name $valueName -Value $regValues[$valueName]
+            }
+        }
+        return $true
+    }
+    catch {
+        Write-Error "Error setting registry values: $_"
+        return $false
+    }
+}
 
-Winget-Apps Updater
-Test-WingetFunctional : Error testing winget: The expression after '&' in a pipeline element produced an object that 
-was not valid. It must result in a command name, a script block, or a CommandInfo object.
-At C:\ProgramData\CentraStage\Packages\679da966-e3b1-4ea4-8ad3-48b2055ac0fc#\command.ps1:177 char:29
-+ ... Winget -and (Test-WingetFunctional -WingetPath $latestWinget.Path)) {
-+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
-    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Test-WingetFunctional
- 
-Test-WingetFunctional : Error testing winget: The term 'Created C:\temp directory Copying winget.zip to C:\Temp... 
-Created target directory: C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\ 
-Extracting winget.zip to C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\... 
-Successfully installed winget to C:\Program 
-Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\winget.exe C:\Program 
-Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\winget.exe' is not recognized as the 
-name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was 
-included, verify that the path is correct and try again.
-At C:\ProgramData\CentraStage\Packages\679da966-e3b1-4ea4-8ad3-48b2055ac0fc#\command.ps1:196 char:58
-+ ... wingetToUse) -and (Test-WingetFunctional -WingetPath $wingetToUse)) {
-+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
-    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Test-WingetFunctional
- 
-C:\ProgramData\CentraStage\Packages\679da966-e3b1-4ea4-8ad3-48b2055ac0fc#\command.ps1 : No functional winget 
-installation available. Cannot run winget upgrade.
-At line:1 char:1
-+ & 'C:\ProgramData\CentraStage\Packages\679da966-e3b1-4ea4-8ad3-48b205 ...
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
-    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,command.ps1
+function Get-LatestInstalledWinget {
+    try {
+        # Find all winget.exe instances
+        $wingetPaths = Get-ChildItem -Path "C:\Program Files\WindowsApps" -Recurse -Filter "winget.exe" -ErrorAction SilentlyContinue
+        
+        # If we find multiple versions, select the one with the highest version based on the folder name
+        if ($wingetPaths.Count -gt 0) {
+            # Extract the version numbers from the parent directories
+            $versionedPaths = $wingetPaths | ForEach-Object {
+                $parentDir = $_.DirectoryName
+                # Extract version from the folder name
+                if ($parentDir -match "Microsoft.DesktopAppInstaller_(\d+\.\d+\.\d+\.\d+)") {
+                    [PSCustomObject]@{
+                        Path = $_.FullName
+                        Version = [version]$matches[1]
+                    }
+                }
+            }
+            
+            # Find the highest version
+            $latestVersionPath = $versionedPaths | Where-Object { $_ -ne $null } | Sort-Object Version -Descending | Select-Object -First 1
+            
+            if ($latestVersionPath) {
+                Write-Output "Found winget version $($latestVersionPath.Version) at: $($latestVersionPath.Path)"
+                return $latestVersionPath
+            }
+        }
+        
+        Write-Output "No winget installation found on the system"
+        return $null
+    }
+    catch {
+        Write-Error "Error finding winget: $_"
+        return $null
+    }
+}
 
+function Test-WingetFunctional {
+    param(
+        [string]$WingetPath
+    )
+    
+    try {
+        # Make sure the path is valid
+        if ([string]::IsNullOrWhiteSpace($WingetPath) -or -not (Test-Path $WingetPath)) {
+            Write-Output "Invalid winget path: $WingetPath"
+            return $false
+        }
+        
+        # Test if winget is functional by running a simple command
+        $output = & "$WingetPath" --version 2>&1
+        if ($LASTEXITCODE -eq 0) {
+            Write-Output "Winget is functional. Version: $output"
+            return $true
+        }
+        else {
+            Write-Output "Winget exists but is not functional: $output"
+            return $false
+        }
+    }
+    catch {
+        Write-Error "Error testing winget: $_"
+        return $false
+    }
+}
+
+# Main script execution
+try {
+    # Step 1: Configure registry settings for winget
+    Write-Output "Configuring winget registry settings..."
+    $regResult = Set-WingetRegistrySettings
+    if (-not $regResult) {
+        Write-Warning "Failed to configure registry settings. Some winget features may not work properly."
+    }
+    
+    # Step 2: Find existing winget installation
+    $latestWinget = Get-LatestInstalledWinget
+    $requiredVersion = [version]"1.25.340.0"
+    $manualInstallPath = "C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\winget.exe"
+    
+    # Step 3: Determine which winget to use
+    $wingetToUse = $null
+    
+    if ($latestWinget -and $latestWinget.Path) {
+        # Check if the path is valid
+        if (Test-Path $latestWinget.Path) {
+            # Check if existing version is sufficient
+            if ($latestWinget.Version -ge $requiredVersion) {
+                Write-Output "Using existing winget installation (v$($latestWinget.Version))"
+                $wingetToUse = $latestWinget.Path
+                $isWingetFunctional = Test-WingetFunctional -WingetPath $wingetToUse
+                if (-not $isWingetFunctional) {
+                    Write-Output "Existing winget is not functional. Will try manual installation."
+                    $wingetToUse = $null
+                }
+            }
+            else {
+                Write-Output "Existing winget version ($($latestWinget.Version)) is older than required ($requiredVersion)"
+                # Try manual installation
+                $wingetToUse = Install-Winget
+            }
+        }
+        else {
+            Write-Output "Found winget path doesn't exist: $($latestWinget.Path)"
+            $wingetToUse = $null
+        }
+    }
+    else {
+        Write-Output "No functional winget installation found"
+        # Try manual installation
+        $wingetToUse = Install-Winget
+    }
+    
+    # Step 4: Run winget upgrade if we have a functional winget
+    if (-not [string]::IsNullOrEmpty($wingetToUse) -and (Test-Path $wingetToUse)) {
+        $isWingetFunctional = Test-WingetFunctional -WingetPath $wingetToUse
+        if ($isWingetFunctional) {
+            Write-Output "Running winget upgrade with: $wingetToUse"
+            # Run with options to accept agreements and update all packages
+            & "$wingetToUse" upgrade --accept-source-agreements --accept-package-agreements --all
+            
+            if ($LASTEXITCODE -eq 0) {
+                Write-Output "Winget upgrade completed successfully"
+            }
+            else {
+                Write-Error "Winget upgrade failed with exit code: $LASTEXITCODE"
+            }
+        }
+        else {
+            Write-Error "Winget at '$wingetToUse' is not functional. Cannot run winget upgrade."
+        }
+    }
+    else {
+        Write-Error "No functional winget installation available. Cannot run winget upgrade."
+    }
+}
+catch {
+    Write-Error "Script execution failed: $_"
+}
