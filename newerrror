@@ -1,0 +1,19 @@
+Configuring winget registry settings...
+No functional winget installation found
+Running winget upgrade with: Created C:\temp directory Copying winget.zip to C:\Temp... Created target directory: C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\ Extracting winget.zip to C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\... Successfully installed winget to C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\winget.exe C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\winget.exe
+
+
+C:\ProgramData\CentraStage\Packages\679da966-e3b1-4ea4-8ad3-48b2055ac0fc#\command.ps1 : Script execution failed: The 
+term 'Created C:\temp directory Copying winget.zip to C:\Temp... Created target directory: C:\Program 
+Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\ Extracting winget.zip to C:\Program 
+Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\... Successfully installed winget to 
+C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\winget.exe C:\Program 
+Files\WindowsApps\Microsoft.DesktopAppInstaller_1.25.340.0_x64__8wekyb3d8bbwe\winget.exe' is not recognized as the 
+name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was 
+included, verify that the path is correct and try again.
+At line:1 char:1
++ & 'C:\ProgramData\CentraStage\Packages\679da966-e3b1-4ea4-8ad3-48b205 ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
+    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,command.ps1
+ 
