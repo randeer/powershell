@@ -9,6 +9,12 @@ Message Id   : WU_E_PT_HTTP_STATUS_REQUEST_TIMEOUT
 Message Text : Same as HTTP status 408 - the server timed out waiting for the request.
 Update Source        : Microsoft
 
+HResult      : 0x80240438
+Message Id   : WU_E_PT_ENDPOINT_UNREACHABLE
+Message Text : There is no route or network connectivity to the endpoint.
+Update Source        : Microsoft
+ 
+
 
 net stop wuauserv
 net stop cryptSvc
