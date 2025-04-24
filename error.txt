@@ -49,3 +49,7 @@ PSProvider                                   : Microsoft.PowerShell.Core\Registr
 Get-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate" -Name "DisableWindowsUpdateAccess"
 
 
+Set-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate" -Name "DisableWindowsUpdateAccess" -Value 0
+
+
+
