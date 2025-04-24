@@ -8,3 +8,19 @@ HResult      : 0x8024401C
 Message Id   : WU_E_PT_HTTP_STATUS_REQUEST_TIMEOUT
 Message Text : Same as HTTP status 408 - the server timed out waiting for the request.
 Update Source        : Microsoft
+
+
+net stop wuauserv
+net stop cryptSvc
+net stop bits
+net stop msiserver
+ren C:\Windows\SoftwareDistribution SoftwareDistribution.old
+ren C:\Windows\System32\catroot2 catroot2.old
+net start wuauserv
+net start cryptSvc
+net start bits
+net start msiserver
+
+netsh winhttp show proxy
+
+
