@@ -46,3 +46,6 @@ PSDrive                                      : HKLM
 PSProvider                                   : Microsoft.PowerShell.Core\Registry
 
 
+Get-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate" -Name "DisableWindowsUpdateAccess"
+
+
