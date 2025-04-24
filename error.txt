@@ -13,6 +13,12 @@ HResult      : 0x80240438
 Message Id   : WU_E_PT_ENDPOINT_UNREACHABLE
 Message Text : There is no route or network connectivity to the endpoint.
 Update Source        : Microsoft
+
+
+HResult      : 0x8024002E
+Message Id   : WU_E_WU_DISABLED
+Message Text : Access to an unmanaged server is not allowed.
+Update Source        : Microsoft
  
 
 
