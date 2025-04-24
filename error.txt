@@ -1,7 +1,14 @@
-HResult      : 0x8024401C
-Message Id   : WU_E_PT_HTTP_STATUS_REQUEST_TIMEOUT
-Message Text : Same as HTTP status 408 - the server timed out waiting for the request.
-Update Source        : Microsoft
+http://windowsupdate.microsoft.com is not reachable.
+http://www.windowsupdate.microsoft.com is not reachable.
+https://www.windowsupdate.microsoft.com is not reachable.
+http://www.update.microsoft.com is not reachable.
+https://www.update.microsoft.com is not reachable.
+http://www.windowsupdate.com is not reachable.
+http://download.windowsupdate.com is reachable.
+http://download.microsoft.com is reachable.
+http://www.download.windowsupdate.com is reachable.
+http://wustat.windows.com is not reachable.
+http://ntservicepack.microsoft.com is reachable.
 
 
 HResult      : 0x8024401C
