@@ -74,3 +74,23 @@ Found WUStatusServer in HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate 
 Found DisableWindowsUpdateAccess in HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate with value: 0
 Found UseWUServer in HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU with value: 0
 PS C:\>
+
+
+
+
+
+
+
+
+# Remove WUServer and WUStatusServer keys since they're empty but might be causing issues
+Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "WUServer" -ErrorAction SilentlyContinue
+Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "WUStatusServer" -ErrorAction SilentlyContinue
+
+# Enable automatic updates by setting NoAutoUpdate to 0
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "NoAutoUpdate" -Value 0 -Type DWord
+
+# Make sure DoNotConnectToWindowsUpdateInternetLocations is not enabled
+Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "DoNotConnectToWindowsUpdateInternetLocations" -ErrorAction SilentlyContinue
+
+# Restart the Windows Update service
+Restart-Service -Name wuauserv -Force
