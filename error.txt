@@ -24,3 +24,25 @@ net start msiserver
 netsh winhttp show proxy
 
 
+PS C:\> Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" | Format-List
+
+
+WUServer                                     :
+WUStatusServer                               :
+UpdateServiceUrlAlternate                    :
+TargetGroupEnabled                           : 1
+TargetGroup                                  : NC-DAAS-SR
+SetDisablePauseUXAccess                      : 1
+NoAutoUpdate                                 : 1
+DisableWindowsUpdateAccess                   : 1
+TargetReleaseVersion                         : 1
+ProductVersion                               : Windows 10
+TargetReleaseVersionInfo                     :
+DoNotConnectToWindowsUpdateInternetLocations :
+PSPath                                       : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+PSParentPath                                 : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows
+PSChildName                                  : WindowsUpdate
+PSDrive                                      : HKLM
+PSProvider                                   : Microsoft.PowerShell.Core\Registry
+
+
