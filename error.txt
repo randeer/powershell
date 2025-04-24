@@ -1,15 +1,10 @@
-$actions = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument "-NoProfile -ExecutionPolicy Bypass -File C:\Temp\createfile.ps1"
-$trigger = New-ScheduledTaskTrigger -Daily -At '9:15 AM'
-$principal = New-ScheduledTaskPrincipal -GroupId "BUILTIN\Users" -RunLevel Highest
+HResult      : 0x8024401C
+Message Id   : WU_E_PT_HTTP_STATUS_REQUEST_TIMEOUT
+Message Text : Same as HTTP status 408 - the server timed out waiting for the request.
+Update Source        : Microsoft
 
-$settings = New-ScheduledTaskSettingsSet
 
-$task = New-ScheduledTask -Action $actions -Principal $principal -Trigger $trigger -Settings $settings
-
-Register-ScheduledTask 'baznewsystem' -InputObject $task
-
-Start-ScheduledTask -TaskName 'baznewsystem'
---------------------
-Add-AppxPackage -Path C:\Temp\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
-
-New-Item -Path C:\Temp\testrash.txt -ItemType File
+HResult      : 0x8024401C
+Message Id   : WU_E_PT_HTTP_STATUS_REQUEST_TIMEOUT
+Message Text : Same as HTTP status 408 - the server timed out waiting for the request.
+Update Source        : Microsoft
