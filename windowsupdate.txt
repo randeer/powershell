@@ -1,0 +1,76 @@
+PS C:\> # Check Windows Update Policies
+PS C:\> Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -ErrorAction SilentlyContinue | Format-Table -AutoSize
+
+WUServer WUStatusServer UpdateServiceUrlAlternate TargetGroupEnabled TargetGroup SetDisablePauseUXAccess DoNotConnectToWindowsUpdateInternetLocations NoAutoUpdate TargetRe 
+                                                                                                                                                                   leaseVer 
+
+
+PS C:\> 
+PS C:\> # Check AU (Automatic Updates) Settings
+PS C:\> Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -ErrorAction SilentlyContinue | Format-Table -AutoSize
+
+           1           0         2                    1                      0 Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Window... 
+
+
+CacheRetryIntervalMsec IGDSearcherDLL JobInactivityTimeout JobMinimumRetryDelay JobNoProgressTimeout LogFileFlags LogFileMinMemory LogFileSize MaximumBackgroundCacheRetrie 
+                                                                                                                                                                          s 
+---------------------- -------------- -------------------- -------------------- -------------------- ------------ ---------------- ----------- ---------------------------- 
+                  1000 bitsigd.dll                 7776000                  600              1209600            0              120           1                           15 
+
+
+PS C:\>
+PS C:\> # Check Windows Update Agent Settings
+PS C:\> Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" -ErrorAction SilentlyContinue | Format-Table -AutoSize
+LastDownloadsPurgeTime LastTaskOperationHandle SusClientId                          SusClientIdValidation UpdateDesiredVisibility PSPath
+---------------------- ----------------------- -----------                          --------------------- ----------------------- ------
+2025-04-23 09:39:30                         21 801fde22-a156-47f4-acc5-11abb4e8bb75 {6, 2, 64, 1...}                            0 Microsoft.PowerShell.Core\Registry::HK... 
+
+PS C:\> Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -ErrorAction SilentlyContinue | Format-Table -AutoSize
+
+WUServer WUStatusServer UpdateServiceUrlAlternate TargetGroupEnabled TargetGroup SetDisablePauseUXAccess DoNotConnectToWindowsUpdateInternetLocations NoAutoUpdate TargetRe
+
+
+PS C:\> Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -ErrorAction SilentlyContinue | Format-Table -AutoSize
+
+NoAutoUpdate UseWUServer AUOptions AllowMUUpdateService EnableFeaturedSoftware PSPath
+------------ ----------- --------- -------------------- ---------------------- ------
+           1           0         2                    1                      0 Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Window... 
+
+
+PS C:\> Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\BITS" -ErrorAction SilentlyContinue | Format-Table -AutoSize
+
+CacheRetryIntervalMsec IGDSearcherDLL JobInactivityTimeout JobMinimumRetryDelay JobNoProgressTimeout LogFileFlags LogFileMinMemory LogFileSize MaximumBackgroundCacheRetrie 
+                                                                                                                                                                          s 
+                  1000 bitsigd.dll                 7776000                  600              1209600            0              120           1                           15 
+
+
+PS C:\> Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" -ErrorAction SilentlyContinue | Format-Table -AutoSize
+
+LastDownloadsPurgeTime LastTaskOperationHandle SusClientId                          SusClientIdValidation UpdateDesiredVisibility PSPath
+---------------------- ----------------------- -----------                          --------------------- ----------------------- ------
+2025-04-23 09:39:30                         21 801fde22-a156-47f4-acc5-11abb4e8bb75 {6, 2, 64, 1...}                            0 Microsoft.PowerShell.Core\Registry::HK... 
+
+
+PS C:\> # Check if specific problematic keys exist
+PS C:\> $paths = @(
+>>     "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate",
+>>     "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
+>> )
+PS C:\>
+PS C:\> $keysToCheck = @("WUServer", "WUStatusServer", "UseWUServer", "DisableWindowsUpdateAccess")
+PS C:\>
+PS C:\> foreach ($path in $paths) {
+>>     if (Test-Path $path) {
+>>         foreach ($key in $keysToCheck) {
+>>             $value = (Get-ItemProperty -Path $path -Name $key -ErrorAction SilentlyContinue).$key
+>>             if ($null -ne $value) {
+>>                 Write-Host "Found $key in $path with value: $value"
+>>             }
+>>         }
+>>     }
+>> }
+Found WUServer in HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate with value: 
+Found WUStatusServer in HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate with value:
+Found DisableWindowsUpdateAccess in HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate with value: 0
+Found UseWUServer in HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU with value: 0
+PS C:\>
