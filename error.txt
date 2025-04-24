@@ -64,4 +64,39 @@ Get-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate"
 Set-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate" -Name "DisableWindowsUpdateAccess" -Value 0
 
 
+# Check Windows Update Policies
+Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -ErrorAction SilentlyContinue | Format-Table -AutoSize
+
+# Check AU (Automatic Updates) Settings
+Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -ErrorAction SilentlyContinue | Format-Table -AutoSize
+
+# Check BITS Settings
+Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\BITS" -ErrorAction SilentlyContinue | Format-Table -AutoSize
+
+# Check Windows Update Agent Settings
+Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" -ErrorAction SilentlyContinue | Format-Table -AutoSize
+
+# Check Network Settings
+Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" -ErrorAction SilentlyContinue | Format-Table -AutoSize
+
+# Check if specific problematic keys exist
+$paths = @(
+    "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate",
+    "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
+)
+
+$keysToCheck = @("WUServer", "WUStatusServer", "UseWUServer", "DisableWindowsUpdateAccess")
+
+foreach ($path in $paths) {
+    if (Test-Path $path) {
+        foreach ($key in $keysToCheck) {
+            $value = (Get-ItemProperty -Path $path -Name $key -ErrorAction SilentlyContinue).$key
+            if ($null -ne $value) {
+                Write-Host "Found $key in $path with value: $value"
+            }
+        }
+    }
+}
+
+
 
