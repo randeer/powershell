@@ -65,3 +65,13 @@ PSChildName                : AU
 PSDrive                    : HKLM
 PSProvider                 : Microsoft.PowerShell.Core\Registry
 
+
+
+# Enable the class-specific update source policy
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "UseUpdateClassPolicySource" -Value 1 -Type DWord
+
+# Set sources for each update class (if using the new naming convention)
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "UpdateServiceSourceForFeature" -Value 2 -Type DWord
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "UpdateServiceSourceForQuality" -Value 2 -Type DWord
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "UpdateServiceSourceForDriver" -Value 2 -Type DWord
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "UpdateServiceSourceForOther" -Value 2 -Type DWord
