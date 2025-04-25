@@ -1,0 +1,22 @@
+# Create the necessary registry keys if they don't exist
+$updatePath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
+$auPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
+
+if (!(Test-Path $updatePath)) {
+    New-Item -Path $updatePath -Force | Out-Null
+}
+
+# Enable the "Specify source service for specific classes of Windows Updates" policy
+Set-ItemProperty -Path $updatePath -Name "SetUpdateSourceForFeature" -Value 2 -Type DWord
+Set-ItemProperty -Path $updatePath -Name "SetUpdateSourceForQuality" -Value 2 -Type DWord
+Set-ItemProperty -Path $updatePath -Name "SetUpdateSourceForDriver" -Value 2 -Type DWord
+Set-ItemProperty -Path $updatePath -Name "SetUpdateSourceForOther" -Value 2 -Type DWord
+
+# Set "Windows Update" as the source for each update class (value 2 represents Windows Update)
+Set-ItemProperty -Path $updatePath -Name "UpdateSourceForFeature" -Value 2 -Type DWord
+Set-ItemProperty -Path $updatePath -Name "UpdateSourceForQuality" -Value 2 -Type DWord
+Set-ItemProperty -Path $updatePath -Name "UpdateSourceForDriver" -Value 2 -Type DWord
+Set-ItemProperty -Path $updatePath -Name "UpdateSourceForOther" -Value 2 -Type DWord
+
+# Force a policy refresh
+gpupdate /force
