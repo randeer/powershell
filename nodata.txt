@@ -20,3 +20,48 @@ Set-ItemProperty -Path $updatePath -Name "UpdateSourceForOther" -Value 2 -Type D
 
 # Force a policy refresh
 gpupdate /force
+
+
+
+
+PS C:\> Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" | Format-List
+
+
+WUServer                                     : 
+WUStatusServer                               : 
+UpdateServiceUrlAlternate                    : 
+TargetGroupEnabled                           : 1
+TargetGroup                                  : NC-DAAS-SR
+SetDisablePauseUXAccess                      : 1
+NoAutoUpdate                                 : 1
+DisableWindowsUpdateAccess                   : 1
+TargetReleaseVersion                         : 1
+ProductVersion                               : Windows 10
+TargetReleaseVersionInfo                     : 
+DoNotConnectToWindowsUpdateInternetLocations : 0
+SetPolicyDrivenUpdateSourceForFeatureUpdates : 0
+SetPolicyDrivenUpdateSourceForQualityUpdates : 0
+SetPolicyDrivenUpdateSourceForDriverUpdates  : 0
+SetPolicyDrivenUpdateSourceForOtherUpdates   : 0
+PSPath                                       : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+PSParentPath                                 : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows
+PSChildName                                  : WindowsUpdate
+PSDrive                                      : HKLM
+PSProvider                                   : Microsoft.PowerShell.Core\Registry
+
+
+PS C:\> Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" | Format-List
+
+
+NoAutoUpdate               : 0
+UseWUServer                : 0
+AUOptions                  : 2
+AllowMUUpdateService       : 1
+EnableFeaturedSoftware     : 0
+UseUpdateClassPolicySource : 1
+PSPath                     : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
+PSParentPath               : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+PSChildName                : AU
+PSDrive                    : HKLM
+PSProvider                 : Microsoft.PowerShell.Core\Registry
+
