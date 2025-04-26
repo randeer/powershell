@@ -93,7 +93,8 @@ function Restart-WindowsUpdateService {
 
 Create-TempFolder
 Copy-FilesToTemp
-Start-Process "C:\Temp\LGPO.exe" -ArgumentList '/t', 'C:\Temp\WindowsUpdateSourceFix.txt'
+$lgpoPath = "C:\Temp\LGPO.exe"
+& $lgpoPath /t "C:\Temp\WindowsUpdateSourceFix.txt"
 Restart-WindowsUpdateService
 
 
