@@ -1,0 +1,291 @@
+<# windows 11 upgrade tool :: REDUX build 3c/seagull, january 2024
+   user variables: usrOverrideChecks/boolean
+
+   this script, like all datto RMM Component scripts unless otherwise explicitly stated, is the copyrighted property of Datto, Inc.;
+   it may not be shared, sold, or distributed beyond the Datto RMM product, whole or in part, even with modifications applied, for 
+   any reason. this includes on reddit, on discord, or as part of other RMM tools. PCSM is the one exception to this rule.
+   	
+   the moment you edit this script it becomes your own risk and support will not provide assistance with it.
+
+########################################## FUNCTION ZONE ###############################################>
+
+$varScriptDir = split-path -parent $MyInvocation.MyCommand.Definition
+
+function verifyPackage ($file, $certificate, $thumbprint, $name, $url) {
+    $varChain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
+    try {
+        $varChain.Build((Get-AuthenticodeSignature -FilePath "$file").SignerCertificate) | out-null
+    } catch [System.Management.Automation.MethodInvocationException] {
+        write-host "! ERROR: $name installer did not contain a valid digital certificate."
+        write-host "  This could suggest a change in the way $name is packaged; it could"
+        write-host "  also suggest tampering in the connection chain."
+        write-host "- Please ensure $url is whitelisted and try again."
+       write-host "  If this issue persists across different devices, please file a support ticket."
+    }
+
+    $varIntermediate=($varChain.ChainElements | ForEach-Object {$_.Certificate} | Where-Object {$_.Subject -match "$certificate"}).Thumbprint
+
+    if ($varIntermediate -ne $thumbprint) {
+        write-host "! ERROR: $file did not pass verification checks for its digital signature."
+        write-host "  This could suggest that the certificate used to sign the $name installer"
+        write-host "  has changed; it could also suggest tampering in the connection chain."
+        write-host `r
+        if ($varIntermediate) {
+            write-host ": We received: $varIntermediate"
+            write-host "  We expected: $thumbprint"
+            write-host "  Please report this issue."
+        }
+        write-host "- Installation cannot continue. Exiting."
+        exit 1
+    } else {
+        write-host "- Digital Signature verification passed."
+    }
+}
+
+function downloadShortlink ($url, $whitelist, $filename) { #custom :: seagull, datto inc.
+    [Net.ServicePointManager]::SecurityProtocol = [Enum]::ToObject([Net.SecurityProtocolType], 3072)
+    $req = [System.Net.HttpWebRequest]::Create("$url")
+    $req.Method = "HEAD"
+    $response = $req.GetResponse()
+    $varLongLink = $response.ResponseURI.AbsoluteURI
+    (New-Object System.Net.WebClient).DownloadFile("$varLongLink","$filename")
+    $response.close()
+    if (!(test-path $filename)) {
+        write-host "! ERROR: File $varfilename could not be downloaded."
+        write-host "  Please ensure you are whitelisting $whitelist."
+        write-host "- Operations cannot continue; exiting."
+        #exit 1
+    } else {
+        write-host "- Downloaded (as $($filename.split('\\')[-1])) from URL:"
+        write-host "  $varLongLink"
+    }
+}
+
+function quitOr {
+    if ($env:usrOverrideChecks -match 'true') {
+        write-host "! This is a blocking error and should abort the process; however, the usrOverrideChecks"
+        write-host "  flag has been enabled, and the error will thus be ignored."
+        write-host "  Support will not be able to assist with issues that arise as a consequence of this action."
+    } else {
+        write-host "! This is a blocking error; the operation has been aborted."
+        Write-Host "  If you do not believe the error to be valid, you can re-run this Component with the"
+        write-host "  `'usrOverrideChecks`' flag enabled, which will ignore blocking errors and proceed."
+        write-host "  Support will not be able to assist with issues that arise as a consequence of this action."
+        Stop-Process -name setupHost -ErrorAction SilentlyContinue
+        Stop-Process -name mediaTool -ErrorAction SilentlyContinue
+        exit 1
+    }
+}
+
+[int]$varWinver=(Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name CurrentBuildNumber).CurrentBuildNumber
+[int]$varLangCode=cmd /c set /a 0x$((Get-ItemProperty hklm:\system\controlset001\control\nls\language -name InstallLanguage).InstallLanguage)
+[int]$varSKU=(Get-WmiObject -Class win32_operatingsystem -Property OperatingSystemSKU).OperatingSystemSKU
+
+############################################ CODE ZONE #################################################
+
+write-host "Windows 11 Updater: Update any Windows 10+ device to the latest version of Windows 11"
+write-host "==============================================================================="
+write-host "- Device information:"
+write-host ": Hostname:        $env:COMPUTERNAME"
+write-host ": Windows Build:   $varWinver"
+write-host ": Windows Edition: $((get-WMiObject -computername $env:computername -Class win32_operatingSystem).caption)"
+write-host ": System Language: $(([system.globalization.cultureinfo]::GetCultures("AllCultures") | ? {$_.LCID -eq $varLangCode}).DisplayName)"
+if ($env:usrOverrideChecks -match 'true') {
+    write-host "! User has enabled overriding outcomes of script errors - proceed with caution"
+} else {
+    write-host ": Script errors will abort execution as intended (this can be overridden)"
+}
+write-host "- The Component will run the Windows 11 Installation Assistant on the device"
+write-host "  and use the disk image it downloads to install Windows 11 on this device."
+write-host "==============================================================================="
+
+#################### SUBZONE: DEVICE ELIGIBILITY
+
+#windows edition
+if ((4,27,48,49,98,99,100,101,161,162) | ? {$_ -eq $varSKU}) {
+    write-host "- Device Windows SKU ($varSKU) is supported."
+} else {
+    write-host "! ERROR: Device Windows SKU ($varSKU) not supported."
+    write-host "  Please proceed only if you are certain the Edition of Windows currently"
+    write-host "  running on the endpoint is compatible with this installation method."
+    quitOr
+}
+
+#services pipe timeout
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control" /v ServicesPipeTimeout /t REG_DWORD /d "300000" /f 2>&1>$null
+write-host "- Device service timeout period configured to five minutes."
+
+#architecture
+if ((Get-WMIObject -Class Win32_Processor).Architecture -ne 9) {
+    write-host "! ERROR: This device does not have an AMD64/EM64T-capable processor."
+    write-host "  Windows 11 will not run on 32-bit devices."
+    write-host "  Installation cancelled; exiting."
+    exit 1
+} elseif ([intptr]::Size -eq 4) {
+    write-host ": 32-bit Windows detected, but device processor is AMD64/EM64T-capable."
+    write-host "  An architecture upgrade will be attempted; the device will lose"
+    write-host "  the ability to run 16-bit programs, but 32-bit programs will"
+    write-host "  continue to work using Windows-on-Windows (WOW) emulation."
+} else {
+    write-host "- 64-bit architecture checks passed."
+}
+
+#minimum W10 2004
+if ($varWinver -lt 19041) {
+    write-host "! ERROR: Windows 10 version 2004 or higher is required to proceed."
+    exit 1
+} else {
+    write-host "- Windows version check passed."
+}
+
+#licence check
+if ((Get-WmiObject SoftwareLicensingProduct | ? {$_.PartialProductKey -And $_.Name -Like '*Windows(R)*'} | select -First 1).LicenseStatus -ne 1) {
+    write-host "! ERROR: Windows 11 can only be installed on devices with an active Windows licence."
+    quitOr
+} else {
+    write-host "- Windows licence is valid."
+}
+
+#make sure we have enough disk space - installation plus iso hosting
+$varSysFree = [Math]::Round((Get-WMIObject -Class Win32_Volume |Where-Object {$_.DriveLetter -eq $env:SystemDrive} | Select -expand FreeSpace) / 1GB)
+if ($varSysFree -lt 20) {
+    write-host "! ERROR: System drive requires at least 20GB: 13 for installation, 7 for the disc image."
+    quitOr
+} else {
+    write-host "- Device has at least 20GB free hard disk space."
+}
+
+#check for RAM
+if (((Get-WmiObject -class "cim_physicalmemory" | Measure-Object -Property Capacity -Sum).Sum / 1024 / 1024 / 1024) -lt 4) {
+    write-host "! ERROR: This machine may not have enough RAM installed."
+    write-host "  Windows 11 requires at least 4GB of system RAM to be installed."
+    write-host "  In case of errors, please check this device's RAM."
+    quitOr
+} else {
+    write-host "- Device has at least 4GB of RAM installed."
+}
+
+#TPM check
+$varTPM=@(0,0,0) # present :: enabled :: activated
+if ((Get-WmiObject -Class Win32_TPM -EnableAllPrivileges -Namespace "root\CIMV2\Security\MicrosoftTpm").__SERVER) {               # TPM installed
+    $varTPM[0]=1
+    if ((Get-WmiObject -Namespace ROOT\CIMV2\Security\MicrosoftTpm -Class Win32_Tpm).IsEnabled().isenabled -eq $true) {           # TPM enabled
+        $varTPM[1]=1
+        if ((Get-WmiObject -Namespace ROOT\CIMV2\Security\MicrosoftTpm -Class Win32_Tpm).IsActivated().isactivated -eq $true) {   # TPM activated
+            $varTPM[2]=1
+        } else {
+            $varTPM[2]=0
+        }
+    } else {
+        $varTPM[1]=0
+        $varTPM[2]=0
+    }
+}
+
+switch -Regex ($varTPM -as [string]) {
+    '^0' {
+        write-host "! ERROR: This system does not contain a Trusted Platform Module (TPM)."
+        write-host "  Windows 11 requires the use of a TPM to install."
+        write-host "  Your device may contain a firmware TPM (fTPM) which can be enabled in the BIOS/uEFI settings. More info:"
+        write-host "  https://support.microsoft.com/en-us/windows/enable-tpm-2-0-on-your-pc-1fd5a332-360d-4f46-a1e7-ae6b0c90645c"
+        write-host "- Cannot continue; exiting."
+        quitOr
+    } '0 0$' {
+        write-host "! ERROR: Whilst a TPM was detected in this system, the WMI reports that it is disabled."
+        write-host "  Please re-enable the use of the TPM and try installing again."
+        write-host "- Cannot continue; exiting."
+        quitOr
+    } default {
+        write-host "! ERROR: Whilst a TPM was detected in this system, the WMI reports that it has been deactivated."
+        write-host "  Please re-activate the TPM and try installing again."
+        write-host "- Cannot continue; exiting."
+        quitOr
+    } '1$' {
+        write-host "- TPM installed and active."
+    } $null {
+        write-host "! ERROR: A fault has occurred during the TPM checking subroutine. Please report this." 
+        quitOr
+    }
+
+    # to those who read my scripts: this logic is taken from the "bitlocker & TPM audit" component, which offers a much more in-depth
+    # look at a device's bitlocker/TPM status than is offered here. grab it from the comstore today! -- seagull
+}
+
+#previous installation?
+if (test-path "$env:SystemDrive\`$WINDOWS.~WS") {
+    write-host `r
+    write-host "! ERROR: This device contains traces of a prior (last ten days) Windows setup."
+    write-host "  It has been reported that these remnant traces can cause the Setup process to"
+    write-host "  hang, in turn causing the Windows 10 Upgrade Component to time out"
+    write-host "  (`"object reference not set to instance of an object`" error)."
+    write-host ": For reference, the device's current build is $varWinver."
+    write-host "  If the latest Feature Update is not required, mission accomplished; if it is,"
+    write-host "  please first reboot this device, then try upgrading again."
+    write-host `r
+    write-host "  To proceed, the '$env:SystemDrive\`$WINDOWS.~WS' folder must be deleted."
+    quitOr
+}
+
+write-host "==============================================================================="
+downloadShortlink "https://go.microsoft.com/fwlink/?linkid=2171764" "https://download.microsoft.com" "$varScriptDir\installAssistant.exe"
+verifyPackage "$varScriptDir\installAssistant.exe" "Microsoft Code Signing PCA" "F252E794FE438E35ACE6E53762C0A234A2C52135" "Microsoft Update Assistant" "https://download.microsoft.com"
+
+#kick off the update
+start-process "$varScriptDir\installAssistant.exe" -argumentlist "/quietinstall /skipeula /auto upgrade"
+#make sure it's done something
+start-sleep -Seconds 120
+
+<#
+    looking to add an option to stop the device from rebooting automatically?
+    unfortunately the tool we're using, the windows 11 install assistant, lacks such a flag.
+    the flags we use above - "/quietinstall /skipeula /auto upgrade" - are the only useful flags we could find.
+    naturally the documentation for this is poor, but there is no indication of any reboot option.
+    https://superuser.com/questions/1681291/command-line-options-for-windows-11-installation-assistant
+    (there is "norestartUI" but that doesn't do what you'd think it does.)
+
+    - seagull, january 2024
+#>
+
+#lookup UA configuration.ini for ESD download location :: jim d., datto labs
+$updateConfigINI = "${env:ProgramFiles(x86)}\WindowsInstallationAssistant\Configuration.ini" #config.ini contains download path
+If (!(test-path $updateConfigINI)) {
+    Write-Host "! ERROR: Configuration.ini not found. Installation Assistant has likely suffered an error." #previous failed UA install attempt can leave UA directory in a broken state. ETL file permission/ownership cannot be regained and ini cannot be rewritten.
+    write-host "  Please attend to the device directly."
+    write-host "  The device may require further attention or an ISO based install."
+    write-host "- Setup process aborted."
+    Stop-Process -name Windows10UpgraderApp -ErrorAction SilentlyContinue -Force #you'd think it'd be Windows11UpgraderApp, but it isn't
+    Stop-Process -name installAssistant -ErrorAction SilentlyContinue -Force
+    exit 1 
+} else {
+    $select = select-string -path $updateConfigINI -Pattern "DownloadESDFolder" | select line
+    $DownloadESDFolder = $select.Line.Split('=')[1]
+    if (!(test-path "$DownloadESDFolder*.esd")) {
+            write-host "! ERROR: Could not confirm that an ESD is being downloaded."
+            write-host "  This usually means that the device does not see itself as requiring an update."
+            write-host "  Please attend to the device directly; it may require further attention."
+            write-host "- Setup process aborted."
+            Stop-Process -name Windows10UpgraderApp -ErrorAction SilentlyContinue -Force #again, not a typo
+            Stop-Process -name installAssistant -ErrorAction SilentlyContinue -Force
+            exit 1
+        } else {
+        ## Check ESD file activity is valid and current
+        $hours_to_check=$(Get-Date).AddMinutes(-10)
+        Get-Item $DownloadESDFolder*.esd | ? { $_.LastWriteTime -gt $hours_to_check } -OutVariable esdValid | % {write-host ": ESD: $DownloadESDFolder$($_.Name)"}
+        If ($esdValid.count -eq 0) {
+            write-host "! NOTICE: The script was unable to confirm that Windows 11 setup files are being downloaded."
+            write-host "  This may indicate a simple delay; it may alternatively suggest greater issues."
+            write-host "  Please allow the endpoint an hour before inspecting it. An active installation can be noted"
+            write-host "  by the presence of an ESD file in $DownloadESDFolder; if there is no such file, please"
+            write-host "  consider running the Update Assistant manually on the device to see if any errors arise."
+            exit 1
+        }
+    }
+}
+
+write-host "- The Windows 11 Setup executable has been instructed to begin installation."
+write-host "  This Component has performed its job and will retire, but the task is still ongoing;"
+write-host "  if errors occur with the installation process, they will require user attention."
+write-host "  Installation logs are populated into '$env:SystemDrive\`$Windows.~bt\Sources'."
+write-host "  (Make sure the ESD has been downloaded and the installation has failed before checking!)"
+write-host `r
+write-host "  The device should reboot automatically but this may take several hours."
