@@ -15,6 +15,9 @@ Set-ExecutionPolicy Restricted -Scope CurrentUser
 Install-WindowsUpdate -AcceptAll
 Install-WindowsUpdate -AcceptAll -AutoReboot
 
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "TargetReleaseVersion" -Value 1
+
+
 
 # Set ProductVersion to "Windows 11"
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "ProductVersion" -Value "Windows 11"
