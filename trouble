@@ -98,4 +98,9 @@ $lgpoPath = "C:\Temp\LGPO.exe"
 Restart-WindowsUpdateService
 
 
+18.2407.1241.0
+16.0.13001.20266
+16.0.18730.20168
+16.0.17928.20512
+
 
