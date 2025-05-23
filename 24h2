@@ -2,7 +2,9 @@ Start-Process "Windows11InstallationAssistant.exe" -ArgumentList "/quietinstall 
 
 
 Get-WmiObject -Class Win32_QuickFixEngineering | Select-Object HotFixID, InstalledOn, @{Name="RebootRequired"; Expression={ (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired" -ErrorAction SilentlyContinue) -ne $null }}
-I will provide an update once these exams are completed.
 
-Best Regards,
-Randeer
+
+$Session = New-Object -ComObject Microsoft.Update.Session
+$Searcher = $Session.CreateUpdateSearcher()
+$InstalledUpdates = $Searcher.Search("IsInstalled=1").Updates
+$InstalledUpdates | Select-Object Title, @{Name="NeedsReboot"; Expression={$_.RebootRequired}}
