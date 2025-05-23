@@ -1,24 +1,7 @@
 Start-Process "Windows11InstallationAssistant.exe" -ArgumentList "/quietinstall /skipeula /auto upgrade
 
 
-Subject: Certification Update
-
-Hi Mark,
-
-I am currently certified in the following:
-
-Microsoft Certified: Azure Administrator Associate – Expires on October 21, 2026
-
-Microsoft Certified: Azure Security Engineer Associate – Expires on March 25, 2026
-
-Both certifications are up to date and have been successfully renewed. Please find them attached to this email.
-
-As for my current to-do list, I am actively studying for the following certifications:
-
-MD-102: Microsoft 365 Certified – Endpoint Administrator Associate
-
-MS-102: Microsoft 365 Administrator
-
+Get-WmiObject -Class Win32_QuickFixEngineering | Select-Object HotFixID, InstalledOn, @{Name="RebootRequired"; Expression={ (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired" -ErrorAction SilentlyContinue) -ne $null }}
 I will provide an update once these exams are completed.
 
 Best Regards,
