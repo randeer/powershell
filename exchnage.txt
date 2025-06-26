@@ -1,1 +1,21 @@
-Get-ExchangeServer | Format-Name, AdminDisplayVersion
+Hi Sutter,
+
+Following the investigation into the reported disk space issue on HSTPMGMT-01, I have identified two key concerns: high resource utilization and an Exchange Server version mismatch.
+
+1. Server Resource Utilization
+The server is currently configured with only 8GB of RAM.
+During monitoring, memory usage remained consistently high at around 95%, accompanied by significant CPU load.
+These resource constraints could contribute to the server’s slow performance and may have interfered with past update processes.
+It would be advisable to consider increasing the server’s memory to improve stability and performance, especially during update operations.
+
+2. Exchange Server Version Inconsistency
+During the review, a significant discrepancy in the Exchange Server version was observed:
+
+ExSetup.exe reports: 15.2.1118.40
+Get-ExchangeServer reports actual running version: 15.2 (Build 1118.21)
+
+This indicates that the server is still running an outdated and vulnerable version (1118.21), even though files from a newer version (1118.40) are present.
+
+This mismatch suggests that a previous update attempt did not complete successfully, or the installation encountered issues that left the server in a partially updated or inconsistent state.
+
+Therefore, it would be better to perform a manual update of Exchange to the latest cumulative version. After verifying the stability of the system, the older OWA build artifacts can be safely deleted to reclaim disk space, according to the article I reviewed.
