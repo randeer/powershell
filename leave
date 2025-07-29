@@ -1,9 +1,140 @@
-Hi Jenn,
+Hi Randeer,
 
-Thank you for the clarification regarding the process for holiday and PTO requests. I appreciate your guidance on this.
+Discussing this further with April, the identified offline devices are not coming online and are never expected to come online, so the script used will not be needed in the future. What will be needed is an update from the current deployment script for AnyConnect to a new deployment script for the Cisco Secure Client.
 
-We had submitted our requests through AT two weeks ago, following the advisory that was shared previously. However, to ensure I'm fully align with the correct procedures going forward, could you kindly share the process document for both the Sick and PTO requests?
+Feel free to loop in @Azaam Basheer for assistance as needed, but the goal will be to use the new Secure Client MSI for deployment using the same OnConnect.bat script and profile from the AnyConnect component. Cisco updated the MSIs and locations for the new installer. Installer can be downloaded on the Meraki Network YC-355SGrandAve >  Security & SD-WAN > Client VPN > Cisco Secure Client Settings
 
-Thank you for your understanding and support. I look forward to being in complete alignment with the team's processes moving forward.
 
-Best regards,
+They also use the Umbrella Roaming agent, so this guide appears relevant where installation requires Secure Client, Roaming Agent, and the DART Tool
+
+ Customize Windows Installation of Cisco Secure Client
+
+Cisco Secure Client (including AnyConnect) Administrator Guide, Release 5 - Customize and Localize Cisco Secure Client and Installer [Cisco Secure Client (including AnyConnect)] - Cisco
+
+Please review the documents, prepare a new RMM component for YC's site, and let us know when it's ready for testing so that April can validate it with George.
+
+
+
+https://docs.umbrella.com/deployment-umbrella/docs/customize-windows-installation-of-cisco-secure-client
+
+https://www.cisco.com/c/en/us/td/docs/security/vpn_client/anyconnect/Cisco-Secure-Client-5/admin/guide/b-cisco-secure-client-admin-guide-5-0/customize-localize-anyconnect.html
+
+
+C:\Users\RandeerLalanga\Downloads\cisco-secure-client-win-5.1.10.233-predeploy-k9>dir
+ Volume in drive C has no label.
+ Volume Serial Number is F49C-A820
+
+ Directory of C:\Users\RandeerLalanga\Downloads\cisco-secure-client-win-5.1.10.233-predeploy-k9
+
+07/28/2025  03:39 AM    <DIR>          .
+07/28/2025  09:04 PM    <DIR>          ..
+07/28/2025  03:39 AM        11,493,376 cisco-secure-client-win-1.240.2-thousandeyes-predeploy-k9.msi
+07/28/2025  03:39 AM        31,950,336 cisco-secure-client-win-5.1.10.1720-zta-predeploy-k9.msi
+07/28/2025  03:39 AM        23,095,808 cisco-secure-client-win-5.1.10.233-core-vpn-predeploy-k9.msi
+07/28/2025  03:39 AM         7,091,200 cisco-secure-client-win-5.1.10.233-dart-predeploy-k9.msi
+07/28/2025  03:39 AM         4,850,176 cisco-secure-client-win-5.1.10.233-iseposture-predeploy-k9.msi
+07/28/2025  03:39 AM         7,304,192 cisco-secure-client-win-5.1.10.233-nam-predeploy-k9.msi
+07/28/2025  03:39 AM        24,630,272 cisco-secure-client-win-5.1.10.233-nvm-predeploy-k9.msi
+07/28/2025  03:39 AM        34,672,640 cisco-secure-client-win-5.1.10.233-posture-predeploy-k9.msi
+07/28/2025  03:39 AM         3,153,408 cisco-secure-client-win-5.1.10.233-sbl-predeploy-k9.msi
+07/28/2025  03:39 AM         5,749,760 cisco-secure-client-win-5.1.10.233-umbrella-predeploy-k9.msi
+07/28/2025  03:39 AM    <DIR>          Profiles
+07/28/2025  03:39 AM    <DIR>          Setup
+07/28/2025  03:39 AM         1,034,160 Setup.exe
+07/28/2025  03:39 AM            22,713 setup.hta
+              12 File(s)    155,048,041 bytes
+               4 Dir(s)  404,780,032,000 bytes free
+
+
+
+##STATIC VARIABLES##
+$AnyConnectArguments = "/i cisco-secure-client-win-5.0.03076-core-vpn-predeploy-k9.msi /norestart /quiet /lvx* $env:ProgramData\AnyConnectInstall.log"
+$DARTArguments = "/i cisco-secure-client-win-5.0.03076-dart-predeploy-k9.msi /norestart /quiet /lvx* $env:ProgramData\DARTInstall.log"
+$Warning = $false
+
+##SCRIPT START##
+#Temporarily change PowerShell Execution Policy
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process -Force
+
+#Banner
+Write-Output "Cisco AnyConnect Secure Mobility Client Installer"
+Write-Output "========================================================="
+
+#Install Cisco AnyConnect Secure Mobility Client
+Write-Output "`nInstalling Cisco AnyConnect Secure Mobility Client..."
+$AnyConnectInstallation = Start-Process -FilePath "$env:systemroot\system32\msiexec.exe" -NoNewWindow -PassThru -Wait -ArgumentList $AnyConnectArguments
+
+#Check the installation status
+$exitcode = $AnyConnectInstallation.ExitCode
+
+#If the installation is successful > exit code is 0
+if ($exitcode -eq 0)
+    {
+        Write-Output "Cisco AnyConnect Secure Mobility Client was installed successfully."
+    }
+
+#If the installation encountered errors > exit code is not 0
+else
+    {
+        Write-Output "WARNING: The component encountered errors while installing Cisco AnyConnect Secure Mobility Client."
+        Write-Output "Please refer `"$env:ProgramData\AnyConnectInstall.log`" for more information."
+        $Warning = $true
+    }
+
+#Install Cisco AnyConnect Diagnostics and Reporting Tool
+Write-Output "`nInstalling Cisco AnyConnect Diagnostics and Reporting Tool..."
+$DARTInstallation = Start-Process -FilePath "$env:systemroot\system32\msiexec.exe" -NoNewWindow -PassThru -Wait -ArgumentList $DARTArguments
+
+#Check the installation status
+$exitcode = $DARTInstallation.ExitCode
+
+#If the installation is successful > exit code is 0
+if ($exitcode -eq 0)
+    {
+        Write-Output "Cisco AnyConnect Diagnostics and Reporting Tool was installed successfully."
+    }
+
+#If the installation encountered errors > exit code is not 0
+else
+    {
+        Write-Output "`nWARNING: The component encountered errors while installing Cisco AnyConnect Diagnostics and Reporting Tool."
+        Write-Output "Please refer `"$env:ProgramData\DARTInstall.log`" for more information."
+        $Warning = $true
+    }
+
+#Copy the configuration file to "%ProgramData%\Cisco\Cisco Secure Client\VPN\Profile" folder
+if ((Test-Path -Path "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Profile"))
+    {
+        #If the configuration file exists, replace it
+        if ((Test-Path -Path "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Profile\AnyConnect.xml" -PathType Leaf))
+            {
+                Remove-Item -Path "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Profile\AnyConnect.xml" -Force -ErrorAction SilentlyContinue
+            }
+        
+        Copy-Item ./AnyConnect.xml -Destination "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Profile" -Force -ErrorAction SilentlyContinue
+
+        Write-Output "`nVPN configuration file was saved to `"$env:ProgramData\Cisco\Cisco Secure Client\VPN\Profile`"."
+    }
+#Copy the OnConnect file to "%ProgramData%\Cisco\Cisco AnyConnect Secure Mobility Client\Script" folder
+if ((Test-Path -Path "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Script"))
+    {
+        #If the configuration file exists, replace it
+        if ((Test-Path -Path "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Script\OnConnect.bat" -PathType Leaf))
+            {
+                Remove-Item -Path "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Script\OnConnect.bat" -Force -ErrorAction SilentlyContinue
+            }
+        
+        Copy-Item ./OnConnect.bat -Destination "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Script" -Force -ErrorAction SilentlyContinue
+
+        Write-Output "`nVPN configuration file was saved to `"$env:ProgramData\Cisco\Cisco Secure Client\VPN\Script`"."
+    } 
+ if ($Warning -eq $false)
+    {
+        Write-Output "`nInstallation completed successfully. Exiting now!"
+    }
+else
+    {
+        Write-Output "`nInstallation completed with warnings. Exiting now!"
+    }
+##SCRIPT END##
+
