@@ -140,9 +140,9 @@ else
 
 ------------------------------------------------------------
 ##STATIC VARIABLES##
-$CoreVPNArguments = "/i cisco-secure-client-win-5.1.10.233-core-vpn-predeploy-k9.msi /norestart /quiet /lvx* $env:ProgramData\CiscoSecureClientInstall.log"
-$DARTArguments = "/i cisco-secure-client-win-5.1.10.233-dart-predeploy-k9.msi /norestart /quiet /lvx* $env:ProgramData\DARTInstall.log"
-$UmbrellaArguments = "/i cisco-secure-client-win-5.1.10.233-umbrella-predeploy-k9.msi /norestart /quiet /lvx* $env:ProgramData\UmbrellaInstall.log"
+$CoreVPNArguments = "/i `"cisco-secure-client-win-5.1.10.233-core-vpn-predeploy-k9.msi`" /norestart /quiet /lvx* `"$env:ProgramData\CiscoSecureClientInstall.log`""
+$UmbrellaArguments = "/i `"cisco-secure-client-win-5.1.10.233-umbrella-predeploy-k9.msi`" /norestart /quiet /lvx* `"$env:ProgramData\UmbrellaInstall.log`""
+$DARTArguments = "/i `"cisco-secure-client-win-5.1.10.233-dart-predeploy-k9.msi`" /norestart /quiet /lvx* `"$env:ProgramData\DARTInstall.log`""
 $Warning = $false
 
 ##SCRIPT START##
@@ -153,67 +153,75 @@ Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process -Force
 Write-Output "Cisco Secure Client Installer"
 Write-Output "========================================================="
 
-#Install Core VPN Client
-Write-Output "`nInstalling Cisco Secure Client (Core VPN)..."
+# 1. Install Core VPN Client
+Write-Output "`n[1/3] Installing Cisco Secure Client (Core VPN)..."
 $CoreVPNInstallation = Start-Process -FilePath "$env:systemroot\system32\msiexec.exe" -NoNewWindow -PassThru -Wait -ArgumentList $CoreVPNArguments
 
-#Check the installation status
-$exitcode = $CoreVPNInstallation.ExitCode
-if ($exitcode -eq 0) {
-    Write-Output "Cisco Secure Client (Core VPN) was installed successfully."
+if ($CoreVPNInstallation.ExitCode -eq 0) {
+    Write-Output "SUCCESS: Core VPN installed"
 } else {
-    Write-Output "WARNING: Errors installing Cisco Secure Client (Core VPN)."
-    Write-Output "Refer to `"$env:ProgramData\CiscoSecureClientInstall.log`" for details."
+    Write-Output "WARNING: Core VPN install failed (Code $($CoreVPNInstallation.ExitCode))"
+    Write-Output "Check log: $env:ProgramData\CiscoSecureClientInstall.log"
     $Warning = $true
 }
 
-#Install Umbrella Roaming Security Module
-Write-Output "`nInstalling Umbrella Roaming Security Module..."
+# 2. Install Umbrella Module
+Write-Output "`n[2/3] Installing Umbrella Roaming Security Module..."
 $UmbrellaInstallation = Start-Process -FilePath "$env:systemroot\system32\msiexec.exe" -NoNewWindow -PassThru -Wait -ArgumentList $UmbrellaArguments
 
-$exitcode = $UmbrellaInstallation.ExitCode
-if ($exitcode -eq 0) {
-    Write-Output "Umbrella Roaming Security Module was installed successfully."
+if ($UmbrellaInstallation.ExitCode -eq 0) {
+    Write-Output "SUCCESS: Umbrella module installed"
 } else {
-    Write-Output "`nWARNING: Errors installing Umbrella Roaming Security Module."
-    Write-Output "Refer to `"$env:ProgramData\UmbrellaInstall.log`" for details."
+    Write-Output "WARNING: Umbrella install failed (Code $($UmbrellaInstallation.ExitCode))"
+    Write-Output "Check log: $env:ProgramData\UmbrellaInstall.log"
     $Warning = $true
 }
 
-#Install DART Tool
-Write-Output "`nInstalling Cisco Diagnostics and Reporting Tool (DART)..."
+# 3. Install DART Tool
+Write-Output "`n[3/3] Installing Diagnostics and Reporting Tool (DART)..."
 $DARTInstallation = Start-Process -FilePath "$env:systemroot\system32\msiexec.exe" -NoNewWindow -PassThru -Wait -ArgumentList $DARTArguments
 
-$exitcode = $DARTInstallation.ExitCode
-if ($exitcode -eq 0) {
-    Write-Output "Cisco DART was installed successfully."
+if ($DARTInstallation.ExitCode -eq 0) {
+    Write-Output "SUCCESS: DART tool installed"
 } else {
-    Write-Output "`nWARNING: Errors installing Cisco DART."
-    Write-Output "Refer to `"$env:ProgramData\DARTInstall.log`" for details."
+    Write-Output "WARNING: DART install failed (Code $($DARTInstallation.ExitCode))"
+    Write-Output "Check log: $env:ProgramData\DARTInstall.log"
     $Warning = $true
 }
 
-#Copy the configuration file to "%ProgramData%\Cisco\Cisco Secure Client\VPN\Profile" folder
-if ((Test-Path -Path "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Profile")) {
-    if ((Test-Path -Path "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Profile\AnyConnect.xml" -PathType Leaf)) {
-        Remove-Item -Path "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Profile\AnyConnect.xml" -Force -ErrorAction SilentlyContinue
+# Configuration Deployment
+Write-Output "`nDeploying configuration files..."
+try {
+    # Ensure target directories exist
+    $profilePath = "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Profile"
+    $scriptPath = "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Script"
+    
+    New-Item -ItemType Directory -Path $profilePath -Force | Out-Null
+    New-Item -ItemType Directory -Path $scriptPath -Force | Out-Null
+
+    # Deploy AnyConnect.xml if exists
+    if (Test-Path ".\AnyConnect.xml") {
+        Copy-Item ".\AnyConnect.xml" -Destination $profilePath -Force
+        Write-Output "Deployed VPN profile to $profilePath"
     }
-    Copy-Item ./AnyConnect.xml -Destination "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Profile" -Force -ErrorAction SilentlyContinue
-    Write-Output "`nVPN configuration file was saved to `"$env:ProgramData\Cisco\Cisco Secure Client\VPN\Profile`"."
+
+    # Deploy OnConnect.bat if exists
+    if (Test-Path ".\OnConnect.bat") {
+        Copy-Item ".\OnConnect.bat" -Destination $scriptPath -Force
+        Write-Output "Deployed OnConnect script to $scriptPath"
+    }
+}
+catch {
+    Write-Output "WARNING: Error deploying configuration files"
+    $Warning = $true
 }
 
-#Copy the OnConnect script
-if ((Test-Path -Path "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Script")) {
-    if ((Test-Path -Path "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Script\OnConnect.bat" -PathType Leaf)) {
-        Remove-Item -Path "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Script\OnConnect.bat" -Force -ErrorAction SilentlyContinue
-    }
-    Copy-Item ./OnConnect.bat -Destination "$env:ProgramData\Cisco\Cisco Secure Client\VPN\Script" -Force -ErrorAction SilentlyContinue
-    Write-Output "`nOnConnect script was saved to `"$env:ProgramData\Cisco\Cisco Secure Client\VPN\Script`"."
-} 
-
-if ($Warning -eq $false) {
-    Write-Output "`nInstallation completed successfully. Exiting now!"
+# Completion message
+if (-not $Warning) {
+    Write-Output "`nCOMPLETE: All components installed successfully"
 } else {
-    Write-Output "`nInstallation completed with warnings. Exiting now!"
+    Write-Output "`nCOMPLETE WITH WARNINGS: Some components may not have installed correctly"
+    Write-Output "Check the log files in $env:ProgramData for details"
 }
+
 ##SCRIPT END##
