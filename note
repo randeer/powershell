@@ -5,3 +5,6 @@ CN=Dfs-Configuration
 
 dfsutil cache referral flush
 dfsutil cache domain flush
+
+repadmin /syncall /AdeP
+repadmin /showrepl
