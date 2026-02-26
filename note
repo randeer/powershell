@@ -1,7 +1,7 @@
 CN=Dfs-Configuration
  └─ CN=System
     └─ DC=bautelaw,DC=local
-
+https://chatgpt.com/share/699fee03-b858-800c-919a-b7e0ca382c49
 
 dfsutil cache referral flush
 dfsutil cache domain flush
