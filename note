@@ -8,3 +8,53 @@ dfsutil cache domain flush
 
 repadmin /syncall /AdeP
 repadmin /showrepl
+
+
+
+What is the change that is being made?
+To delete and remove unused "NS" DFSR namespace from Active Directory Domain enviroment
+
+Why is the change being requested?
+To remove unneccassary records from the domain <-- I think this is also similler like before question 1
+
+When will the change be implemented?
+<SPECIFIC DAY, DATE @ TIME>
+
+Will there be downtime? If so, which systems and for how long?
+There is no downtime of any servers
+
+What is the Potential Risk or Business Impact?
+This namespace "NS" is at the moment not working, therefore no business impact
+
+
+Will there be an expense to the client?
+No
+
+Who will be implementing the change?
+Randeer Lalanga
+
+What are the steps for implementing the change?
+Login to BCH-DC01
+Open powershell as administrator and run Get-DfsnRoot to see the dead unsuable DFSR namespace status.
+Then run "adsiedit.msc" to open ADSI Edit and then connect to "Deafult Naming Context" and then Navigate to 
+CN=Dfs-Configuration
+ └─ CN=System
+    └─ DC=bautelaw,DC=local
+Look for (inside CN=Dfs-Configuration) CN=NS and then Right click and delete it.
+Perfrom metadata cleanup and remove DC-03
+repadmin /syncall /AdeP
+repadmin /showrepl
+Then run following commands;
+ipconfig /flushdns
+dfsutil cache referral flush
+dfsutil cache domain flush
+and for the last step run Get-DfsnRoot
+Delete and remove DC-03 from RMM and Datto backups
+
+After the change has been made, how will you test that it was successful?
+After completing all the neeccaasary task need to run "Get-DfsnRoot" and if it is does not give any outputs task completed successfully and old "NS" namespace is fully removed from the domain
+
+Test <business function> by:
+
+What is the rollback plan?
+<WHAT ARE THE EXACT STEPS FOR ROLLBACK - WHAT WOULD NEED TO BE DONE IF YOU WERE NOT HERE>
