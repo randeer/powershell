@@ -1,6 +1,1 @@
-Get-Process | Where-Object {$_.Path -like "*eSub*"} | Select Name, Path
-
-
-F:\FileShare\eSubmitter
-
-F:\FileShare\eSubmitter\eSubmitter Installer
+https://chatgpt.com/share/69bd0fc0-a870-800c-8a2a-feea3f3ee82e
