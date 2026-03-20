@@ -2,3 +2,5 @@ Get-Process | Where-Object {$_.Path -like "*eSub*"} | Select Name, Path
 
 
 F:\FileShare\eSubmitter
+
+F:\FileShare\eSubmitter\eSubmitter Installer
