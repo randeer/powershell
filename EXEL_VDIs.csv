@@ -1,13 +1,42 @@
-PS C:\eSubApps\eSub_v3\JExpress\uninstaller> ls
+What is the change that is being made?
+eSubmitter needs to be updated and automatic updates are not currently available. 
+Why is the change being requested?
+Software is out-of-date for the end-users and no longer compliant with FDA regulations because of it.
+When will the change be implemented?
+3/20 @ 1am
+Will there be downtime? If so, which systems and for how long?
+During this maintenance the app will be unavailable. 
+What is the Potential Risk or Business Impact?
+Users will be unable to submit files during this upgrade. 
+Will there be an expense to the client?
+Yes, up to 4 hours.
+Who will be implementing the change?
+Randeer
+What are the steps for implementing the change?
+Before installation, uninstall any other versions of the eSubmitter software.
+use Windows Explorer to navigate to the eSub folder of the installed drive: \\EXEL-FP01.exel.local\eSubmitter\Data\JExpress
+Locate and double-click the Uninstall.exe file to launch the uninstallation wizard
+If you cannot locate the Uninstall.exe file in your eSubmitter installation directory, it may
+be hidden by your system settings. To make hidden files visible:
+a. Open File Explorer and navigate to your eSubmitter directory (typically
+C:\eSubApps\eSub_v3)
+b. Click on the "View" tab in the ribbon menu
+c. Check the box for "Hidden items" to display hidden files and folders
+d. The Uninstall.exe file should now be visible in the directory
+Follow the on-screen prompts to complete the standard uninstallation process
+After the uninstaller completes, manually delete the entire eSubApps directory
+Navigate to C:\Users\Public
+Locate the eSub_Home directory
+Important: Rename this directory to eSub_Home_bkup instead of deleting it (This preserves any previously created forms or submissions for potential future
+recover)
+To install the latest version of the FDA eSubmitter software, navigate to the C:/temp folder and extract the zip containing jinstall.exe
+ double-click on the jinstall.exe and run the installer https://www.fda.gov/industry/fda-esubmitter/esubmitter-download-and-installation
+STS configs are noted here https://stspartner.huducloud.com/kba/78623facb7dd
+The three users at Exel will now need to have the app uninstalled and re-installed with the latest version as a local instance: Jeffery Qian, Carissa Saenez, and Sharon Sambat.
+After the change has been made, how will you test that it was successful?
 
-
-    Directory: C:\eSubApps\eSub_v3\JExpress\uninstaller
-
-
-Mode                 LastWriteTime         Length Name
-----                 -------------         ------ ----
--a----         11/5/2025  11:19 PM        1317603 JExpressUninstaller.jar
--a----         11/5/2025  11:19 PM            135 specmenu
--a----         11/5/2025  11:19 PM            111 specreg
--a----         11/5/2025  11:19 PM            519 uninstall
--a----         11/5/2025  11:19 PM            210 uninstall.control
+Test by:
+Launch app on server and verify that it is the current version, instead of version 3.76.01 Build 1
+Confirm the same for a user device
+What is the rollback plan?
+Restore EXEL-FP01 to previous state 
