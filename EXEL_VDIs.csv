@@ -1,15 +1,1 @@
-$ErrorActionPreference = 'SilentlyContinue'
-
-# Define drive mappings
-$DriveLetter = "Y:"
-$SharePath = "\\EXEL-FP01.EXEL.LOCAL\eSubmitter\"
- 
-# Remove any existing Y: mapping
-if (Get-PSDrive -Name ($DriveLetter.TrimEnd(':')) -ErrorAction SilentlyContinue) {
-    net use $DriveLetter /delete /y | Out-Null
-}
- 
-# Map the drive only if the share is accessible
-if (Test-Path $SharePath) {
-    net use $DriveLetter $SharePath /persistent:yes | Out-Null
-
+Get-Process eSubmitterv3 | Select-Object Path
