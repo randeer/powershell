@@ -1,1 +1,7 @@
-Get-Process eSubmitterv3 | Select-Object Path
+PS C:\eSubApps\eSub_v3\JExpress\uninstaller> Get-Process eSubmitterv3 | Select-Object Path
+Get-Process : Cannot find a process with the name "eSubmitterv3". Verify the process name and call the cmdlet again.
+At line:1 char:1
++ Get-Process eSubmitterv3 | Select-Object Path
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (eSubmitterv3:String) [Get-Process], ProcessCommandException
+    + FullyQualifiedErrorId : NoProcessFoundForGivenName,Microsoft.PowerShell.Commands.GetProcessCommand
