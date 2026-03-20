@@ -1,1 +1,4 @@
 https://chatgpt.com/share/69bd0fc0-a870-800c-8a2a-feea3f3ee82e
+
+
+During testing on the server, the new version was installed without uninstalling the previous version, as this scenario was not covered in the CCR or documentation. While this approach worked on the server, it is unclear whether performing the same steps on user workstations may impact existing user data or application configurations. Therefore, this step was not performed on user devices, and the concern has been raised with the team for clarification
