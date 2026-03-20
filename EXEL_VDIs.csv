@@ -1,22 +1,13 @@
-PS C:\eSubApps\eSub_v3\JExpress> ls
+PS C:\eSubApps\eSub_v3\JExpress\uninstaller> ls
 
 
-    Directory: C:\eSubApps\eSub_v3\JExpress
+    Directory: C:\eSubApps\eSub_v3\JExpress\uninstaller
 
 
 Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
-d-----         11/5/2025  11:19 PM                META-INF
-d-----         11/5/2025  11:19 PM                uninstaller
-d-----         11/5/2025  11:19 PM                updates
--a----         11/5/2025  11:19 PM             15 created.txt
--a----          3/5/2026   8:47 PM          14328 errors.log
--a----         11/5/2025  11:19 PM            287 eSubmitterv3.properties
--a----         11/5/2025  11:19 PM           3322 jex.control
--a----         11/5/2025  11:19 PM         542573 JExpressUpdater.jar
--a----         11/5/2025  11:19 PM          51766 jexuninstall.icns
--a----         11/5/2025  11:19 PM           4286 jexuninstall.ico
--a----         11/5/2025  11:19 PM           2265 jexuninstall.png
--a----         11/5/2025  11:19 PM            339 Uninstall.properties
--a----         11/5/2025  11:19 PM            866 update.control
--a----         11/5/2025  11:19 PM            139 version.txt
+-a----         11/5/2025  11:19 PM        1317603 JExpressUninstaller.jar
+-a----         11/5/2025  11:19 PM            135 specmenu
+-a----         11/5/2025  11:19 PM            111 specreg
+-a----         11/5/2025  11:19 PM            519 uninstall
+-a----         11/5/2025  11:19 PM            210 uninstall.control
