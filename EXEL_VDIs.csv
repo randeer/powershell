@@ -1,4 +1,146 @@
-https://chatgpt.com/share/69bd0fc0-a870-800c-8a2a-feea3f3ee82e
+PS C:\Temp> netdom verify ESWGM-AZ-DC01 /domain:lawfirm.local
+The specified domain either does not exist or could not be contacted.
+
+The command failed to complete successfully.
+
+PS C:\Temp> dcdiag /test:CheckSecurityError /v
+
+Directory Server Diagnosis
+
+Performing initial setup:
+   Trying to find home server...
+   * Verifying that the local machine ESWGM-AZ-DC01, is a Directory Server.
+   Home Server = ESWGM-AZ-DC01
+   * Connecting to directory service on server ESWGM-AZ-DC01.
+   * Identified AD Forest.
+   Collecting AD specific global data
+   * Collecting site info.
+   Calling ldap_search_init_page(hld,CN=Sites,CN=Configuration,DC=lawfirm,DC=local,LDAP_SCOPE_SUBTREE,(objectCategory=ntDSSiteSettings),.......
+   The previous call succeeded
+   Iterating through the sites
+   Looking at base site object: CN=NTDS Site Settings,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=lawfirm,DC=local
+   Getting ISTG and options for the site
+   Looking at base site object: CN=NTDS Site Settings,CN=STSCLOUD-ESWGM,CN=Sites,CN=Configuration,DC=lawfirm,DC=local
+   Getting ISTG and options for the site
+   Looking at base site object: CN=NTDS Site Settings,CN=Azure,CN=Sites,CN=Configuration,DC=lawfirm,DC=local
+   Getting ISTG and options for the site
+   Looking at base site object: CN=NTDS Site Settings,CN=LA-Office,CN=Sites,CN=Configuration,DC=lawfirm,DC=local
+   Getting ISTG and options for the site
+   * Identifying all servers.
+   Calling ldap_search_init_page(hld,CN=Sites,CN=Configuration,DC=lawfirm,DC=local,LDAP_SCOPE_SUBTREE,(objectClass=ntDSDsa),.......
+   The previous call succeeded....
+   The previous call succeeded
+   Iterating through the list of servers
+   Getting information for the server CN=NTDS Settings,CN=ESWGM-DC01,CN=Servers,CN=STSCLOUD-ESWGM,CN=Sites,CN=Configuration,DC=lawfirm,DC=local
+   objectGuid obtained
+   InvocationID obtained
+   dnsHostname obtained
+   site info obtained
+   All the info for the server collected
+   Getting information for the server CN=NTDS Settings,CN=ESWGM-AZ-DC01,CN=Servers,CN=Azure,CN=Sites,CN=Configuration,DC=lawfirm,DC=local
+   objectGuid obtained
+   InvocationID obtained
+   dnsHostname obtained
+   site info obtained
+   All the info for the server collected
+   Getting information for the server CN=NTDS Settings,CN=ESWGM-LA-DC01,CN=Servers,CN=LA-Office,CN=Sites,CN=Configuration,DC=lawfirm,DC=local
+   objectGuid obtained
+   InvocationID obtained
+   dnsHostname obtained
+   site info obtained
+   All the info for the server collected
+   * Identifying all NC cross-refs.
+   * Found 3 DC(s). Testing 1 of them.
+   Done gathering initial info.
+
+Doing initial required tests
+
+   Testing server: Azure\ESWGM-AZ-DC01
+      Starting test: Connectivity
+         * Active Directory LDAP Services Check
+         Determining IP4 connectivity
+         * Active Directory RPC Services Check
+         ......................... ESWGM-AZ-DC01 passed test Connectivity
+
+Doing primary tests
+
+   Testing server: Azure\ESWGM-AZ-DC01
+      Test omitted by user request: Advertising
+      Starting test: CheckSecurityError
+         * Dr Auth:  Beginning security errors check!
+         Found KDC ESWGM-AZ-DC01 for domain lawfirm.local in site Azure
+         Checking machine account for DC ESWGM-AZ-DC01 on DC ESWGM-AZ-DC01.
+         * SPN found :LDAP/ESWGM-AZ-DC01.lawfirm.local/lawfirm.local
+         * SPN found :LDAP/ESWGM-AZ-DC01.lawfirm.local
+         * SPN found :LDAP/ESWGM-AZ-DC01
+         * SPN found :LDAP/ESWGM-AZ-DC01.lawfirm.local/LAWFIRM
+         * SPN found :LDAP/5bbb2668-98d0-44ae-83de-014ca249bbed._msdcs.lawfirm.local
+         * SPN found :E3514235-4B06-11D1-AB04-00C04FC2DCD2/5bbb2668-98d0-44ae-83de-014ca249bbed/lawfirm.local
+         * SPN found :HOST/ESWGM-AZ-DC01.lawfirm.local/lawfirm.local
+         * SPN found :HOST/ESWGM-AZ-DC01.lawfirm.local
+         * SPN found :HOST/ESWGM-AZ-DC01
+         * SPN found :HOST/ESWGM-AZ-DC01.lawfirm.local/LAWFIRM
+         * SPN found :GC/ESWGM-AZ-DC01.lawfirm.local/lawfirm.local
+         [ESWGM-AZ-DC01] No security related replication errors were found on this DC!  To target the connection to a specific source DC use
+         /ReplSource:<DC>.
+         ......................... ESWGM-AZ-DC01 passed test CheckSecurityError
+      Test omitted by user request: CutoffServers
+      Test omitted by user request: FrsEvent
+      Test omitted by user request: DFSREvent
+      Test omitted by user request: SysVolCheck
+      Test omitted by user request: KccEvent
+      Test omitted by user request: KnowsOfRoleHolders
+      Test omitted by user request: MachineAccount
+      Test omitted by user request: NCSecDesc
+      Test omitted by user request: NetLogons
+      Test omitted by user request: ObjectsReplicated
+      Test omitted by user request: OutboundSecureChannels
+      Test omitted by user request: Replications
+      Test omitted by user request: RidManager
+      Test omitted by user request: Services
+      Test omitted by user request: SystemLog
+      Test omitted by user request: Topology
+      Test omitted by user request: VerifyEnterpriseReferences
+      Test omitted by user request: VerifyReferences
+      Test omitted by user request: VerifyReplicas
+
+      Test omitted by user request: DNS
+      Test omitted by user request: DNS
+
+   Running partition tests on : ForestDnsZones
+      Test omitted by user request: CheckSDRefDom
+      Test omitted by user request: CrossRefValidation
+
+   Running partition tests on : DomainDnsZones
+      Test omitted by user request: CheckSDRefDom
+      Test omitted by user request: CrossRefValidation
+
+   Running partition tests on : Schema
+      Test omitted by user request: CheckSDRefDom
+      Test omitted by user request: CrossRefValidation
+
+   Running partition tests on : Configuration
+      Test omitted by user request: CheckSDRefDom
+      Test omitted by user request: CrossRefValidation
+
+   Running partition tests on : lawfirm
+      Test omitted by user request: CheckSDRefDom
+      Test omitted by user request: CrossRefValidation
+
+   Running enterprise tests on : lawfirm.local
+      Test omitted by user request: DNS
+      Test omitted by user request: DNS
+      Test omitted by user request: LocatorCheck
+      Test omitted by user request: Intersite
+PS C:\Temp> repadmin /showrepl ESWGM-AZ-DC01 /errorsonly
+Azure\ESWGM-AZ-DC01
+DSA Options: IS_GC
+Site Options: (none)
+DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+DSA invocationID: 22fca060-556d-4bca-ae52-70c4f9faeb56
+
+==== INBOUND NEIGHBORS ======================================
+
+PS C:\Temp>
 
 
-During testing on the server, the new version was installed without uninstalling the previous version, as this scenario was not covered in the CCR or documentation. While this approach worked on the server, it is unclear whether performing the same steps on user workstations may impact existing user data or application configurations. Therefore, this step was not performed on user devices, and the concern has been raised with the team for clarification
