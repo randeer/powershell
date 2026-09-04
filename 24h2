@@ -5,3 +5,10 @@ repadmin /showobjmeta ESWGM-DC01 "CN=ESWGM-DC01,OU=_SRV2022-L2-DC-Hardened,OU=_S
 
 
 repadmin /showobjmeta ESWGM-DC01 "<DN returned from Step 1>" > C:\Temp\AZ-DC01objmeta_FROM_DC01.txt
+
+
+netdom verify ESWGM-AZ-DC01 /domain:lawfirm.local
+
+dcdiag /test:CheckSecurityError /v
+
+repadmin /showrepl ESWGM-AZ-DC01 /errorsonly
