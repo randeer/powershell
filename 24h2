@@ -1,17 +1,4 @@
-Get-ADComputer ESWGM-DC01 | Select-Object DistinguishedName
+repadmin /showobjmeta ESWGM-AZ-DC01 "CN=ESWGM-AZ-DC01,OU=CIS Hardened 2022 DCs V5.0.0,OU=Domain Controllers,DC=lawfirm,DC=local" > C:\Temp\AZ-DC01objmeta_FROM_AZ.txt
 
 
-
-PS C:\Temp> Get-ADComputer ESWGM-AZ-DC01 | Select-Object DistinguishedName
-
-DistinguishedName
------------------
-CN=ESWGM-AZ-DC01,OU=CIS Hardened 2022 DCs V5.0.0,OU=Domain Controllers,DC=lawfirm,DC=local
-
-
-
-PS C:\Temp> Get-ADComputer ESWGM-DC01 | Select-Object DistinguishedName
-
-DistinguishedName
------------------
-CN=ESWGM-DC01,OU=_SRV2022-L2-DC-Hardened,OU=_SRV2022-L1-DC-Hardened,OU=Domain Controllers,DC=lawfirm,DC=local
+repadmin /showobjmeta ESWGM-DC01 "CN=ESWGM-AZ-DC01,OU=CIS Hardened 2022 DCs V5.0.0,OU=Domain Controllers,DC=lawfirm,DC=local" > C:\Temp\AZ-DC01objmeta_FROM_DC01.txt
