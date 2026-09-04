@@ -1,93 +1,207 @@
-$ErrorActionPreference = "Stop"
-try {
-    # Define the temp path and create if it doesn't exist
-    $tempPath = "C:\Temp\scripts"
-    $logPath = Join-Path $tempPath "WinStoreUpdate.log"
-    
-    if (-not (Test-Path $tempPath)) {
-        Write-Output "Creating directory: $tempPath"
-        New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
-    }
-    
-    # Define the source and destination paths
-    $scriptSourcePath = "./appstoreupdaternew.ps1"  # Source file path (local)
-    $scriptPath = Join-Path $tempPath "appstoreupdaternew.ps1"  # Destination path
-    
-    # Check if the script file already exists in the destination, and if so, delete it
-    if (Test-Path $scriptPath) {
-        Write-Output "Script file already exists, deleting: $scriptPath"
-        Remove-Item $scriptPath -Force
-    }
-    
-    # Copy the script from the local directory to the temp directory
-    Write-Output "Copying script from $scriptSourcePath to $scriptPath"
-    Copy-Item $scriptSourcePath -Destination $scriptPath -Force
-    Write-Output "Script copied successfully to $scriptPath"
-    
-    # Use SYSTEM account instead of current user
-    $UserContext = "SYSTEM"
-    
-    # Create the argument list with output redirection
-    $argumentList = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptPath`" *> `"$logPath`" "
-    
-    # Create task action with output logging
-    $action = New-ScheduledTaskAction -Execute "powershell.exe" `
-        -Argument $argumentList
-    
-    # Create monthly trigger for last Friday at 7:00 PM
-    $trigger = New-ScheduledTaskTrigger -Weekly -WeeksInterval 4 -DaysOfWeek Friday -At "19:00"
-    
-    # Create principal (run with SYSTEM account)
-    $principal = New-ScheduledTaskPrincipal -UserId $UserContext `
-        -LogonType ServiceAccount `
-        -RunLevel Highest
-    
-    # Create the task settings with basic options
-    $settings = New-ScheduledTaskSettingsSet `
-        -DontStopIfGoingOnBatteries `
-        -AllowStartIfOnBatteries `
-        -ExecutionTimeLimit (New-TimeSpan -Hours 2) `
-        -Hidden
-    
-    # Register the scheduled task
-    Register-ScheduledTask -TaskName "WinStore Update" `
-        -Action $action `
-        -Trigger $trigger `
-        -Principal $principal `
-        -Settings $settings `
-        -Force
-    
-    Write-Output "Scheduled task created successfully"
-    Write-Output "Task will run as: $UserContext"
-    Write-Output "Output will be logged to: $logPath"
-    Write-Output "Task will run whether user is logged in or not"
-    
-    # Add a function to test the task and get output
-    function Test-ScheduledTask {
-        Write-Output "Testing scheduled task..."
-        Start-ScheduledTask -TaskName "WinStore Update"
-        
-        # Wait for log file to be created and contain content
-        $waitTime = 0
-        $maxWait = 30 # Maximum seconds to wait
-        
-        while ((-not (Test-Path $logPath) -or (Get-Content $logPath).Length -eq 0) -and $waitTime -lt $maxWait) {
-            Start-Sleep -Seconds 1
-            $waitTime++
-        }
-        
-        if (Test-Path $logPath) {
-            Write-Output "Task output:"
-            Get-Content $logPath
-        } else {
-            Write-Output "No output file created within timeout period"
-        }
-    }
-    
-    # Uncomment the following line to test the task immediately
-    # Test-ScheduledTask
-}
-catch {
-    Write-Error "Failed to execute script: $_"
-    exit 1
-}
+
+
+32 entries.
+
+Loc.USN                           Originating DSA  Org.USN  Org.Time/Date        Ver Attribute
+
+=======                           =============== ========= =============        === =========
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063635 2025-10-28 02:07:55    1 objectClass
+
+   7938      a8bf610e-ae2c-48a2-80d5-475598703c0b      7938 2025-10-28 02:43:21    1 cn
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063643 2025-10-28 02:07:58    1 userCertificate
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063635 2025-10-28 02:07:55    1 instanceType
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063635 2025-10-28 02:07:55    1 whenCreated
+
+  12295      a8bf610e-ae2c-48a2-80d5-475598703c0b     12295 2025-10-28 02:44:09    2 nTSecurityDescriptor
+
+1205586                       Azure\ESWGM-AZ-DC01   1205586 2026-09-03 14:26:10    4 name
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64065423 2025-10-28 02:43:21    2 userAccountControl
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063636 2025-10-28 02:07:55    1 codePage
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063636 2025-10-28 02:07:55    1 countryCode
+
+1168740                       Azure\ESWGM-AZ-DC01   1168740 2026-08-26 12:06:28   11 dBCSPwd
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063635 2025-10-28 02:07:55    1 localPolicyFlags
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063636 2025-10-28 02:07:55    1 logonHours
+
+1168740                       Azure\ESWGM-AZ-DC01   1168740 2026-08-26 12:06:28   11 unicodePwd
+
+1168740                       Azure\ESWGM-AZ-DC01   1168740 2026-08-26 12:06:28   11 ntPwdHistory
+
+1168740                       Azure\ESWGM-AZ-DC01   1168740 2026-08-26 12:06:28   11 pwdLastSet
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64065423 2025-10-28 02:43:21    2 primaryGroupID
+
+1168741                       Azure\ESWGM-AZ-DC01   1168741 2026-08-26 12:06:28   11 supplementalCredentials
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063635 2025-10-28 02:07:55    1 objectSid
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063636 2025-10-28 02:07:55    1 accountExpires
+
+1168740                       Azure\ESWGM-AZ-DC01   1168740 2026-08-26 12:06:28   11 lmPwdHistory
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063635 2025-10-28 02:07:55    1 sAMAccountName
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063635 2025-10-28 02:07:55    1 sAMAccountType
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063641 2025-10-28 02:07:56    1 operatingSystem
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063641 2025-10-28 02:07:56    1 operatingSystemVersion
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063635 2025-10-28 02:07:55    1 dNSHostName
+
+  12313                 STSCLOUD-ESWGM\ESWGM-DC01  64065543 2025-10-28 02:44:52    1 rIDSetReferences
+
+  12362      a8bf610e-ae2c-48a2-80d5-475598703c0b     12362 2025-10-28 02:44:52    8 servicePrincipalName
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64063635 2025-10-28 02:07:55    1 objectCategory
+
+   7938                 STSCLOUD-ESWGM\ESWGM-DC01  64065423 2025-10-28 02:43:21    2 isCriticalSystemObject
+
+1199197                       Azure\ESWGM-AZ-DC01   1199197 2026-09-02 23:06:11   31 lastLogonTimestamp
+
+ 614426      a8bf610e-ae2c-48a2-80d5-475598703c0b    614426 2026-05-27 07:10:38    2 msDS-SupportedEncryptionTypes
+
+1 entries.
+
+Type    Attribute     Last Mod Time                            Originating DSA  Loc.USN Org.USN Ver
+
+======= ============  =============                           ================= ======= ======= ===
+
+        Distinguished Name
+
+        =============================
+
+PRESENT msDS-HostServiceAccount 2026-05-22 06:19:13   a8bf610e-ae2c-48a2-80d5-475598703c0b  594034  594034   1
+
+        CN=ADSyncMSA0e5bb,CN=Managed Service Accounts,DC=lawfirm,DC=local
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------
+
+
+
+41 entries.
+
+Loc.USN                           Originating DSA  Org.USN  Org.Time/Date        Ver Attribute
+
+=======                           =============== ========= =============        === =========
+
+  12293                 STSCLOUD-ESWGM\ESWGM-DC01     12293 2023-05-19 15:09:19    1 objectClass
+
+  12293                 STSCLOUD-ESWGM\ESWGM-DC01     12293 2023-05-19 15:09:19    1 cn
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 description
+
+ 608207                 STSCLOUD-ESWGM\ESWGM-DC01    608207 2023-08-20 14:45:39    1 userCertificate
+
+  12293                 STSCLOUD-ESWGM\ESWGM-DC01     12293 2023-05-19 15:09:19    1 instanceType
+
+  12293                 STSCLOUD-ESWGM\ESWGM-DC01     12293 2023-05-19 15:09:19    1 whenCreated
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 displayName
+
+  12400                 STSCLOUD-ESWGM\ESWGM-DC01     12400 2023-05-19 15:09:19    2 nTSecurityDescriptor
+
+36079578                 STSCLOUD-ESWGM\ESWGM-DC01  36079578 2024-10-25 06:56:38    2 name
+
+  12295                 STSCLOUD-ESWGM\ESWGM-DC01     12295 2023-05-19 15:09:19    3 userAccountControl
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 codePage
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 countryCode
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 homeDirectory
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 homeDrive
+
+67961949                       Azure\ESWGM-AZ-DC01   1069583 2026-08-11 23:21:42   42 dBCSPwd
+
+  12293                 STSCLOUD-ESWGM\ESWGM-DC01     12293 2023-05-19 15:09:19    1 localPolicyFlags
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 scriptPath
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 logonHours
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 userWorkstations
+
+67961949                       Azure\ESWGM-AZ-DC01   1069583 2026-08-11 23:21:42   42 unicodePwd
+
+67961949                       Azure\ESWGM-AZ-DC01   1069583 2026-08-11 23:21:42   42 ntPwdHistory
+
+67961949                       Azure\ESWGM-AZ-DC01   1069583 2026-08-11 23:21:42   42 pwdLastSet
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 primaryGroupID
+
+67961949                       Azure\ESWGM-AZ-DC01   1069584 2026-08-11 23:21:42   41 supplementalCredentials
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 userParameters
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 profilePath
+
+  12293                 STSCLOUD-ESWGM\ESWGM-DC01     12293 2023-05-19 15:09:19    1 objectSid
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 comment
+
+  12294                 STSCLOUD-ESWGM\ESWGM-DC01     12294 2023-05-19 15:09:19    1 accountExpires
+
+67961949                       Azure\ESWGM-AZ-DC01   1069583 2026-08-11 23:21:42   42 lmPwdHistory
+
+  12293                 STSCLOUD-ESWGM\ESWGM-DC01     12293 2023-05-19 15:09:19    1 sAMAccountName
+
+  12293                 STSCLOUD-ESWGM\ESWGM-DC01     12293 2023-05-19 15:09:19    1 sAMAccountType
+
+  12478                 STSCLOUD-ESWGM\ESWGM-DC01     12478 2023-05-19 15:09:34    1 operatingSystem
+
+  12478                 STSCLOUD-ESWGM\ESWGM-DC01     12478 2023-05-19 15:09:34    1 operatingSystemVersion
+
+  12480                 STSCLOUD-ESWGM\ESWGM-DC01     12480 2023-05-19 15:09:34    1 dNSHostName
+
+  12474                 STSCLOUD-ESWGM\ESWGM-DC01     12474 2023-05-19 15:09:29    1 rIDSetReferences
+
+66932820      a8bf610e-ae2c-48a2-80d5-475598703c0b    198475 2026-01-20 09:31:52    8 servicePrincipalName
+
+  12293                 STSCLOUD-ESWGM\ESWGM-DC01     12293 2023-05-19 15:09:19    1 objectCategory
+
+  12293                 STSCLOUD-ESWGM\ESWGM-DC01     12293 2023-05-19 15:09:19    1 isCriticalSystemObject
+
+68080509                 STSCLOUD-ESWGM\ESWGM-DC01  68080509 2026-09-01 12:09:17  119 lastLogonTimestamp
+
+  20487                 STSCLOUD-ESWGM\ESWGM-DC01     20487 2023-05-25 13:13:48    2 msDS-SupportedEncryptionTypes
+
+1 entries.
+
+Type    Attribute     Last Mod Time                            Originating DSA  Loc.USN Org.USN Ver
+
+======= ============  =============                           ================= ======= ======= ===
+
+        Distinguished Name
+
+        =============================
+
+PRESENT msDS-HostServiceAccount 2023-08-17 06:36:00              STSCLOUD-ESWGM\ESWGM-DC01  422631  422631   1
+
+        CN=ADSyncMSAd29f6,CN=Managed Service Accounts,DC=lawfirm,DC=local
+
+
+
+
+
