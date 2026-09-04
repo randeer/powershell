@@ -1,16 +1,1 @@
-PS C:\Windows\system32> nltest /dsgetdc:lawfirm.local
-           DC: \\ESWGM-AZ-DC01.lawfirm.local
-      Address: \\10.0.50.10
-     Dom Guid: 6dd921d0-cfa9-40c4-bc25-24081d034776
-     Dom Name: lawfirm.local
-  Forest Name: lawfirm.local
- Dc Site Name: Azure
-Our Site Name: Azure
-        Flags: PDC GC DS LDAP KDC TIMESERV GTIMESERV WRITABLE DNS_DC DNS_DOMAIN DNS_FOREST CLOSE_SITE FULL_SECRET WS DS_8 DS_9 DS_10 KEYLIST
-The command completed successfully
-PS C:\Windows\system32> nltest /sc_verify:lawfirm.local
-I_NetLogonControl failed: Status = 1355 0x54b ERROR_NO_SUCH_DOMAIN
-PS C:\Windows\system32> nltest /sc_query:lawfirm.local
-I_NetLogonControl failed: Status = 1355 0x54b ERROR_NO_SUCH_DOMAIN
-PS C:\Windows\system32> hostname
-ESWGM-AZ-DC01
+klist get ldap/ESWGM-DC01.lawfirm.local
