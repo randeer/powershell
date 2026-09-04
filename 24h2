@@ -1,1 +1,111 @@
-klist get ldap/ESWGM-DC01.lawfirm.local
+PS C:\Windows\system32> klist
+
+Current LogonId is 0:0x67ecc51
+
+Cached Tickets: (4)
+
+#0>     Client: STSAdmin01 @ LAWFIRM.LOCAL
+        Server: krbtgt/LAWFIRM.LOCAL @ LAWFIRM.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x60a10000 -> forwardable forwarded renewable pre_authent name_canonicalize
+        Start Time: 9/3/2026 22:12:47 (local)
+        End Time:   9/4/2026 7:49:15 (local)
+        Renew Time: 9/10/2026 21:49:15 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0x2 -> DELEGATION
+        Kdc Called: ESWGM-AZ-DC01
+
+#1>     Client: STSAdmin01 @ LAWFIRM.LOCAL
+        Server: krbtgt/LAWFIRM.LOCAL @ LAWFIRM.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40e10000 -> forwardable renewable initial pre_authent name_canonicalize
+        Start Time: 9/3/2026 21:49:15 (local)
+        End Time:   9/4/2026 7:49:15 (local)
+        Renew Time: 9/10/2026 21:49:15 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0x1 -> PRIMARY
+        Kdc Called: ESWGM-AZ-DC01
+
+#2>     Client: STSAdmin01 @ LAWFIRM.LOCAL
+        Server: cifs/ESWGM-DC01.lawfirm.local @ LAWFIRM.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40a50000 -> forwardable renewable pre_authent ok_as_delegate name_canonicalize
+        Start Time: 9/3/2026 22:13:00 (local)
+        End Time:   9/4/2026 7:49:15 (local)
+        Renew Time: 9/10/2026 21:49:15 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0
+        Kdc Called: ESWGM-AZ-DC01
+
+#3>     Client: STSAdmin01 @ LAWFIRM.LOCAL
+        Server: cifs/ESWGM-LA-DC01.lawfirm.local @ LAWFIRM.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40a50000 -> forwardable renewable pre_authent ok_as_delegate name_canonicalize
+        Start Time: 9/3/2026 22:12:47 (local)
+        End Time:   9/4/2026 7:49:15 (local)
+        Renew Time: 9/10/2026 21:49:15 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0
+        Kdc Called: ESWGM-AZ-DC01
+PS C:\Windows\system32> klist get ldap/ESWGM-DC01.lawfirm.local
+
+Current LogonId is 0:0x67ecc51
+A ticket to ldap/ESWGM-DC01.lawfirm.local has been retrieved successfully.
+
+Cached Tickets: (5)
+
+#0>     Client: STSAdmin01 @ LAWFIRM.LOCAL
+        Server: krbtgt/LAWFIRM.LOCAL @ LAWFIRM.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40e10000 -> forwardable renewable initial pre_authent name_canonicalize
+        Start Time: 9/3/2026 22:36:23 (local)
+        End Time:   9/4/2026 8:36:23 (local)
+        Renew Time: 9/10/2026 21:49:15 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0x1 -> PRIMARY
+        Kdc Called: ESWGM-AZ-DC01
+
+#1>     Client: STSAdmin01 @ LAWFIRM.LOCAL
+        Server: krbtgt/LAWFIRM.LOCAL @ LAWFIRM.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x60a10000 -> forwardable forwarded renewable pre_authent name_canonicalize
+        Start Time: 9/3/2026 22:12:47 (local)
+        End Time:   9/4/2026 7:49:15 (local)
+        Renew Time: 9/10/2026 21:49:15 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0x2 -> DELEGATION
+        Kdc Called: ESWGM-AZ-DC01
+
+#2>     Client: STSAdmin01 @ LAWFIRM.LOCAL
+        Server: ldap/ESWGM-DC01.lawfirm.local @ LAWFIRM.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40a50000 -> forwardable renewable pre_authent ok_as_delegate name_canonicalize
+        Start Time: 9/3/2026 22:36:23 (local)
+        End Time:   9/4/2026 8:36:23 (local)
+        Renew Time: 9/10/2026 21:49:15 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0
+        Kdc Called: ESWGM-AZ-DC01
+
+#3>     Client: STSAdmin01 @ LAWFIRM.LOCAL
+        Server: cifs/ESWGM-DC01.lawfirm.local @ LAWFIRM.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40a50000 -> forwardable renewable pre_authent ok_as_delegate name_canonicalize
+        Start Time: 9/3/2026 22:13:00 (local)
+        End Time:   9/4/2026 7:49:15 (local)
+        Renew Time: 9/10/2026 21:49:15 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0
+        Kdc Called: ESWGM-AZ-DC01
+
+#4>     Client: STSAdmin01 @ LAWFIRM.LOCAL
+        Server: cifs/ESWGM-LA-DC01.lawfirm.local @ LAWFIRM.LOCAL
+        KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
+        Ticket Flags 0x40a50000 -> forwardable renewable pre_authent ok_as_delegate name_canonicalize
+        Start Time: 9/3/2026 22:12:47 (local)
+        End Time:   9/4/2026 7:49:15 (local)
+        Renew Time: 9/10/2026 21:49:15 (local)
+        Session Key Type: AES-256-CTS-HMAC-SHA1-96
+        Cache Flags: 0
+        Kdc Called: ESWGM-AZ-DC01
+PS C:\Windows\system32>
