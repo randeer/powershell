@@ -1,49 +1,67 @@
-PS C:\Windows\system32> nltest /sc_verify:lawfirm.local
-I_NetLogonControl failed: Status = 1355 0x54b ERROR_NO_SUCH_DOMAIN
-PS C:\Windows\system32> hostname
-ESWGM-AZ-DC01
+PS C:\Windows\system32> Test-NetConnection ESWGM-AZ-DC01 -Port 445                                                                                                                                                                                                                                                                                                                                                                                                                        ComputerName     : ESWGM-AZ-DC01
+RemoteAddress    : 10.0.50.10
+RemotePort       : 445
+InterfaceAlias   : Ethernet1
+SourceAddress    : 10.100.38.10
+TcpTestSucceeded : True
 
---------------------------
+
+
+PS C:\Windows\system32> Test-NetConnection ESWGM-DC01 -Port 445
+
+
+ComputerName     : ESWGM-DC01
+RemoteAddress    : 10.100.38.10
+RemotePort       : 445
+InterfaceAlias   : Ethernet1
+SourceAddress    : 10.100.38.10
+TcpTestSucceeded : True
+
+
+
+PS C:\Windows\system32> Test-NetConnection ESWGM-LA-DC01 -Port 445
+
+
+ComputerName     : ESWGM-LA-DC01
+RemoteAddress    : 10.10.50.10
+RemotePort       : 445
+InterfaceAlias   : Ethernet1
+SourceAddress    : 10.100.38.10
+TcpTestSucceeded : True
+
+
+
 PS C:\Windows\system32> hostname
 ESWGM-DC01
-PS C:\Windows\system32> nltest /sc_verify:lawfirm.local
-Flags: b0 HAS_IP  HAS_TIMESERV
-Trusted DC Name \\ESWGM-AZ-DC01.lawfirm.local
-Trusted DC Connection Status Status = 0 0x0 NERR_Success
-Trust Verification Status = 0 0x0 NERR_Success
-The command completed successfully
-PS C:\Windows\system32> net view \\ESWGM-AZ-DC01.lawfirm.local
-System error 53 has occurred.
-
-The network path was not found.
-
-PS C:\Windows\system32> net view \\ESWGM-AZ-DC01
-System error 53 has occurred.
-
-The network path was not found.
-
-PS C:\Windows\system32> net view \\ESWGM-LA-DC01
-Shared resources at \\ESWGM-LA-DC01
-
-
-
-Share name  Type  Used as  Comment
-
--------------------------------------------------------------------------------
-NETLOGON    Disk           Logon server share
-SYSVOL      Disk           Logon server share
-The command completed successfully.
-
-PS C:\Windows\system32> net view \\ESWGM-LA-DC01.lawfirm.local
-Shared resources at \\ESWGM-LA-DC01.lawfirm.local
-
-
-
-Share name  Type  Used as  Comment
-
--------------------------------------------------------------------------------
-NETLOGON    Disk           Logon server share
-SYSVOL      Disk           Logon server share
-The command completed successfully.
-
 PS C:\Windows\system32>
+---------------------------------
+PS C:\Windows\system32> Test-NetConnection ESWGM-AZ-DC01 -Port 445                                                                                                                                                                                                                                                                                                                                                                                                                        ComputerName     : ESWGM-AZ-DC01
+RemoteAddress    : 10.0.50.10
+RemotePort       : 445
+InterfaceAlias   : Ethernet 2
+SourceAddress    : 10.0.50.10
+TcpTestSucceeded : True
+
+
+
+PS C:\Windows\system32> Test-NetConnection ESWGM-DC01 -Port 445
+
+
+ComputerName     : ESWGM-DC01
+RemoteAddress    : 10.100.38.10
+RemotePort       : 445
+InterfaceAlias   : Ethernet 2
+SourceAddress    : 10.0.50.10
+TcpTestSucceeded : True
+
+
+
+PS C:\Windows\system32> Test-NetConnection ESWGM-LA-DC01 -Port 445
+
+
+ComputerName     : ESWGM-LA-DC01
+RemoteAddress    : 10.10.50.10
+RemotePort       : 445
+InterfaceAlias   : Ethernet 2
+SourceAddress    : 10.0.50.10
+TcpTestSucceeded : True
