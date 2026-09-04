@@ -1,1 +1,17 @@
-Get-ADComputer ESWGM-AZ-DC01 | Select-Object DistinguishedName
+Get-ADComputer ESWGM-DC01 | Select-Object DistinguishedName
+
+
+
+PS C:\Temp> Get-ADComputer ESWGM-AZ-DC01 | Select-Object DistinguishedName
+
+DistinguishedName
+-----------------
+CN=ESWGM-AZ-DC01,OU=CIS Hardened 2022 DCs V5.0.0,OU=Domain Controllers,DC=lawfirm,DC=local
+
+
+
+PS C:\Temp> Get-ADComputer ESWGM-DC01 | Select-Object DistinguishedName
+
+DistinguishedName
+-----------------
+CN=ESWGM-DC01,OU=_SRV2022-L2-DC-Hardened,OU=_SRV2022-L1-DC-Hardened,OU=Domain Controllers,DC=lawfirm,DC=local
