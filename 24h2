@@ -2,3 +2,19 @@ repadmin /showobjmeta ESWGM-AZ-DC01 "CN=ESWGM-AZ-DC01,OU=Domain Controllers,DC=l
 
 
 repadmin /showobjmeta ESWGM-DC01 "CN=ESWGM-AZ-DC01,OU=Domain Controllers,DC=lawfirm,DC=local" > AZ-DC01objmeta_FROM_DC01.txt
+
+
+DsReplicaGetInfo() failed with status 8333 (0x208d):
+
+    Directory object not found.
+
+
+DsReplicaGetInfo() failed with status 8333 (0x208d):
+
+    Directory object not found.
+
+
+
+
+
+
