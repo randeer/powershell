@@ -12,3 +12,23 @@ netdom verify ESWGM-AZ-DC01 /domain:lawfirm.local
 dcdiag /test:CheckSecurityError /v
 
 repadmin /showrepl ESWGM-AZ-DC01 /errorsonly
+
+
+PS C:\Windows\system32> repadmin /replsummary
+Replication Summary Start Time: 2026-09-04 01:24:00
+
+Beginning data collection for replication summary, this may take awhile:
+  ......
+
+
+Source DSA          largest delta    fails/total %%   error
+ ESWGM-AZ-DC01     11d.23h:16m:36s   10 /  10  100  (2148074274) The target principal name is incorrect.
+ ESWGM-DC01            02h:11m:19s    0 /   5    0
+ ESWGM-LA-DC01         02h:16m:53s    0 /   5    0
+
+
+
+
+Experienced the following operational errors trying to retrieve replication information:
+        8341 - ESWGM-AZ-DC01.lawfirm.local
+PS C:\Windows\system32>
