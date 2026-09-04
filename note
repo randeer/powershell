@@ -1,60 +1,95 @@
-CN=Dfs-Configuration
- └─ CN=System
-    └─ DC=bautelaw,DC=local
-https://chatgpt.com/share/699fee03-b858-800c-919a-b7e0ca382c49
+PS C:\Windows\system32> repadmin /showrepl ESWGM-LA-DC01
+LA-Office\ESWGM-LA-DC01
+DSA Options: IS_GC
+Site Options: (none)
+DSA object GUID: cea2f2b4-13a5-41fe-884d-d3f4060fec7c
+DSA invocationID: 7602f5be-cadc-46a0-abc3-04b8ab1c4b64
 
-dfsutil cache referral flush
-dfsutil cache domain flush
+==== INBOUND NEIGHBORS ======================================
 
-repadmin /syncall /AdeP
-repadmin /showrepl
+DC=lawfirm,DC=local
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 23:12:41 was successful.
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 23:12:41 failed, result -2146893022 (0x80090322):
+            The target principal name is incorrect.
+        99 consecutive failure(s).
+        Last success @ 2026-08-23 02:07:24.
+
+CN=Configuration,DC=lawfirm,DC=local
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 23:12:41 was successful.
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 23:12:41 failed, result -2146893022 (0x80090322):
+            The target principal name is incorrect.
+        99 consecutive failure(s).
+        Last success @ 2026-08-23 02:07:24.
+
+CN=Schema,CN=Configuration,DC=lawfirm,DC=local
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 23:12:41 was successful.
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 23:12:41 failed, result -2146893022 (0x80090322):
+            The target principal name is incorrect.
+        99 consecutive failure(s).
+        Last success @ 2026-08-23 02:07:24.
+
+DC=ForestDnsZones,DC=lawfirm,DC=local
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 23:12:41 failed, result 1256 (0x4e8):
+            The remote system is not available. For information about network troubleshooting, see Windows Help.
+        99 consecutive failure(s).
+        Last success @ 2026-08-23 02:07:24.
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 23:12:41 was successful.
+
+DC=DomainDnsZones,DC=lawfirm,DC=local
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 23:12:41 failed, result 1256 (0x4e8):
+            The remote system is not available. For information about network troubleshooting, see Windows Help.
+        99 consecutive failure(s).
+        Last success @ 2026-08-23 02:07:24.
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 23:12:41 was successful.
+
+Source: Azure\ESWGM-AZ-DC01
+******* 99 CONSECUTIVE FAILURES since 2026-08-23 02:07:24
+Last error: -2146893022 (0x80090322):
+            The target principal name is incorrect.
+
+PS C:\Windows\system32> repadmin /replsummary
+Replication Summary Start Time: 2026-09-04 01:35:25
+
+Beginning data collection for replication summary, this may take awhile:
+  ......
+
+
+Source DSA          largest delta    fails/total %%   error
+ ESWGM-AZ-DC01     11d.23h:28m:01s   10 /  10  100  (2148074274) The target principal name is incorrect.
+ ESWGM-DC01            02h:22m:44s    0 /   5    0
+ ESWGM-LA-DC01         02h:28m:18s    0 /   5    0
 
 
 
-What is the change that is being made?
-To delete and remove unused "NS" DFSR namespace from Active Directory Domain enviroment
 
-Why is the change being requested?
-To remove unneccassary records from the domain <-- I think this is also similler like before question 1
-
-When will the change be implemented?
-<SPECIFIC DAY, DATE @ TIME>
-
-Will there be downtime? If so, which systems and for how long?
-There is no downtime of any servers
-
-What is the Potential Risk or Business Impact?
-This namespace "NS" is at the moment not working, therefore no business impact
+Experienced the following operational errors trying to retrieve replication information:
+        8341 - ESWGM-AZ-DC01.lawfirm.local
+PS C:\Windows\system32>
 
 
-Will there be an expense to the client?
-No
 
-Who will be implementing the change?
-Randeer Lalanga
 
-What are the steps for implementing the change?
-Login to BCH-DC01
-Open powershell as administrator and run Get-DfsnRoot to see the dead unsuable DFSR namespace status.
-Then run "adsiedit.msc" to open ADSI Edit and then connect to "Deafult Naming Context" and then Navigate to 
-CN=Dfs-Configuration
- └─ CN=System
-    └─ DC=bautelaw,DC=local
-Look for (inside CN=Dfs-Configuration) CN=NS and then Right click and delete it.
-Perfrom metadata cleanup and remove DC-03
-repadmin /syncall /AdeP
-repadmin /showrepl
-Then run following commands;
-ipconfig /flushdns
-dfsutil cache referral flush
-dfsutil cache domain flush
-and for the last step run Get-DfsnRoot
-Delete and remove DC-03 from RMM and Datto backups
 
-After the change has been made, how will you test that it was successful?
-After completing all the neeccaasary task need to run "Get-DfsnRoot" and if it is does not give any outputs task completed successfully and old "NS" namespace is fully removed from the domain
 
-Test <business function> by:
 
-What is the rollback plan?
-<WHAT ARE THE EXACT STEPS FOR ROLLBACK - WHAT WOULD NEED TO BE DONE IF YOU WERE NOT HERE>
+
