@@ -1,4 +1,4 @@
 repadmin /showobjmeta ESWGM-AZ-DC01 "CN=ESWGM-AZ-DC01,OU=CIS Hardened 2022 DCs V5.0.0,OU=Domain Controllers,DC=lawfirm,DC=local" > C:\Temp\AZ-DC01objmeta_FROM_AZ.txt
 
 
-repadmin /showobjmeta ESWGM-DC01 "CN=ESWGM-AZ-DC01,OU=CIS Hardened 2022 DCs V5.0.0,OU=Domain Controllers,DC=lawfirm,DC=local" > C:\Temp\AZ-DC01objmeta_FROM_DC01.txt
+repadmin /showobjmeta ESWGM-DC01 "CN=ESWGM-DC01,OU=_SRV2022-L2-DC-Hardened,OU=_SRV2022-L1-DC-Hardened,OU=Domain Controllers,DC=lawfirm,DC=local" > C:\Temp\DC01objmeta.txt
