@@ -1,10 +1,188 @@
-Start-Process "Windows11InstallationAssistant.exe" -ArgumentList "/quietinstall /skipeula /auto upgrade
+PS C:\> repadmin /showrepl ESWGM-AZ-DC01
+Azure\ESWGM-AZ-DC01
+DSA Options: IS_GC 
+Site Options: (none)
+DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+DSA invocationID: 22fca060-556d-4bca-ae52-70c4f9faeb56
 
+==== INBOUND NEIGHBORS ======================================
 
-Get-WmiObject -Class Win32_QuickFixEngineering | Select-Object HotFixID, InstalledOn, @{Name="RebootRequired"; Expression={ (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired" -ErrorAction SilentlyContinue) -ne $null }}
+DC=lawfirm,DC=local
+    LA-Office\ESWGM-LA-DC01 via RPC
+        DSA object GUID: cea2f2b4-13a5-41fe-884d-d3f4060fec7c
+        Last attempt @ 2026-09-03 20:13:45 was successful.
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 21:13:45 was successful.
 
+CN=Configuration,DC=lawfirm,DC=local
+    LA-Office\ESWGM-LA-DC01 via RPC
+        DSA object GUID: cea2f2b4-13a5-41fe-884d-d3f4060fec7c
+        Last attempt @ 2026-09-03 20:13:45 was successful.
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 21:13:45 was successful.
 
-$Session = New-Object -ComObject Microsoft.Update.Session
-$Searcher = $Session.CreateUpdateSearcher()
-$InstalledUpdates = $Searcher.Search("IsInstalled=1").Updates
-$InstalledUpdates | Select-Object Title, @{Name="NeedsReboot"; Expression={$_.RebootRequired}}
+CN=Schema,CN=Configuration,DC=lawfirm,DC=local
+    LA-Office\ESWGM-LA-DC01 via RPC
+        DSA object GUID: cea2f2b4-13a5-41fe-884d-d3f4060fec7c
+        Last attempt @ 2026-09-03 20:13:45 was successful.
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 21:13:45 was successful.
+
+DC=DomainDnsZones,DC=lawfirm,DC=local
+    LA-Office\ESWGM-LA-DC01 via RPC
+        DSA object GUID: cea2f2b4-13a5-41fe-884d-d3f4060fec7c
+        Last attempt @ 2026-09-03 20:13:45 was successful.
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 21:13:45 was successful.
+
+DC=ForestDnsZones,DC=lawfirm,DC=local
+    LA-Office\ESWGM-LA-DC01 via RPC
+        DSA object GUID: cea2f2b4-13a5-41fe-884d-d3f4060fec7c
+        Last attempt @ 2026-09-03 20:13:45 was successful.
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 21:13:45 was successful.
+
+PS C:\> repadmin /showrepl ESWGM-DC01   
+STSCLOUD-ESWGM\ESWGM-DC01
+DSA Options: IS_GC 
+Site Options: (none)
+DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+DSA invocationID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+
+==== INBOUND NEIGHBORS ======================================
+
+DC=lawfirm,DC=local
+    LA-Office\ESWGM-LA-DC01 via RPC
+        DSA object GUID: cea2f2b4-13a5-41fe-884d-d3f4060fec7c
+        Last attempt @ 2026-09-03 20:07:06 was successful.
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 21:07:06 failed, result -2146893022 (0x80090322):
+            The target principal name is incorrect.
+        1129 consecutive failure(s).
+        Last success @ 2026-08-23 03:52:12.
+
+CN=Configuration,DC=lawfirm,DC=local
+    LA-Office\ESWGM-LA-DC01 via RPC
+        DSA object GUID: cea2f2b4-13a5-41fe-884d-d3f4060fec7c
+        Last attempt @ 2026-09-03 20:07:06 was successful.
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 21:07:06 failed, result -2146893022 (0x80090322):
+            The target principal name is incorrect.
+        1129 consecutive failure(s).
+        Last success @ 2026-08-23 03:52:12.
+
+CN=Schema,CN=Configuration,DC=lawfirm,DC=local
+    LA-Office\ESWGM-LA-DC01 via RPC
+        DSA object GUID: cea2f2b4-13a5-41fe-884d-d3f4060fec7c
+        Last attempt @ 2026-09-03 20:07:06 was successful.
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 21:07:06 failed, result -2146893022 (0x80090322):
+            The target principal name is incorrect.
+        1129 consecutive failure(s).
+        Last success @ 2026-08-23 03:52:12.
+
+DC=DomainDnsZones,DC=lawfirm,DC=local
+    LA-Office\ESWGM-LA-DC01 via RPC
+        DSA object GUID: cea2f2b4-13a5-41fe-884d-d3f4060fec7c
+        Last attempt @ 2026-09-03 20:07:07 was successful.
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 21:07:06 failed, result 1256 (0x4e8):
+            The remote system is not available. For information about network troubleshooting, see Windows Help.
+        1130 consecutive failure(s).
+        Last success @ 2026-08-23 03:52:12.
+
+DC=ForestDnsZones,DC=lawfirm,DC=local
+    LA-Office\ESWGM-LA-DC01 via RPC
+        DSA object GUID: cea2f2b4-13a5-41fe-884d-d3f4060fec7c
+        Last attempt @ 2026-09-03 20:07:07 was successful.
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 21:07:06 failed, result 1256 (0x4e8):
+            The remote system is not available. For information about network troubleshooting, see Windows Help.
+        1130 consecutive failure(s).
+        Last success @ 2026-08-23 03:52:12.
+
+Source: Azure\ESWGM-AZ-DC01
+******* 1130 CONSECUTIVE FAILURES since 2026-08-23 03:52:12
+Last error: -2146893022 (0x80090322):
+            The target principal name is incorrect.
+
+PS C:\> repadmin /showrepl ESWGM-LA-DC01
+LA-Office\ESWGM-LA-DC01
+DSA Options: IS_GC 
+Site Options: (none)
+DSA object GUID: cea2f2b4-13a5-41fe-884d-d3f4060fec7c
+DSA invocationID: 7602f5be-cadc-46a0-abc3-04b8ab1c4b64
+
+==== INBOUND NEIGHBORS ======================================
+
+DC=lawfirm,DC=local
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 20:12:41 was successful.
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 20:12:41 failed, result -2146893022 (0x80090322):
+            The target principal name is incorrect.
+        98 consecutive failure(s).
+        Last success @ 2026-08-23 02:07:24.
+
+CN=Configuration,DC=lawfirm,DC=local
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 20:12:41 was successful.
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 20:12:41 failed, result -2146893022 (0x80090322):
+            The target principal name is incorrect.
+        98 consecutive failure(s).
+        Last success @ 2026-08-23 02:07:24.
+
+CN=Schema,CN=Configuration,DC=lawfirm,DC=local
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 20:12:41 was successful.
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 20:12:41 failed, result -2146893022 (0x80090322):
+            The target principal name is incorrect.
+        98 consecutive failure(s).
+        Last success @ 2026-08-23 02:07:24.
+
+DC=ForestDnsZones,DC=lawfirm,DC=local
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 20:12:41 failed, result 1256 (0x4e8):
+            The remote system is not available. For information about network troubleshooting, see Windows Help.
+        98 consecutive failure(s).
+        Last success @ 2026-08-23 02:07:24.
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 20:12:41 was successful.
+
+DC=DomainDnsZones,DC=lawfirm,DC=local
+    Azure\ESWGM-AZ-DC01 via RPC
+        DSA object GUID: 5bbb2668-98d0-44ae-83de-014ca249bbed
+        Last attempt @ 2026-09-03 20:12:41 failed, result 1256 (0x4e8):
+            The remote system is not available. For information about network troubleshooting, see Windows Help.
+        98 consecutive failure(s).
+        Last success @ 2026-08-23 02:07:24.
+    STSCLOUD-ESWGM\ESWGM-DC01 via RPC
+        DSA object GUID: 312bc706-9da5-4c9b-880a-00fc11261e6a
+        Last attempt @ 2026-09-03 20:12:41 was successful.
+
+Source: Azure\ESWGM-AZ-DC01
+******* 98 CONSECUTIVE FAILURES since 2026-08-23 02:07:24
+Last error: -2146893022 (0x80090322):
+            The target principal name is incorrect.
+
+PS C:\>
