@@ -1,67 +1,16 @@
-PS C:\Windows\system32> Test-NetConnection ESWGM-AZ-DC01 -Port 445                                                                                                                                                                                                                                                                                                                                                                                                                        ComputerName     : ESWGM-AZ-DC01
-RemoteAddress    : 10.0.50.10
-RemotePort       : 445
-InterfaceAlias   : Ethernet1
-SourceAddress    : 10.100.38.10
-TcpTestSucceeded : True
-
-
-
-PS C:\Windows\system32> Test-NetConnection ESWGM-DC01 -Port 445
-
-
-ComputerName     : ESWGM-DC01
-RemoteAddress    : 10.100.38.10
-RemotePort       : 445
-InterfaceAlias   : Ethernet1
-SourceAddress    : 10.100.38.10
-TcpTestSucceeded : True
-
-
-
-PS C:\Windows\system32> Test-NetConnection ESWGM-LA-DC01 -Port 445
-
-
-ComputerName     : ESWGM-LA-DC01
-RemoteAddress    : 10.10.50.10
-RemotePort       : 445
-InterfaceAlias   : Ethernet1
-SourceAddress    : 10.100.38.10
-TcpTestSucceeded : True
-
-
-
+PS C:\Windows\system32> nltest /dsgetdc:lawfirm.local
+           DC: \\ESWGM-AZ-DC01.lawfirm.local
+      Address: \\10.0.50.10
+     Dom Guid: 6dd921d0-cfa9-40c4-bc25-24081d034776
+     Dom Name: lawfirm.local
+  Forest Name: lawfirm.local
+ Dc Site Name: Azure
+Our Site Name: Azure
+        Flags: PDC GC DS LDAP KDC TIMESERV GTIMESERV WRITABLE DNS_DC DNS_DOMAIN DNS_FOREST CLOSE_SITE FULL_SECRET WS DS_8 DS_9 DS_10 KEYLIST
+The command completed successfully
+PS C:\Windows\system32> nltest /sc_verify:lawfirm.local
+I_NetLogonControl failed: Status = 1355 0x54b ERROR_NO_SUCH_DOMAIN
+PS C:\Windows\system32> nltest /sc_query:lawfirm.local
+I_NetLogonControl failed: Status = 1355 0x54b ERROR_NO_SUCH_DOMAIN
 PS C:\Windows\system32> hostname
-ESWGM-DC01
-PS C:\Windows\system32>
----------------------------------
-PS C:\Windows\system32> Test-NetConnection ESWGM-AZ-DC01 -Port 445                                                                                                                                                                                                                                                                                                                                                                                                                        ComputerName     : ESWGM-AZ-DC01
-RemoteAddress    : 10.0.50.10
-RemotePort       : 445
-InterfaceAlias   : Ethernet 2
-SourceAddress    : 10.0.50.10
-TcpTestSucceeded : True
-
-
-
-PS C:\Windows\system32> Test-NetConnection ESWGM-DC01 -Port 445
-
-
-ComputerName     : ESWGM-DC01
-RemoteAddress    : 10.100.38.10
-RemotePort       : 445
-InterfaceAlias   : Ethernet 2
-SourceAddress    : 10.0.50.10
-TcpTestSucceeded : True
-
-
-
-PS C:\Windows\system32> Test-NetConnection ESWGM-LA-DC01 -Port 445
-
-
-ComputerName     : ESWGM-LA-DC01
-RemoteAddress    : 10.10.50.10
-RemotePort       : 445
-InterfaceAlias   : Ethernet 2
-SourceAddress    : 10.0.50.10
-TcpTestSucceeded : True
+ESWGM-AZ-DC01
