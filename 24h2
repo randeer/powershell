@@ -1,27 +1,44 @@
-repadmin /showobjmeta ESWGM-AZ-DC01 "CN=ESWGM-AZ-DC01,OU=CIS Hardened 2022 DCs V5.0.0,OU=Domain Controllers,DC=lawfirm,DC=local" > C:\Temp\AZ-DC01objmeta_FROM_AZ.txt
+do you know what is this? - From: Aderant <noreply@aderant.com>
+Sent: Monday, August 31, 2026 5:15 AM
+To: Secretary One <secretaryone@nidaromyn.com>
+Subject: Final Reminder: Microsoft's Recommended EWS Extension Deadline Is Today
+
+You don't often get email from noreply@aderant.com. Learn why this is important<https://aka.ms/LearnAboutSenderIdentification>
 
 
-repadmin /showobjmeta ESWGM-DC01 "CN=ESWGM-DC01,OU=_SRV2022-L2-DC-Hardened,OU=_SRV2022-L1-DC-Hardened,OU=Domain Controllers,DC=lawfirm,DC=local" > C:\Temp\DC01objmeta.txt
+[Image removed by sender.]
 
+Dear Dorla,
 
-repadmin /showobjmeta ESWGM-DC01 "<DN returned from Step 1>" > C:\Temp\AZ-DC01objmeta_FROM_DC01.txt
+Today is Microsoft's deadline for enabling the temporary EWS extension for organizations that have not yet completed the required CompuLaw Vision Sync Microsoft Graph upgrade.
 
+If your firm has already completed the Microsoft Graph upgrade or has already enabled Microsoft's temporary EWS extension, no further action is required and you may disregard this email.
 
-netdom verify ESWGM-AZ-DC01 /domain:lawfirm.local
+If you are receiving this email as a member of your firm's docketing, records, or operations team, please forward this communication to your IT department or Microsoft 365 administrator for immediate review and action.
 
-dcdiag /test:CheckSecurityError /v
+Microsoft will begin the phased retirement of Exchange Web Services (EWS) in Exchange Online on October 1, 2026. Firms that have not completed the Microsoft Graph upgrade and have not enabled Microsoft's temporary EWS extension may be at increased risk of service disruption once Microsoft's EWS retirement activities begin.
 
-repadmin /showrepl ESWGM-AZ-DC01 /errorsonly
+If the extension is not enabled and the Graph upgrade is not completed, your firm may experience:
 
+  *   Loss or interruption of CompuLaw Vision Sync functionality with Exchange Online
+  *   Outlook calendar events and deadlines no longer synchronizing or updating as expected.
+  *   Reduced visibility of CompuLaw deadlines in Outlook, increasing the risk of missed deadlines and workflow disruption.
+CompuLaw itself will remain available for docketing; however, the Exchange/Outlook synchronization that supports deadline visibility may be affected.
 
-PS C:\Windows\system32> repadmin /replsummary
-Replication Summary Start Time: 2026-09-04 01:27:29
+Please contact your Microsoft 365 administrator to enable the temporary EWS extension as soon as possible.
 
-Beginning data collection for replication summary, this may take awhile:
-  ......
+Please Notify Aderant
+If your firm enables Microsoft's EWS extension, please notify us at:
+Compulaw_EWSUpgrade@aderant.com<mailto:Compulaw_EWSUpgrade@aderant.com?subject=&body=>
 
+This helps us coordinate readiness planning and provide assistance where needed.
 
-Source DSA          largest delta    fails/total %%   error
- ESWGM-AZ-DC01     11d.23h:20m:05s   10 /  10  100  (2148074274) The target principal name is incorrect.
- ESWGM-DC01            02h:14m:48s    0 /  10    0
- ESWGM-LA-DC01         02h:20m:22s    3 /  10   30  (5) Access is denied.
+The extension is valid through April 1, 2027, when Microsoft will permanently retire EWS for Exchange Online. However, the extension is only a temporary measure and does not replace the required Microsoft Graph upgrade.
+
+If your firm has not yet scheduled its CompuLaw Vision Sync upgrade, we strongly encourage you to begin planning immediately.
+
+For guidance, please view the myAderant Article:?
+Exchange Web Services (EWS): Preparing Exchange Online for Microsoft's October 2026 EWS Disablement<http://url7660.aderant.com/ls/click?upn=u001.7OmzwFpNd4383HI801J9Ceryjn6Mg-2FDzYxP-2FVsABmSEazG7QTIUeeewJ0k9Bn-2F4iJWS-2B86AmBsVaiFAezEqgIT-2B-2F3Gp-2FR4ApZEBVTvBvTVQiHw7HCqkzFpdh4lwyATOFl3-2BFszckK7d53Sew76pA-2BOwAwEwB0fw9IxpgmJAt0RbKVVcXw-2BS0EkRLKKGScl6nCmBU1n2MhqXoEnyosFO0kfs0OAYD2VMbUnXibV0Gt8tiQp-2FrUDMWU5C9G3a-2BS-2F-2FKHj8WITQp9Hq8VhllsLAduZUeb6l2oVzvsyazNtCIdPG7-2BHjg8VXbUUqSbpcctwz1UKgQ3H4uZOCzL5GLj2FBeKWBDRqgaiUFCQNX7x7FEy9nLoMgR9kGEMG1-2FnfgPzDcgMVjej0smZ4Ri9fk0YSYRFGV-2B-2BA0Zx5977XCdcx4TCPU8s44oUm-2FPADhwN9ib2LWyjYG7mBQ9s5I9doK7V1GoC0Z0NiDCNboI33qKDkoN3MHsXLnNT7V1G4rE54obUfykohAK35kpLjEwLwK3g0Kr7J4lvaV-2F2MvZjLx1q3LvmEDf0aZdFQJvy6i8m-2ByYCSirWXTkz3uFSyBfNeOain-2FMCLD-2BZGCOLUn0iJFB0HhGDI7rvTvGNiyD4EevLPvmKmFAEmvn48bpNe7MevQY9spAeUojnO4KBkHJMBjYmm6yanIE2uR-2BjiG9kk6XqjqBf-2FiMc2T-2F0vS3qI3nGqWxp2-2ByU8aBj-2B2sNdFR6VDeGOOF1ZUX1jzYTGkzJgUFiHkVCZNMpysq3K-2B09Y91X58RzCDVyoyLXx5JOpefiLOEwivEzq6-2F7ph9V-2F-2BMxQsx1de3gwYssLC8l17G9SXc9614gfndW63ed-2BpW-2FfJvyXHp-2Fb8pTbNAAzH40IcrZg82z9ZfXOkwFVWR4eYdjj8mBV3cOWBx1kqCiWYCSs5MZdqQzj3fI5x8QmkzAu05GnCVxb966oXTDJWZdJx2DmfGUuEsaCG-2BUSNx2ms7kKMYpjIxpUGyH9LIW-2BXUZ5mqmBFRuHl8eqtm1s48LUpcplhjGleZJ6CtE-2B3t0w99nJs81kGplcBKiKCkJVUwYpGCTw0y0JLDcMfBfytPtnJbEKab3xP2I0m8brwP3ME-2FlAmirjnsaVh8vTUXTL8ubX5-2B9f42Tmr99Vl0-2Biper6LlkihzfHTKJativ-2Bp7hBcmVsb4WkrI2VIRvkbrYkuabsNQZotVYqoP3C8RSOsCUpLDLpC7lt4oKyIQO1koniYveiyoEHHerh-2Fofqw9QCKdy68hSQAmEiICpRtadF3izKIHxfx46VE6k5CpBflJC3T-2BOoWdf7DvOW6tPVDFgtPR43Ji9HtAPaL62mUe1la_uHJs1V-2BH4MSuZwiBXZ3mvnnOABa9P2VYA50jLRj0M-2FT6sFoxdOvwXEaNvBCgN-2F1bWvwZBHXxWcTJJZmJV3VqPAhYzT75QZXZE-2FrywdXozb-2Fli7EbVTQzIYnvkxYgl4XL-2B6edlxuFuPtp7qIm3IYfDhbHdZa3ZSveFLlIL9SgykEovzw7BpGqKwzNPLVMI8G98NgDafig1OgAxrF4zLKPs9b7xrBY0E-2Bu-2BaBXLUItgwrQE9rJnKhZfuMC5e8XSxyE6-2BzCVSFAK4Qguler22eSBb0nLTdJtuxpt7lS82XoPGWFLJ0em0b3Lvn9ydAzxfZkWdJFDXNuautA6Wp-2FLaBmbK7AO18CeCvxnBDFRBY5scRFVc9aga3IangIwuFqDCS7OJyB5odyHMlrkUueCjMKDCFzxm-2BlLyADdPrDrQtKXqbxU6krQSbcCpd9tHYM3GTbCeE0SDHYA7-2FSoUTQzSHVAqANxzjj9lYy3YZsQMOAC27IfTUZhRA6dxRWxx6I6QBBjh1hBbgZlEmP1NctfpXMz8dGmkowd1zOi1hIim7go0WfS0me0FkLx7qfOxZHelfNbjO8-2BYbNAKf0DtCuBLYFKibfyHTAN-2FiofZVIlb1-2F8vjcNDbTuVA4B4zbn4kn6Edyu9CW3A8GDM4sPD9stGe8Sy9j9iIA4tIKL2OynKwqcNslm7Rf7KPDR3p6xMyzLoNFPksV6NJjqnUYuysZsO8Hwb7iK-2BAphIb7N6yoNd8mT8F3l4xutvjMesI9t9LgX3ighFHFFpgtDNcn2ryUU-2BkrIgUoWZ0r0EInwisr6OeKGvqQrhjw-2FW9f9Bi6WZtiGwRHsc-2FPCj578YxrINQBj4di1pf6SYeS1D2JJASEB1NDZvRkz5hxzJNfdMnxTz0KvmwqmESja3Tfyd-2BW1NRoYTjPuO8nZXq9vp7dmL1pgMWtKt9UQUys1NBb2pZc6wzER0-2FywwaLVYhVWZDJDfrk1BY-2FfHjb-2B7zogSdILTxqGzjw8KFeYHLdaIc-2Bv1-2FEVH1FWJZg>
+
+If you need assistance confirming your firm’s readiness or scheduling the upgrade, please submit a ticket in the myAderant portal: ?www.myAderant.com<http://url7660.aderant.com/ls/click?upn=u001.7OmzwFpNd4383HI801J9CUy0PK3Xljb8Lz4Nd9BlvbnTcOlUlVlX62PZS8mFmZYexW7P_uHJs1V-2BH4MSuZwiBXZ3mvnnOABa9P2VYA50jLRj0M-2FT6sFoxdOvwXEaNvBCgN-2F1bWvwZBHXxWcTJJZmJV3VqPAhYzT75QZXZE-2FrywdXozb-2Fli7EbVTQzIYnvkxYgl4XL-2B6edlxuFuPtp7qIm3IYfDhbHdZa3ZSveFLlIL9SgykEovzw7BpGqKwzNPLVMI8G98NgDafig1OgAxrF4zLKPs9b7xrBY0E-2Bu-2BaBXLUItgwrQE9rJnKhZfuMC5e8XSxyE6-2BzCVSFAK4Qguler22eSBb0nLTdJtuxpt7lS82XoPGWFLJ0em0b3Lvn9ydAzxfZkWdJFDXNuautA6Wp-2FLaBmbK7AO18CeCvxnBDFRBY5scRFVc9aga3IangIwuFqDCS7OJyB5odyHMlrkUueCjMKDCFzxm-2
+
