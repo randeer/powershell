@@ -1,56 +1,88 @@
-<configuration>
-  <Synching>
-    <XmlSerializerSection type="Vision.Groupware.Synching.Utilities.SynchConfigurationData, VGSU, Version=3.58.9092.17500, Culture=neutral, PublicKeyToken=null">
-      <SynchConfigurationData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <ClientSecret>YPnNR3TR/8SXcYm6Ta3FXEjnTbh+IBtpigFgEdCo6sjaz2zDYeM+iLb/WD2rTr7T</ClientSecret>
-        <ConsolidateReminderEmailsOrder>0</ConsolidateReminderEmailsOrder>
-        <EDocsIsV10>false</EDocsIsV10>
-        <EDocsQuoteLinks>false</EDocsQuoteLinks>
-        <iManageIsV10>false</iManageIsV10>
-        <QuoteInterwovenLinks>false</QuoteInterwovenLinks>
-        <UseConfiguredOWAServersOnly>false</UseConfiguredOWAServersOnly>
-        <UseConfiguredEWSServersOnly>false</UseConfiguredEWSServersOnly>
-        <UseEWSAPIAutodiscover>true</UseEWSAPIAutodiscover>
-        <NoLockVision>false</NoLockVision>
-        <NoLockPimSync>false</NoLockPimSync>
-        <SQLTimeout>0</SQLTimeout>
-        <IgnoreDatabaseUpgradeErrors>false</IgnoreDatabaseUpgradeErrors>
-        <NoExchangeServer>false</NoExchangeServer>
-        <HideToField>false</HideToField>
-        <SkipCustomField>false</SkipCustomField>
-        <DisableConnectionReuse>false</DisableConnectionReuse>
-        <DisableKeepAlive>false</DisableKeepAlive>
-        <DisablePreAuthenticate>false</DisablePreAuthenticate>
-        <HideLogTimestamps>false</HideLogTimestamps>
-        <DetectOWAServers>true</DetectOWAServers>
-        <UseLegacyUrlCheck>false</UseLegacyUrlCheck>
-        <SkipUrlCache>false</SkipUrlCache>
-        <AutoDeleteExtra>true</AutoDeleteExtra>
-        <RetrieveItemsBatchSize>50</RetrieveItemsBatchSize>
-        <Domain>nidaromyn.com</Domain>
-        <Username>a@a.com</Username>
-        <Password>VERmEM3mdMlikGJwZ+k4hjOigcQl0JYTa4sJJxKcbYY=</Password>
-        <AzureClientID>940b22f7-fac3-405a-910d-ab654c96e905</AzureClientID>
-        <UseEWSNoAnchorMbx>true</UseEWSNoAnchorMbx>
-        <SMTPServer>outbound-us1.ppe-hosted.com</SMTPServer>
-        <SMTPFrom>VisionSync@nidaromyn.com</SMTPFrom>
-        <UseAlternativeUrl>false</UseAlternativeUrl>
-        <ActionLogFileName>C:\Program Files (x86)\Vision Sync for Exchange\logs\sync_[year][month][day].log</ActionLogFileName>
-        <ExceptionPublisherFileName>C:\Program Files (x86)\Vision Sync for Exchange\logs\errors_[year][month][day].log</ExceptionPublisherFileName>
-        <ExceptionPublisherEmail>office365admin@nidaromyn.com</ExceptionPublisherEmail>
-        <LogExpirationDays>-1</LogExpirationDays>
-        <AllowDupADLogins>false</AllowDupADLogins>
-        <AppendFooter>true</AppendFooter>
-        <GuessAutoDiscoverURLs>false</GuessAutoDiscoverURLs>
-        <BatchLoadTimekeepersList />
-        <Office365EwsUrl>https://outlook.office365.com/EWS/Exchange.asmx</Office365EwsUrl>
-        <EWSUseKerberosOnly>false</EWSUseKerberosOnly>
-        <DisableSPNCheck>true</DisableSPNCheck>
-        <DisableExchange2003>true</DisableExchange2003>
-        <UseSimpleSearch>true</UseSimpleSearch>
-        <DisableTaskSynching>false</DisableTaskSynching>
-        <ForceOffice365EwsUrl>true</ForceOffice365EwsUrl>
-      </SynchConfigurationData>
-    </XmlSerializerSection>
-  </Synching>
-</configuration>
+Does this article 
+
+
+CompuLaw Vision Synch for Exchange: How to install VSFE 4.0+ and transition from EWS items to MS Graph items
+This article discusses how to install Vision Synch for Exchange version 4.0 and higher as well as how to run the replacer module to convert all future EWS items into MS Graph versions ahead of Microsoft's retirement of EWS in Exchange Online.
+Aug 11, 2026
+Knowledge
+Title
+CompuLaw Vision Synch for Exchange: How to install VSFE 4.0+ and transition from EWS items to MS Graph items
+Article Number
+000026543
+Summary
+This article discusses how to install Vision Synch for Exchange version 4.0 and higher as well as how to run the replacer module to convert all future EWS items into MS Graph versions ahead of Microsoft's retirement of EWS in Exchange Online.
+Discussion
+Overview
+Microsoft is retiring Exchange Web Services (EWS) for Exchange Online effective October 2026. To maintain synchronization between CompuLaw and Exchange Online, update Vision Sync for Exchange to use Microsoft Graph.
+This process applies only to firms currently synchronizing CompuLaw Exchange Sync with Office 365 or Exchange Online.
+If your firm synchronizes with on-premises Exchange, no action is required. If your firm plans to migrate to Microsoft 365, contact Aderant Support before proceeding.
+Important: Complete all steps in the order provided. Changing the sequence can cause future synchronization issues.
+Pause the Scheduled Synchronization Cycle
+Pause synchronization before making application changes.
+Open Windows Task Scheduler on the Vision Sync for Exchange server.
+Locate the scheduled task that runs the CompuLaw synchronization cycle, typically launching VisionSynch.exe.
+Right-click the task and select Disable.
+Create Required Backups
+Before proceeding, create the following backups:
+A complete copy of the existing Vision Sync for Exchange application folder.
+A current backup of the CompuLawSync SQL database.
+Note: You can exclude the Logs folder from the application backup to reduce size.
+Note: Confirm you are backing up the synchronization database and not the primary CompuLaw Vision database.
+Validate Entra ID Application Permissions
+Validate the required Microsoft Entra ID application permissions before updating synchronization settings.
+Sign in to Microsoft 365 as an administrator.
+Open the Microsoft Entra Admin Center.
+Go to App registrations > All applications.
+Select the existing Exchange Sync application.
+Go to API Permissions.
+Confirm the following permissions exist:
+Permission TypeRequired Permissions
+Microsoft Graph (Application Permissions)
+Calendars.ReadWrite
+Microsoft Graph (Application Permissions)
+Tasks.ReadWrite.All
+Microsoft Graph (Application Permissions)
+User.Read.All
+Office 365 Exchange Online
+full_access_as_app
+Note: Review the client secret expiration date and renew it if necessary before proceeding.
+Note: User.Read.All replaces the previously required Directory.Read.All permission for Exchange synchronization.
+Important: Do not remove full_access_as_app until the Replacer.exe process completes.
+After confirming or adding permissions:
+Click Grant Admin Consent.
+Confirm consent is successfully granted.
+Apply the Exchange Sync Update
+Apply the updated synchronization application files.
+Run Vision Sync for Exchange Update.exe.
+Install the update over the existing Vision Sync for Exchange folder.
+After installation completes, the system continues operating with EWS until you update the configuration settings.
+Update the Configuration Schema
+Open pimsyncsetup.exe.
+Perform a synchronization cycle.
+Close the application.
+Switch Synchronization Mode
+Open the synching.config file in the upgraded Vision Sync for Exchange folder.
+Locate the following setting:
+Change the value to:
+Save the file.
+This change enables synchronization through Microsoft Graph.
+Run Replacer.exe
+The Replacer.exe process converts existing EWS calendar items into Microsoft Graph-based items.
+By default, the process scans calendar items beginning 30 days in the past and continuing through all future events.
+Key Considerations
+Items not yet processed by Replacer.exe do not update through normal synchronization after enabling Microsoft Graph mode.
+The process can take several days depending on the amount of calendar data.
+Allow the process to complete, or nearly complete for future events, before relying on standard synchronization updates.
+Run the Replacer Process
+Open Replacer.exe from the Vision Sync for Exchange folder.
+Monitor progress and confirm all future events convert successfully.
+Resume the Scheduled Synchronization Cycle
+After the Replacer.exe process starts, resume scheduled synchronization.
+Return to Windows Task Scheduler.
+Locate the scheduled task that runs the CompuLaw synchronization cycle, typically launching VisionSynch.exe.
+Right-click the task and select Enable.
+Confirm synchronization operates normally.
+Get Support
+If you need assistance, contact Aderant Support.
+Visit the Aderant Support Portal at MyAderant.com.
+Call +1 850 224 2004 for telephone support.
