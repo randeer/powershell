@@ -1,82 +1,33 @@
+I found another article, is this helpful
 
-Does this article related, I found this
 
-
-Why EWS End of Life Matters and is Important
-Microsoft is retiring the Exchange Web Services (EWS) API.
-Starting 1 October 2026, all non-Microsoft apps (like Expert) will be blocked from using EWS with Exchange Online.
-Aderant modules must migrate to the Microsoft Graph API – a more secure and modern solution.
-What This Means for Your Firm
-To remain compatible with Microsoft’s changes, Expert clients will need to apply a new release with support for the Graph API, and redeploy their environment.
-This upgrade ensures your firm benefits from the more secure, modern Microsoft Graph API foundation.
-Even if you recently upgraded, a new release with support for the Graph API will still be required to keep your system current.
-If your firm is planning to implement an affected module, a new release with support for the Graph API will be a necessary prerequisite.
-We recognize that additional upgrades are disruptive, which is why our goal is to make this transition as smooth and beneficial as possible - giving your firm both immediate compliance and a stronger long-term platform.
-Who is affected by this change?
-Not impacted: Expert firms using Expert Classic applications only or Firms with on-premises Exchange servers
-Impacted: Firms using Exchange Online (O365) with affected Aderant applications
+Compulaw Vision Sync for Exchange: Configure a Single EWS Server
+This article explains how to configure Vision Sync for Exchange to use a single or specific EWS server instead of Autodiscover.
+Apr 24, 2026
+Knowledge
+Title
+Compulaw Vision Sync for Exchange: Configure a Single EWS Server
+Article Number
+000017104
+Summary
+This article explains how to configure Vision Sync for Exchange to use a single or specific EWS server instead of Autodiscover.
+Discussion
+In on-prem Exchange environments with multiple servers, Vision Sync for Exchange can automatically locate EWS through Autodiscover. However, you can configure the application to use a single or specific EWS server when connecting to mailboxes.
  
-Expert/ Sierra Module 
-Impacted Features
-Expert Accounts Payable
-Remittance Advice Emails, Invoice Recognition
-Expert Billing
-Emailing Bills, eBill Status Updates
-Expert Expenses
-Contact Management (specifically, contacts attached to meal receipts)
-Expert Case
-Exchange Sync Job
-Expert Time
-Found Time
-Expert Workflows
-Collections Letter, Email Notifications, Send Email Activity, Task Approval Inbox Processor
+Note: These instructions apply to on-prem Exchange environments where there may be multiple Exchange servers.
  
-CompuLaw (Vision Sync module), vi by Aderant, Total Office
-What is the Timing & Planning
-Microsoft’s retirement of EWS takes effect 1 October 2026.
-For Expert and Sierra clients, we are pleased to share that version 8.2.4.1, which introduces support for the Graph API, was released in November 2025 and is available. As Microsoft has announced the end of life for EWS, we recognize the importance of ensuring a smooth and timely transition. To support this, we are also actively investigating the possibility of enabling Graph API support in earlier releases for supported versions. We value your partnership and are committed to helping you navigate this change with confidence and minimal disruption.
+Vision Sync for Exchange requires impersonation rights on each server you specify. For more information, refer to Impersonation Rights With Exchange 2013 and Exchange 2016.
+Open the Vision Sync for Exchange folder.
+Open the syncing.config file.
+Add the following tags:
 
-
-For CompuLaw: No action is needed now. We will notify your firm when the release is available.
-For ATO (Total Office): Firms will need to upgrade to version 9.3, your firm will be notified when this release is available.
-For vi by Aderant: On-premises clients must upgrade to 2022 Q1 B1 or later to remain supported. 
-What are the Costs & Scope
-If your firm is on Expert Sierra, you’re already in great shape! A no cost technical upgrade is available and our Aderant team will be in touch to schedule next steps.
-If you are an Expert on-premise client:
-A validation SQL script will be available on www.myaderant.com to identify impacted features and define the scope of your upgrade.
-Our Professional Services team can assist with the technical upgrade to ensure a smooth transition.
-Costs will vary based on your firm’s integrations, customizations, and testing needs; complex environments may require additional scoping.
-To avoid scheduling delays, we recommend sharing your validation results early so we can assess your needs and secure your place in the services queue.
-We are coordinating with third-party partners to keep the entire ecosystem aligned for a seamless experience.
-How do I access the Expert SQL validation script and submit the results?
-Note: This step is only needed if your firm is running Expert on-premises. If your firm is on Expert Sierra, CompuLaw, ATO, or vi by Aderant – this step is not required.
-For Expert on-premises firms only:
-Download the EWS SQL Validation Script from www.myaderant.com (Announcements → or search “Identifying EWS Usage in Expert Systems”) or use this link.
-Run the script in your environment.
-Submit results for analysis to EWSupgrade@aderant.com.
-Receive feedback from Aderant confirming impact and next steps.
-What are the Next Steps for Expert On-Premise or Expert Sierra Clients
-If your firm is on Expert Sierra, no action is needed if your system is on Expert 8.2.4.1. Firms requiring upgrade, please submit a support ticket, and the Cloud Operations team coordinates and completes the technical upgrade.
-If you are Expert on-premises, you will need to run an EWS SQL Validation Script to confirm if your Expert system is using EWS.
-Download the EWS SQL Validation Script from www.myaderant.com (Announcements → or search “Identifying EWS Usage in Expert Systems”) or use this link.
-Run the script in your environment.
-Submit results for analysis to EWSupgrade@aderant.com
-Receive feedback from Aderant confirming impact and next steps.
-What are the Next Steps for CompuLaw, ATO, and vi by Aderant
-CompuLaw: No immediate action is required. We will notify your firm once the release is available.
-ATO (Total Office): Your firm will need to upgrade to version 9.3. We will notify your firm once the release is available.
-vi by Aderant: If your firm is running on-premises, you will need to upgrade to 2022 Q1 B1 or later to remain supported. Our team will work with you to confirm your current version and guide you through the upgrade process.
-Our Commitment to You
-We understand that additional upgrades are disruptive, and our goal is to make this transition as smooth and supported as possible for your firm.
-Here’s how we are here to help:
-Validation tools - Scripts will be provided to quickly identify if and where your firm is impacted.
-Clear guidance - You will receive straightforward communications and step-by-step upgrade guides so you know what to expect.
-Aligned ecosystem - We are coordinating with third-party partners to ensure their solutions remain compatible and the transition is seamless.
-Dedicated resources - Your Customer Success Manager, Client Manager, and Support teams are available to answer questions. We are committed to guiding you through this process, so your firm feels confident, supported, and well-prepared for the future.
+Enter the name of the Exchange server in the EWSServers tag.
+You can specify multiple servers by separating the server names with a comma.
+Example: 
 Last Published Date
-2/2/2026 6:42 PM
+4/24/2026 3:53 PM
 References
 Associated Products
-CompuLaw;Expert;Sierra;Total Office Case;Total Office Financial;vi by Aderant
+CompuLaw
 URL Name
-Exchange-Web-Services-EWS-FAQs
+Compulaw-Vision-Vision-Sync-for-Exchange-Configure-a-Single-EWS-Server
