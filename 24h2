@@ -1,44 +1,82 @@
-do you know what is this? - From: Aderant <noreply@aderant.com>
-Sent: Monday, August 31, 2026 5:15 AM
-To: Secretary One <secretaryone@nidaromyn.com>
-Subject: Final Reminder: Microsoft's Recommended EWS Extension Deadline Is Today
 
-You don't often get email from noreply@aderant.com. Learn why this is important<https://aka.ms/LearnAboutSenderIdentification>
+Does this article related, I found this
 
 
-[Image removed by sender.]
+Why EWS End of Life Matters and is Important
+Microsoft is retiring the Exchange Web Services (EWS) API.
+Starting 1 October 2026, all non-Microsoft apps (like Expert) will be blocked from using EWS with Exchange Online.
+Aderant modules must migrate to the Microsoft Graph API – a more secure and modern solution.
+What This Means for Your Firm
+To remain compatible with Microsoft’s changes, Expert clients will need to apply a new release with support for the Graph API, and redeploy their environment.
+This upgrade ensures your firm benefits from the more secure, modern Microsoft Graph API foundation.
+Even if you recently upgraded, a new release with support for the Graph API will still be required to keep your system current.
+If your firm is planning to implement an affected module, a new release with support for the Graph API will be a necessary prerequisite.
+We recognize that additional upgrades are disruptive, which is why our goal is to make this transition as smooth and beneficial as possible - giving your firm both immediate compliance and a stronger long-term platform.
+Who is affected by this change?
+Not impacted: Expert firms using Expert Classic applications only or Firms with on-premises Exchange servers
+Impacted: Firms using Exchange Online (O365) with affected Aderant applications
+ 
+Expert/ Sierra Module 
+Impacted Features
+Expert Accounts Payable
+Remittance Advice Emails, Invoice Recognition
+Expert Billing
+Emailing Bills, eBill Status Updates
+Expert Expenses
+Contact Management (specifically, contacts attached to meal receipts)
+Expert Case
+Exchange Sync Job
+Expert Time
+Found Time
+Expert Workflows
+Collections Letter, Email Notifications, Send Email Activity, Task Approval Inbox Processor
+ 
+CompuLaw (Vision Sync module), vi by Aderant, Total Office
+What is the Timing & Planning
+Microsoft’s retirement of EWS takes effect 1 October 2026.
+For Expert and Sierra clients, we are pleased to share that version 8.2.4.1, which introduces support for the Graph API, was released in November 2025 and is available. As Microsoft has announced the end of life for EWS, we recognize the importance of ensuring a smooth and timely transition. To support this, we are also actively investigating the possibility of enabling Graph API support in earlier releases for supported versions. We value your partnership and are committed to helping you navigate this change with confidence and minimal disruption.
 
-Dear Dorla,
 
-Today is Microsoft's deadline for enabling the temporary EWS extension for organizations that have not yet completed the required CompuLaw Vision Sync Microsoft Graph upgrade.
-
-If your firm has already completed the Microsoft Graph upgrade or has already enabled Microsoft's temporary EWS extension, no further action is required and you may disregard this email.
-
-If you are receiving this email as a member of your firm's docketing, records, or operations team, please forward this communication to your IT department or Microsoft 365 administrator for immediate review and action.
-
-Microsoft will begin the phased retirement of Exchange Web Services (EWS) in Exchange Online on October 1, 2026. Firms that have not completed the Microsoft Graph upgrade and have not enabled Microsoft's temporary EWS extension may be at increased risk of service disruption once Microsoft's EWS retirement activities begin.
-
-If the extension is not enabled and the Graph upgrade is not completed, your firm may experience:
-
-  *   Loss or interruption of CompuLaw Vision Sync functionality with Exchange Online
-  *   Outlook calendar events and deadlines no longer synchronizing or updating as expected.
-  *   Reduced visibility of CompuLaw deadlines in Outlook, increasing the risk of missed deadlines and workflow disruption.
-CompuLaw itself will remain available for docketing; however, the Exchange/Outlook synchronization that supports deadline visibility may be affected.
-
-Please contact your Microsoft 365 administrator to enable the temporary EWS extension as soon as possible.
-
-Please Notify Aderant
-If your firm enables Microsoft's EWS extension, please notify us at:
-Compulaw_EWSUpgrade@aderant.com<mailto:Compulaw_EWSUpgrade@aderant.com?subject=&body=>
-
-This helps us coordinate readiness planning and provide assistance where needed.
-
-The extension is valid through April 1, 2027, when Microsoft will permanently retire EWS for Exchange Online. However, the extension is only a temporary measure and does not replace the required Microsoft Graph upgrade.
-
-If your firm has not yet scheduled its CompuLaw Vision Sync upgrade, we strongly encourage you to begin planning immediately.
-
-For guidance, please view the myAderant Article:?
-Exchange Web Services (EWS): Preparing Exchange Online for Microsoft's October 2026 EWS Disablement<http://url7660.aderant.com/ls/click?upn=u001.7OmzwFpNd4383HI801J9Ceryjn6Mg-2FDzYxP-2FVsABmSEazG7QTIUeeewJ0k9Bn-2F4iJWS-2B86AmBsVaiFAezEqgIT-2B-2F3Gp-2FR4ApZEBVTvBvTVQiHw7HCqkzFpdh4lwyATOFl3-2BFszckK7d53Sew76pA-2BOwAwEwB0fw9IxpgmJAt0RbKVVcXw-2BS0EkRLKKGScl6nCmBU1n2MhqXoEnyosFO0kfs0OAYD2VMbUnXibV0Gt8tiQp-2FrUDMWU5C9G3a-2BS-2F-2FKHj8WITQp9Hq8VhllsLAduZUeb6l2oVzvsyazNtCIdPG7-2BHjg8VXbUUqSbpcctwz1UKgQ3H4uZOCzL5GLj2FBeKWBDRqgaiUFCQNX7x7FEy9nLoMgR9kGEMG1-2FnfgPzDcgMVjej0smZ4Ri9fk0YSYRFGV-2B-2BA0Zx5977XCdcx4TCPU8s44oUm-2FPADhwN9ib2LWyjYG7mBQ9s5I9doK7V1GoC0Z0NiDCNboI33qKDkoN3MHsXLnNT7V1G4rE54obUfykohAK35kpLjEwLwK3g0Kr7J4lvaV-2F2MvZjLx1q3LvmEDf0aZdFQJvy6i8m-2ByYCSirWXTkz3uFSyBfNeOain-2FMCLD-2BZGCOLUn0iJFB0HhGDI7rvTvGNiyD4EevLPvmKmFAEmvn48bpNe7MevQY9spAeUojnO4KBkHJMBjYmm6yanIE2uR-2BjiG9kk6XqjqBf-2FiMc2T-2F0vS3qI3nGqWxp2-2ByU8aBj-2B2sNdFR6VDeGOOF1ZUX1jzYTGkzJgUFiHkVCZNMpysq3K-2B09Y91X58RzCDVyoyLXx5JOpefiLOEwivEzq6-2F7ph9V-2F-2BMxQsx1de3gwYssLC8l17G9SXc9614gfndW63ed-2BpW-2FfJvyXHp-2Fb8pTbNAAzH40IcrZg82z9ZfXOkwFVWR4eYdjj8mBV3cOWBx1kqCiWYCSs5MZdqQzj3fI5x8QmkzAu05GnCVxb966oXTDJWZdJx2DmfGUuEsaCG-2BUSNx2ms7kKMYpjIxpUGyH9LIW-2BXUZ5mqmBFRuHl8eqtm1s48LUpcplhjGleZJ6CtE-2B3t0w99nJs81kGplcBKiKCkJVUwYpGCTw0y0JLDcMfBfytPtnJbEKab3xP2I0m8brwP3ME-2FlAmirjnsaVh8vTUXTL8ubX5-2B9f42Tmr99Vl0-2Biper6LlkihzfHTKJativ-2Bp7hBcmVsb4WkrI2VIRvkbrYkuabsNQZotVYqoP3C8RSOsCUpLDLpC7lt4oKyIQO1koniYveiyoEHHerh-2Fofqw9QCKdy68hSQAmEiICpRtadF3izKIHxfx46VE6k5CpBflJC3T-2BOoWdf7DvOW6tPVDFgtPR43Ji9HtAPaL62mUe1la_uHJs1V-2BH4MSuZwiBXZ3mvnnOABa9P2VYA50jLRj0M-2FT6sFoxdOvwXEaNvBCgN-2F1bWvwZBHXxWcTJJZmJV3VqPAhYzT75QZXZE-2FrywdXozb-2Fli7EbVTQzIYnvkxYgl4XL-2B6edlxuFuPtp7qIm3IYfDhbHdZa3ZSveFLlIL9SgykEovzw7BpGqKwzNPLVMI8G98NgDafig1OgAxrF4zLKPs9b7xrBY0E-2Bu-2BaBXLUItgwrQE9rJnKhZfuMC5e8XSxyE6-2BzCVSFAK4Qguler22eSBb0nLTdJtuxpt7lS82XoPGWFLJ0em0b3Lvn9ydAzxfZkWdJFDXNuautA6Wp-2FLaBmbK7AO18CeCvxnBDFRBY5scRFVc9aga3IangIwuFqDCS7OJyB5odyHMlrkUueCjMKDCFzxm-2BlLyADdPrDrQtKXqbxU6krQSbcCpd9tHYM3GTbCeE0SDHYA7-2FSoUTQzSHVAqANxzjj9lYy3YZsQMOAC27IfTUZhRA6dxRWxx6I6QBBjh1hBbgZlEmP1NctfpXMz8dGmkowd1zOi1hIim7go0WfS0me0FkLx7qfOxZHelfNbjO8-2BYbNAKf0DtCuBLYFKibfyHTAN-2FiofZVIlb1-2F8vjcNDbTuVA4B4zbn4kn6Edyu9CW3A8GDM4sPD9stGe8Sy9j9iIA4tIKL2OynKwqcNslm7Rf7KPDR3p6xMyzLoNFPksV6NJjqnUYuysZsO8Hwb7iK-2BAphIb7N6yoNd8mT8F3l4xutvjMesI9t9LgX3ighFHFFpgtDNcn2ryUU-2BkrIgUoWZ0r0EInwisr6OeKGvqQrhjw-2FW9f9Bi6WZtiGwRHsc-2FPCj578YxrINQBj4di1pf6SYeS1D2JJASEB1NDZvRkz5hxzJNfdMnxTz0KvmwqmESja3Tfyd-2BW1NRoYTjPuO8nZXq9vp7dmL1pgMWtKt9UQUys1NBb2pZc6wzER0-2FywwaLVYhVWZDJDfrk1BY-2FfHjb-2B7zogSdILTxqGzjw8KFeYHLdaIc-2Bv1-2FEVH1FWJZg>
-
-If you need assistance confirming your firm’s readiness or scheduling the upgrade, please submit a ticket in the myAderant portal: ?www.myAderant.com<http://url7660.aderant.com/ls/click?upn=u001.7OmzwFpNd4383HI801J9CUy0PK3Xljb8Lz4Nd9BlvbnTcOlUlVlX62PZS8mFmZYexW7P_uHJs1V-2BH4MSuZwiBXZ3mvnnOABa9P2VYA50jLRj0M-2FT6sFoxdOvwXEaNvBCgN-2F1bWvwZBHXxWcTJJZmJV3VqPAhYzT75QZXZE-2FrywdXozb-2Fli7EbVTQzIYnvkxYgl4XL-2B6edlxuFuPtp7qIm3IYfDhbHdZa3ZSveFLlIL9SgykEovzw7BpGqKwzNPLVMI8G98NgDafig1OgAxrF4zLKPs9b7xrBY0E-2Bu-2BaBXLUItgwrQE9rJnKhZfuMC5e8XSxyE6-2BzCVSFAK4Qguler22eSBb0nLTdJtuxpt7lS82XoPGWFLJ0em0b3Lvn9ydAzxfZkWdJFDXNuautA6Wp-2FLaBmbK7AO18CeCvxnBDFRBY5scRFVc9aga3IangIwuFqDCS7OJyB5odyHMlrkUueCjMKDCFzxm-2
-
+For CompuLaw: No action is needed now. We will notify your firm when the release is available.
+For ATO (Total Office): Firms will need to upgrade to version 9.3, your firm will be notified when this release is available.
+For vi by Aderant: On-premises clients must upgrade to 2022 Q1 B1 or later to remain supported. 
+What are the Costs & Scope
+If your firm is on Expert Sierra, you’re already in great shape! A no cost technical upgrade is available and our Aderant team will be in touch to schedule next steps.
+If you are an Expert on-premise client:
+A validation SQL script will be available on www.myaderant.com to identify impacted features and define the scope of your upgrade.
+Our Professional Services team can assist with the technical upgrade to ensure a smooth transition.
+Costs will vary based on your firm’s integrations, customizations, and testing needs; complex environments may require additional scoping.
+To avoid scheduling delays, we recommend sharing your validation results early so we can assess your needs and secure your place in the services queue.
+We are coordinating with third-party partners to keep the entire ecosystem aligned for a seamless experience.
+How do I access the Expert SQL validation script and submit the results?
+Note: This step is only needed if your firm is running Expert on-premises. If your firm is on Expert Sierra, CompuLaw, ATO, or vi by Aderant – this step is not required.
+For Expert on-premises firms only:
+Download the EWS SQL Validation Script from www.myaderant.com (Announcements → or search “Identifying EWS Usage in Expert Systems”) or use this link.
+Run the script in your environment.
+Submit results for analysis to EWSupgrade@aderant.com.
+Receive feedback from Aderant confirming impact and next steps.
+What are the Next Steps for Expert On-Premise or Expert Sierra Clients
+If your firm is on Expert Sierra, no action is needed if your system is on Expert 8.2.4.1. Firms requiring upgrade, please submit a support ticket, and the Cloud Operations team coordinates and completes the technical upgrade.
+If you are Expert on-premises, you will need to run an EWS SQL Validation Script to confirm if your Expert system is using EWS.
+Download the EWS SQL Validation Script from www.myaderant.com (Announcements → or search “Identifying EWS Usage in Expert Systems”) or use this link.
+Run the script in your environment.
+Submit results for analysis to EWSupgrade@aderant.com
+Receive feedback from Aderant confirming impact and next steps.
+What are the Next Steps for CompuLaw, ATO, and vi by Aderant
+CompuLaw: No immediate action is required. We will notify your firm once the release is available.
+ATO (Total Office): Your firm will need to upgrade to version 9.3. We will notify your firm once the release is available.
+vi by Aderant: If your firm is running on-premises, you will need to upgrade to 2022 Q1 B1 or later to remain supported. Our team will work with you to confirm your current version and guide you through the upgrade process.
+Our Commitment to You
+We understand that additional upgrades are disruptive, and our goal is to make this transition as smooth and supported as possible for your firm.
+Here’s how we are here to help:
+Validation tools - Scripts will be provided to quickly identify if and where your firm is impacted.
+Clear guidance - You will receive straightforward communications and step-by-step upgrade guides so you know what to expect.
+Aligned ecosystem - We are coordinating with third-party partners to ensure their solutions remain compatible and the transition is seamless.
+Dedicated resources - Your Customer Success Manager, Client Manager, and Support teams are available to answer questions. We are committed to guiding you through this process, so your firm feels confident, supported, and well-prepared for the future.
+Last Published Date
+2/2/2026 6:42 PM
+References
+Associated Products
+CompuLaw;Expert;Sierra;Total Office Case;Total Office Financial;vi by Aderant
+URL Name
+Exchange-Web-Services-EWS-FAQs
