@@ -1,33 +1,56 @@
-I found another article, is this helpful
-
-
-Compulaw Vision Sync for Exchange: Configure a Single EWS Server
-This article explains how to configure Vision Sync for Exchange to use a single or specific EWS server instead of Autodiscover.
-Apr 24, 2026
-Knowledge
-Title
-Compulaw Vision Sync for Exchange: Configure a Single EWS Server
-Article Number
-000017104
-Summary
-This article explains how to configure Vision Sync for Exchange to use a single or specific EWS server instead of Autodiscover.
-Discussion
-In on-prem Exchange environments with multiple servers, Vision Sync for Exchange can automatically locate EWS through Autodiscover. However, you can configure the application to use a single or specific EWS server when connecting to mailboxes.
- 
-Note: These instructions apply to on-prem Exchange environments where there may be multiple Exchange servers.
- 
-Vision Sync for Exchange requires impersonation rights on each server you specify. For more information, refer to Impersonation Rights With Exchange 2013 and Exchange 2016.
-Open the Vision Sync for Exchange folder.
-Open the syncing.config file.
-Add the following tags:
-
-Enter the name of the Exchange server in the EWSServers tag.
-You can specify multiple servers by separating the server names with a comma.
-Example: 
-Last Published Date
-4/24/2026 3:53 PM
-References
-Associated Products
-CompuLaw
-URL Name
-Compulaw-Vision-Vision-Sync-for-Exchange-Configure-a-Single-EWS-Server
+<configuration>
+  <Synching>
+    <XmlSerializerSection type="Vision.Groupware.Synching.Utilities.SynchConfigurationData, VGSU, Version=3.58.9092.17500, Culture=neutral, PublicKeyToken=null">
+      <SynchConfigurationData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <ClientSecret>YPnNR3TR/8SXcYm6Ta3FXEjnTbh+IBtpigFgEdCo6sjaz2zDYeM+iLb/WD2rTr7T</ClientSecret>
+        <ConsolidateReminderEmailsOrder>0</ConsolidateReminderEmailsOrder>
+        <EDocsIsV10>false</EDocsIsV10>
+        <EDocsQuoteLinks>false</EDocsQuoteLinks>
+        <iManageIsV10>false</iManageIsV10>
+        <QuoteInterwovenLinks>false</QuoteInterwovenLinks>
+        <UseConfiguredOWAServersOnly>false</UseConfiguredOWAServersOnly>
+        <UseConfiguredEWSServersOnly>false</UseConfiguredEWSServersOnly>
+        <UseEWSAPIAutodiscover>true</UseEWSAPIAutodiscover>
+        <NoLockVision>false</NoLockVision>
+        <NoLockPimSync>false</NoLockPimSync>
+        <SQLTimeout>0</SQLTimeout>
+        <IgnoreDatabaseUpgradeErrors>false</IgnoreDatabaseUpgradeErrors>
+        <NoExchangeServer>false</NoExchangeServer>
+        <HideToField>false</HideToField>
+        <SkipCustomField>false</SkipCustomField>
+        <DisableConnectionReuse>false</DisableConnectionReuse>
+        <DisableKeepAlive>false</DisableKeepAlive>
+        <DisablePreAuthenticate>false</DisablePreAuthenticate>
+        <HideLogTimestamps>false</HideLogTimestamps>
+        <DetectOWAServers>true</DetectOWAServers>
+        <UseLegacyUrlCheck>false</UseLegacyUrlCheck>
+        <SkipUrlCache>false</SkipUrlCache>
+        <AutoDeleteExtra>true</AutoDeleteExtra>
+        <RetrieveItemsBatchSize>50</RetrieveItemsBatchSize>
+        <Domain>nidaromyn.com</Domain>
+        <Username>a@a.com</Username>
+        <Password>VERmEM3mdMlikGJwZ+k4hjOigcQl0JYTa4sJJxKcbYY=</Password>
+        <AzureClientID>940b22f7-fac3-405a-910d-ab654c96e905</AzureClientID>
+        <UseEWSNoAnchorMbx>true</UseEWSNoAnchorMbx>
+        <SMTPServer>outbound-us1.ppe-hosted.com</SMTPServer>
+        <SMTPFrom>VisionSync@nidaromyn.com</SMTPFrom>
+        <UseAlternativeUrl>false</UseAlternativeUrl>
+        <ActionLogFileName>C:\Program Files (x86)\Vision Sync for Exchange\logs\sync_[year][month][day].log</ActionLogFileName>
+        <ExceptionPublisherFileName>C:\Program Files (x86)\Vision Sync for Exchange\logs\errors_[year][month][day].log</ExceptionPublisherFileName>
+        <ExceptionPublisherEmail>office365admin@nidaromyn.com</ExceptionPublisherEmail>
+        <LogExpirationDays>-1</LogExpirationDays>
+        <AllowDupADLogins>false</AllowDupADLogins>
+        <AppendFooter>true</AppendFooter>
+        <GuessAutoDiscoverURLs>false</GuessAutoDiscoverURLs>
+        <BatchLoadTimekeepersList />
+        <Office365EwsUrl>https://outlook.office365.com/EWS/Exchange.asmx</Office365EwsUrl>
+        <EWSUseKerberosOnly>false</EWSUseKerberosOnly>
+        <DisableSPNCheck>true</DisableSPNCheck>
+        <DisableExchange2003>true</DisableExchange2003>
+        <UseSimpleSearch>true</UseSimpleSearch>
+        <DisableTaskSynching>false</DisableTaskSynching>
+        <ForceOffice365EwsUrl>true</ForceOffice365EwsUrl>
+      </SynchConfigurationData>
+    </XmlSerializerSection>
+  </Synching>
+</configuration>
