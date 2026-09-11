@@ -1,88 +1,69 @@
-Does this article 
+Another article
 
 
-CompuLaw Vision Synch for Exchange: How to install VSFE 4.0+ and transition from EWS items to MS Graph items
-This article discusses how to install Vision Synch for Exchange version 4.0 and higher as well as how to run the replacer module to convert all future EWS items into MS Graph versions ahead of Microsoft's retirement of EWS in Exchange Online.
-Aug 11, 2026
+Compulaw Vision Sync for Exchange: Verify MS Graph Conversion
+This article explains how to verify that your environment has successfully converted from EWS to Microsoft Graph in Compulaw Vision Sync for Exchange 4.00 or higher.
+Jul 1, 2026
 Knowledge
 Title
-CompuLaw Vision Synch for Exchange: How to install VSFE 4.0+ and transition from EWS items to MS Graph items
+Compulaw Vision Sync for Exchange: Verify MS Graph Conversion
 Article Number
-000026543
+000026488
 Summary
-This article discusses how to install Vision Synch for Exchange version 4.0 and higher as well as how to run the replacer module to convert all future EWS items into MS Graph versions ahead of Microsoft's retirement of EWS in Exchange Online.
+This article explains how to verify that your environment has successfully converted from EWS to Microsoft Graph in Compulaw Vision Sync for Exchange 4.00 or higher.
 Discussion
-Overview
-Microsoft is retiring Exchange Web Services (EWS) for Exchange Online effective October 2026. To maintain synchronization between CompuLaw and Exchange Online, update Vision Sync for Exchange to use Microsoft Graph.
-This process applies only to firms currently synchronizing CompuLaw Exchange Sync with Office 365 or Exchange Online.
-If your firm synchronizes with on-premises Exchange, no action is required. If your firm plans to migrate to Microsoft 365, contact Aderant Support before proceeding.
-Important: Complete all steps in the order provided. Changing the sequence can cause future synchronization issues.
-Pause the Scheduled Synchronization Cycle
-Pause synchronization before making application changes.
-Open Windows Task Scheduler on the Vision Sync for Exchange server.
-Locate the scheduled task that runs the CompuLaw synchronization cycle, typically launching VisionSynch.exe.
-Right-click the task and select Disable.
-Create Required Backups
-Before proceeding, create the following backups:
-A complete copy of the existing Vision Sync for Exchange application folder.
-A current backup of the CompuLawSync SQL database.
-Note: You can exclude the Logs folder from the application backup to reduce size.
-Note: Confirm you are backing up the synchronization database and not the primary CompuLaw Vision database.
-Validate Entra ID Application Permissions
-Validate the required Microsoft Entra ID application permissions before updating synchronization settings.
-Sign in to Microsoft 365 as an administrator.
-Open the Microsoft Entra Admin Center.
-Go to App registrations > All applications.
-Select the existing Exchange Sync application.
-Go to API Permissions.
-Confirm the following permissions exist:
-Permission TypeRequired Permissions
-Microsoft Graph (Application Permissions)
-Calendars.ReadWrite
-Microsoft Graph (Application Permissions)
-Tasks.ReadWrite.All
-Microsoft Graph (Application Permissions)
-User.Read.All
-Office 365 Exchange Online
-full_access_as_app
-Note: Review the client secret expiration date and renew it if necessary before proceeding.
-Note: User.Read.All replaces the previously required Directory.Read.All permission for Exchange synchronization.
-Important: Do not remove full_access_as_app until the Replacer.exe process completes.
-After confirming or adding permissions:
-Click Grant Admin Consent.
-Confirm consent is successfully granted.
-Apply the Exchange Sync Update
-Apply the updated synchronization application files.
-Run Vision Sync for Exchange Update.exe.
-Install the update over the existing Vision Sync for Exchange folder.
-After installation completes, the system continues operating with EWS until you update the configuration settings.
-Update the Configuration Schema
-Open pimsyncsetup.exe.
-Perform a synchronization cycle.
-Close the application.
-Switch Synchronization Mode
-Open the synching.config file in the upgraded Vision Sync for Exchange folder.
-Locate the following setting:
-Change the value to:
-Save the file.
-This change enables synchronization through Microsoft Graph.
-Run Replacer.exe
-The Replacer.exe process converts existing EWS calendar items into Microsoft Graph-based items.
-By default, the process scans calendar items beginning 30 days in the past and continuing through all future events.
-Key Considerations
-Items not yet processed by Replacer.exe do not update through normal synchronization after enabling Microsoft Graph mode.
-The process can take several days depending on the amount of calendar data.
-Allow the process to complete, or nearly complete for future events, before relying on standard synchronization updates.
-Run the Replacer Process
-Open Replacer.exe from the Vision Sync for Exchange folder.
-Monitor progress and confirm all future events convert successfully.
-Resume the Scheduled Synchronization Cycle
-After the Replacer.exe process starts, resume scheduled synchronization.
-Return to Windows Task Scheduler.
-Locate the scheduled task that runs the CompuLaw synchronization cycle, typically launching VisionSynch.exe.
-Right-click the task and select Enable.
-Confirm synchronization operates normally.
-Get Support
-If you need assistance, contact Aderant Support.
-Visit the Aderant Support Portal at MyAderant.com.
-Call +1 850 224 2004 for telephone support.
+Verify Configuration Setting
+Confirm that the system is configured to use Microsoft Graph instead of EWS.
+Open the synching.exe.config file.
+Locate <UseEWSNoAnchorMbx>false</UseEWSNoAnchorMbx>.
+Verify the value is set to <UseEWSNoAnchorMbx>false</UseEWSNoAnchorMbx>.
+ValueResult
+false
+Syncs in Microsoft Graph API
+true
+Syncs in EWS API
+Review Replacer Log for Successful Migration
+Review the Replacer log to confirm that the migration completed successfully.
+Default Log Location: C:\Program Files (x86)\Vision Sync for Exchange\Logs\
+File Format: Replacer_<date>_<numbers>.log
+Example: Replacer_20260512_101257.log
+Open the most recent Replacer log file.
+Scroll to the end of the log.
+Verify === Migration completed successfully === displays.
+Review the Processing Summary and Migration Results sections.
+Locate the EWS Conversion Pending section.
+Key indicators of success include:
+Failed: 0
+Skipped: 0
+Successful equals Total Processed
+In the EWS Conversion Pending section, focus on the future events value. If the log shows 0 future events are still EWS items, the conversion is successful.
+Review Sync Log for Graph Usage
+Review the sync log to confirm that synchronization is running through Microsoft Graph.
+Default Log Location: C:\Program Files (x86)\Vision Sync for Exchange\Logs\
+File Format: sync_<date>_<run>.log
+Example: sync_20260511_5.log
+Open the most recent sync log file.
+Review the beginning of the run.
+Confirm the log shows VisionSynch, Version=4.00.x.
+Confirm the log shows Using MSGraph for Active Directory services..
+Scroll to the end of the run.
+Review the synchronization summary for errors and warnings.
+At the end of a successful synchronization run, no errors or warnings display. If there are no errors or warnings, and the beginning of the log confirms MSGraph, the environment has been converted and is syncing through Microsoft Graph.
+ 
+Note: If <UseEWSNoAnchorMbx>false</UseEWSNoAnchorMbx> is set and the sync log shows VisionSynch, Version=4.00.x, historical EWS items may still exist in Outlook calendars. These historical EWS items cannot be updated during Microsoft Graph runs of Vision Sync.
+Optional: Convert Additional Historical EWS Items
+If you need to convert older EWS items, update the Replacer configuration and run the process again.
+Open the replacer.exe.config file.
+Locate the start date setting.
+Change the value from today-30 to include additional past dates.
+Run the Replacer process again.
+This converts older EWS items to Microsoft Graph so they can be updated, cleared, or otherwise managed.
+Last Published Date
+7/1/2026 11:29 AM
+References
+Associated Products
+ CompuLaw 
+URL Name
+Compulaw-Vision-Sync-for-Exchange-Verify-MS-Graph-Conversion
+CompuLaw
+
