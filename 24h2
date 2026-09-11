@@ -1,69 +1,36 @@
-Another article
+Received an Aderant email dated 31 August 2026 titled “Final Reminder: Microsoft's Recommended EWS Extension Deadline Is Today.”
+
+The email advises firms using CompuLaw Vision Sync with Exchange Online that Microsoft is retiring Exchange Web Services (EWS) and that they should either:
+complete the required Microsoft Graph upgrade, or
+enable Microsoft's temporary EWS extension as an interim measure.
+
+Aderant states that without either the Graph upgrade or temporary EWS extension, firms may experience:
+interruption/loss of CompuLaw Vision Sync functionality;
+Outlook calendar events/deadlines not synchronizing correctly; and
+reduced visibility of CompuLaw deadlines in Outlook.
+
+The email states that the temporary EWS extension is only a temporary measure and is valid until 1 April 2027, when EWS will be permanently retired.
+
+--------------------------------------
+CompuLaw is installed in the environment.
+Investigation of the RDS server did not identify the Vision Sync installation.
+The DC server, however, contains the Vision Sync installation under:
+C:\Program Files (x86)\Vision Sync for Exchange\
+The Vision Sync configuration file was located and reviewed.
+The configuration contains:
+<Office365EwsUrl>https://outlook.office365.com/EWS/Exchange.asmx</Office365EwsUrl>
+<ForceOffice365EwsUrl>true</ForceOffice365EwsUrl>
+This confirms that the currently configured synchronization path is Exchange Online EWS.
+
+The configuration also contains an Azure/Entra Client ID, which corresponds to the CompuLaw Modern Authentication Enterprise Application found in Microsoft Entra ID.
+The Enterprise Application has both Microsoft Graph permissions and Exchange Online/EWS permissions.
+However, the presence of Microsoft Graph permissions does not mean Vision Sync has already been migrated to Graph.
+Aderant's separate verification article states that a successful Graph conversion should show:
+<UseEWSNoAnchorMbx>false</UseEWSNoAnchorMbx>
+whereas the current configuration found on the server has
+<UseEWSNoAnchorMbx>true</UseEWSNoAnchorMbx>
+
+According to Aderant's documentation, true means EWS synchronization, while false means Microsoft Graph synchronization
 
 
-Compulaw Vision Sync for Exchange: Verify MS Graph Conversion
-This article explains how to verify that your environment has successfully converted from EWS to Microsoft Graph in Compulaw Vision Sync for Exchange 4.00 or higher.
-Jul 1, 2026
-Knowledge
-Title
-Compulaw Vision Sync for Exchange: Verify MS Graph Conversion
-Article Number
-000026488
-Summary
-This article explains how to verify that your environment has successfully converted from EWS to Microsoft Graph in Compulaw Vision Sync for Exchange 4.00 or higher.
-Discussion
-Verify Configuration Setting
-Confirm that the system is configured to use Microsoft Graph instead of EWS.
-Open the synching.exe.config file.
-Locate <UseEWSNoAnchorMbx>false</UseEWSNoAnchorMbx>.
-Verify the value is set to <UseEWSNoAnchorMbx>false</UseEWSNoAnchorMbx>.
-ValueResult
-false
-Syncs in Microsoft Graph API
-true
-Syncs in EWS API
-Review Replacer Log for Successful Migration
-Review the Replacer log to confirm that the migration completed successfully.
-Default Log Location: C:\Program Files (x86)\Vision Sync for Exchange\Logs\
-File Format: Replacer_<date>_<numbers>.log
-Example: Replacer_20260512_101257.log
-Open the most recent Replacer log file.
-Scroll to the end of the log.
-Verify === Migration completed successfully === displays.
-Review the Processing Summary and Migration Results sections.
-Locate the EWS Conversion Pending section.
-Key indicators of success include:
-Failed: 0
-Skipped: 0
-Successful equals Total Processed
-In the EWS Conversion Pending section, focus on the future events value. If the log shows 0 future events are still EWS items, the conversion is successful.
-Review Sync Log for Graph Usage
-Review the sync log to confirm that synchronization is running through Microsoft Graph.
-Default Log Location: C:\Program Files (x86)\Vision Sync for Exchange\Logs\
-File Format: sync_<date>_<run>.log
-Example: sync_20260511_5.log
-Open the most recent sync log file.
-Review the beginning of the run.
-Confirm the log shows VisionSynch, Version=4.00.x.
-Confirm the log shows Using MSGraph for Active Directory services..
-Scroll to the end of the run.
-Review the synchronization summary for errors and warnings.
-At the end of a successful synchronization run, no errors or warnings display. If there are no errors or warnings, and the beginning of the log confirms MSGraph, the environment has been converted and is syncing through Microsoft Graph.
- 
-Note: If <UseEWSNoAnchorMbx>false</UseEWSNoAnchorMbx> is set and the sync log shows VisionSynch, Version=4.00.x, historical EWS items may still exist in Outlook calendars. These historical EWS items cannot be updated during Microsoft Graph runs of Vision Sync.
-Optional: Convert Additional Historical EWS Items
-If you need to convert older EWS items, update the Replacer configuration and run the process again.
-Open the replacer.exe.config file.
-Locate the start date setting.
-Change the value from today-30 to include additional past dates.
-Run the Replacer process again.
-This converts older EWS items to Microsoft Graph so they can be updated, cleared, or otherwise managed.
-Last Published Date
-7/1/2026 11:29 AM
-References
-Associated Products
- CompuLaw 
-URL Name
-Compulaw-Vision-Sync-for-Exchange-Verify-MS-Graph-Conversion
-CompuLaw
 
