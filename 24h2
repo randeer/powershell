@@ -1,36 +1,13 @@
-Received an Aderant email dated 31 August 2026 titled “Final Reminder: Microsoft's Recommended EWS Extension Deadline Is Today.”
-
-The email advises firms using CompuLaw Vision Sync with Exchange Online that Microsoft is retiring Exchange Web Services (EWS) and that they should either:
-complete the required Microsoft Graph upgrade, or
-enable Microsoft's temporary EWS extension as an interim measure.
-
-Aderant states that without either the Graph upgrade or temporary EWS extension, firms may experience:
-interruption/loss of CompuLaw Vision Sync functionality;
-Outlook calendar events/deadlines not synchronizing correctly; and
-reduced visibility of CompuLaw deadlines in Outlook.
-
-The email states that the temporary EWS extension is only a temporary measure and is valid until 1 April 2027, when EWS will be permanently retired.
-
---------------------------------------
-CompuLaw is installed in the environment.
-Investigation of the RDS server did not identify the Vision Sync installation.
-The DC server, however, contains the Vision Sync installation under:
-C:\Program Files (x86)\Vision Sync for Exchange\
-The Vision Sync configuration file was located and reviewed.
-The configuration contains:
-<Office365EwsUrl>https://outlook.office365.com/EWS/Exchange.asmx</Office365EwsUrl>
-<ForceOffice365EwsUrl>true</ForceOffice365EwsUrl>
-This confirms that the currently configured synchronization path is Exchange Online EWS.
-
-The configuration also contains an Azure/Entra Client ID, which corresponds to the CompuLaw Modern Authentication Enterprise Application found in Microsoft Entra ID.
-The Enterprise Application has both Microsoft Graph permissions and Exchange Online/EWS permissions.
-However, the presence of Microsoft Graph permissions does not mean Vision Sync has already been migrated to Graph.
-Aderant's separate verification article states that a successful Graph conversion should show:
-<UseEWSNoAnchorMbx>false</UseEWSNoAnchorMbx>
-whereas the current configuration found on the server has
-<UseEWSNoAnchorMbx>true</UseEWSNoAnchorMbx>
-
-According to Aderant's documentation, true means EWS synchronization, while false means Microsoft Graph synchronization
-
-
-
+Noticed that the last few backup jobs for this server had failed.
+During investigation, it appeared that the backup failures started around the time the server was patched and rebooted.
+Confirmed that patches were installed on this server and the server was subsequently rebooted.
+Also noted that this site has experienced AD replication issues previously; however, this server was not involved in the previous replication issue.
+During troubleshooting, noticed that other servers were unable to reach this server, while this server could successfully reach the other servers.
+Tested connectivity from other servers/DCs to this server and found that TCP 445 (SMB), TCP 389 (LDAP), and TCP 88 (Kerberos) were not accessible. ICMP/ping was also unsuccessful.
+Confirmed that the main AD-related services on the server, including NTDS, DNS, Netlogon, KDC and LanmanServer, were running.
+Ran nltest /dsgetdc:LAWFIRM and confirmed that the server could successfully locate the domain controller/domain information.
+Checked the Network Connection profile and found that the server was classified as Public instead of DomainAuthenticated.
+Checked the NLA service configuration and dependencies. No obvious incorrect NLA dependency was identified.
+Reviewed the Windows Firewall configuration and noted that the Public network profile is currently active, which may be affecting inbound connectivity.
+The issue may potentially be related to the Meraki firewall/network configuration, particularly if the affected servers are located on different VLANs/subnets, or it may have been triggered by the recent Windows patch/reboot.
+Need to check with Mark and the team regarding the Meraki configuration, recent patch changes, and any known issues before making further configuration changes.
