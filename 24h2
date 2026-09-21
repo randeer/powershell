@@ -1,13 +1,13 @@
-Noticed that the last few backup jobs for this server had failed.
-During investigation, it appeared that the backup failures started around the time the server was patched and rebooted.
-Confirmed that patches were installed on this server and the server was subsequently rebooted.
-Also noted that this site has experienced AD replication issues previously; however, this server was not involved in the previous replication issue.
-During troubleshooting, noticed that other servers were unable to reach this server, while this server could successfully reach the other servers.
-Tested connectivity from other servers/DCs to this server and found that TCP 445 (SMB), TCP 389 (LDAP), and TCP 88 (Kerberos) were not accessible. ICMP/ping was also unsuccessful.
-Confirmed that the main AD-related services on the server, including NTDS, DNS, Netlogon, KDC and LanmanServer, were running.
-Ran nltest /dsgetdc:LAWFIRM and confirmed that the server could successfully locate the domain controller/domain information.
-Checked the Network Connection profile and found that the server was classified as Public instead of DomainAuthenticated.
-Checked the NLA service configuration and dependencies. No obvious incorrect NLA dependency was identified.
-Reviewed the Windows Firewall configuration and noted that the Public network profile is currently active, which may be affecting inbound connectivity.
-The issue may potentially be related to the Meraki firewall/network configuration, particularly if the affected servers are located on different VLANs/subnets, or it may have been triggered by the recent Windows patch/reboot.
-Need to check with Mark and the team regarding the Meraki configuration, recent patch changes, and any known issues before making further configuration changes.
+Subject: Urgent – Server Connectivity and Backup Issue
+
+Hi Mark,
+
+We have an urgent issue with the server [Server Name].
+
+The server has been experiencing backup failures following the recent patching and reboot. During troubleshooting, I also noticed that the server's network profile is showing as Public.
+
+Additionally, other servers are unable to reach this server, including connectivity to some required ports, while this server can successfully reach the other servers.
+
+I have carried out some troubleshooting to identify the cause, but I have not been able to determine the root cause so far.
+
+Could you please check this from your end and advise on what we should do next? It would be appreciated if you could also check whether there are any relevant Meraki/network-side issues.
