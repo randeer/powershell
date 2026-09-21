@@ -1,13 +1,2 @@
-Subject: Urgent – Server Connectivity and Backup Issue
-
-Hi Mark,
-
-We have an urgent issue with the server [Server Name].
-
-The server has been experiencing backup failures following the recent patching and reboot. During troubleshooting, I also noticed that the server's network profile is showing as Public.
-
-Additionally, other servers are unable to reach this server, including connectivity to some required ports, while this server can successfully reach the other servers.
-
-I have carried out some troubleshooting to identify the cause, but I have not been able to determine the root cause so far.
-
-Could you please check this from your end and advise on what we should do next? It would be appreciated if you could also check whether there are any relevant Meraki/network-side issues.
+The patches installed on the HV server included KB5122871 – Windows Server 2025 Cumulative Update (OS Build 26100.33438) and KB5126052 – .NET Framework 3.5/4.8.1 update.
+Reviewed the Microsoft documentation for both updates and could not identify any documented known issue directly related to NLA, network profile changes, Windows Firewall, or inbound connectivity to AD services.
