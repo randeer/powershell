@@ -1,3 +1,8 @@
-Get-ChildItem 'HKLM:\SYSTEM\CurrentControlSet\Services' |
-Where-Object {$_.PSChildName -match 'PVS|BNDevice|Stream'} |
-Select-Object PSChildName
+PS C:\> Get-ChildItem 'HKLM:\SYSTEM\CurrentControlSet\Services' |
+>> Where-Object {$_.PSChildName -match 'PVS|BNDevice|Stream'} |
+>> Select-Object PSChildName
+
+PSChildName 
+-----------
+AppvStrm
+PvsVmAgent
