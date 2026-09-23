@@ -23,9 +23,8 @@ I assume the Citrix VDI servers you mentioned are the WZ-CTXND servers, based on
 
 I checked these servers and could not find KB5122876, which is the update mentioned in the Citrix advisory. The CTXND servers also show their last installed Windows patches as 27 March 2026.
 
-Based on my findings, the CTXND servers appear to be part of an MCS non-persistent Citrix VDI environment. If the September update is required for these VDIs, we may need to apply the relevant OOB patch to the MCS master image rather than directly to the individual CTXND servers.
+I also found that Windows Update is disabled on the CTXND servers, and these servers are not being patched through Datto RMM patch policies. This appears to be the existing configuration since the environment was onboarded. As these servers are built from a master image, they are not patched individually.
 
-I will pass this to my team for further investigation and confirmation of the Citrix configuration. I’ll keep you updated with our findings.
+Based on my findings, the CTXND servers appear to be part of an MCS non-persistent Citrix VDI environment. Therefore, if the September update is required, we may need to apply the relevant OOB patch to the MCS master image and then update the VDIs, rather than patching the individual CTXND servers.
 
-Kind regards,
-Rashmika
+I will pass this to my team for further investigation and confirmation of the Citrix configuration, and I’ll keep you updated with our findings.
