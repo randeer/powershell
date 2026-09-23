@@ -1,8 +1,19 @@
-PS C:\> Get-ChildItem 'HKLM:\SYSTEM\CurrentControlSet\Services' |
->> Where-Object {$_.PSChildName -match 'PVS|BNDevice|Stream'} |
->> Select-Object PSChildName
+PS C:\> Get-Service PvsVmAgent | format-list *
 
-PSChildName 
------------
-AppvStrm
-PvsVmAgent
+
+Name                : PvsVmAgent 
+RequiredServices    : {}
+CanPauseAndContinue : False
+CanShutdown         : False
+CanStop             : True
+DisplayName         : Citrix Pvs for VMs agent
+DependentServices   : {SessionEnv, Netlogon, BrokerAgent, LanmanWorkstation...}
+MachineName         : .
+ServiceName         : PvsVmAgent
+ServicesDependedOn  : {}
+ServiceHandle       : SafeServiceHandle
+Status              : Running
+ServiceType         : Win32OwnProcess
+StartType           : Automatic
+Site                :
+Container           :
