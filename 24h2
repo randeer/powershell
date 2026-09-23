@@ -1,2 +1,7 @@
-Get-Partition | 
-Select-Object DiskNumber, PartitionNumber, DriveLetter, Size, Type
+Get-Partition | Select-Object DiskNumber, PartitionNumber, DriveLetter, Size, Type
+
+Get-Volume | Select-Object DriveLetter, FileSystemLabel, FileSystem, Size, Path
+
+Get-Disk -Number 2 | Format-List *
+
+Get-Disk | Format-Table Number,FriendlyName,OperationalStatus,IsBoot,IsSystem,IsReadOnly,IsOffline,Size
