@@ -15,3 +15,17 @@ Further investigation confirmed that WZ-BASE-2019-ND has Citrix VDA and PvsVmAge
 Therefore, before installing the Microsoft OOB update KB5129238, the actual MCS master/golden image and current provisioning configuration should be confirmed.
 As this is a Citrix VDI environment and the provisioning configuration could not be fully verified, I recommend confirming with the internal team and the client how the VDI environment was provisioned, which VM/snapshot is currently being used as the MCS master image, and how image updates are normally deployed.
 STS team has been informed of the findings for further investigation and confirmation before making any changes to the Citrix VDI environment.
+
+
+Hi Rita,
+
+I assume the Citrix VDI servers you mentioned are the WZ-CTXND servers, based on their naming.
+
+I checked these servers and could not find KB5122876, which is the update mentioned in the Citrix advisory. The CTXND servers also show their last installed Windows patches as 27 March 2026.
+
+Based on my findings, the CTXND servers appear to be part of an MCS non-persistent Citrix VDI environment. If the September update is required for these VDIs, we may need to apply the relevant OOB patch to the MCS master image rather than directly to the individual CTXND servers.
+
+I will pass this to my team for further investigation and confirmation of the Citrix configuration. I’ll keep you updated with our findings.
+
+Kind regards,
+Rashmika
