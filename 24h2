@@ -1,16 +1,3 @@
-PS C:\> Get-ItemProperty "HKLM:\SOFTWARE\Citrix\VirtualDesktopAgent\" | Format-list *
-
-
-ProductInstalled            : 8 
-ResyncTimeOnFailedRegister  : 1
-StartMenuScanExe            : C:\Program Files\Citrix\Virtual Desktop Agent\StartMenuScan.exe
-HaModeTimeEnd               : 0
-HaModeComputerName          :
-ControllerRegistrarPort     : 80
-RegistryOverridesAutoUpdate : 1
-ListOfDDCs                  : wz-oc-cc01.wzllp.local wz-la-cc01.wzllp.local
-PSPath                      : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Citrix\VirtualDesktopAgent\
-PSParentPath                : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Citrix
-PSChildName                 : VirtualDesktopAgent
-PSDrive                     : HKLM
-PSProvider                  : Microsoft.PowerShell.Core\Registry
+Get-ChildItem 'HKLM:\SYSTEM\CurrentControlSet\Services' |
+Where-Object {$_.PSChildName -match 'PVS|BNDevice|Stream'} |
+Select-Object PSChildName
