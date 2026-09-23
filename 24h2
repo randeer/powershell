@@ -1,17 +1,1 @@
-PS C:\> hostname
-WZ-BASE-2019-ND
-PS C:\> Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\PvsVmAgent\" | format-list *
-
-
-Type         : 16
-Start        : 2
-ErrorControl : 0
-ImagePath    : "C:\Program Files\Citrix\PvsVm\Service\PvsVmAgent.exe"
-DisplayName  : Citrix Pvs for VMs agent
-ObjectName   : LocalSystem
-Description  : Pvs for VMs agent machine password update service
-PSPath       : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PvsVmAgent\
-PSParentPath : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services
-PSChildName  : PvsVmAgent
-PSDrive      : HKLM
-PSProvider   : Microsoft.PowerShell.Core\Registry
+Get-Disk | Select-Object Number, FriendlyName, SerialNumber, BusType, Size
