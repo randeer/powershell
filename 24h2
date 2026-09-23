@@ -1,3 +1,5 @@
+PS C:\> hostname
+WZ-BASE-2019-ND
 PS C:\> Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\PvsVmAgent\" | format-list *
 
 
