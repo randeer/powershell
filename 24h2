@@ -18,3 +18,21 @@ FriendlyName : VMware Virtual disk
 SerialNumber :
 BusType      : SAS
 Size         : 128849018880
+
+---------------
+PS C:\> Get-Disk | Select-Object Number, FriendlyName, SerialNumber, BusType, Size
+
+
+Number       : 0
+FriendlyName : VMware Virtual disk
+SerialNumber :
+BusType      : SAS
+Size         : 128849018880
+
+Number       : 1
+FriendlyName : VMware Virtual disk
+SerialNumber :
+BusType      : SAS
+Size         : 4294967296
+
+
