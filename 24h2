@@ -1,19 +1,15 @@
-PS C:\> Get-Service PvsVmAgent | format-list *
+PS C:\> Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\PvsVmAgent\" | format-list *
 
 
-Name                : PvsVmAgent 
-RequiredServices    : {}
-CanPauseAndContinue : False
-CanShutdown         : False
-CanStop             : True
-DisplayName         : Citrix Pvs for VMs agent
-DependentServices   : {SessionEnv, Netlogon, BrokerAgent, LanmanWorkstation...}
-MachineName         : .
-ServiceName         : PvsVmAgent
-ServicesDependedOn  : {}
-ServiceHandle       : SafeServiceHandle
-Status              : Running
-ServiceType         : Win32OwnProcess
-StartType           : Automatic
-Site                :
-Container           :
+Type         : 16
+Start        : 2
+ErrorControl : 0
+ImagePath    : "C:\Program Files\Citrix\PvsVm\Service\PvsVmAgent.exe"
+DisplayName  : Citrix Pvs for VMs agent
+ObjectName   : LocalSystem
+Description  : Pvs for VMs agent machine password update service
+PSPath       : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PvsVmAgent\
+PSParentPath : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services
+PSChildName  : PvsVmAgent
+PSDrive      : HKLM
+PSProvider   : Microsoft.PowerShell.Core\Registry
