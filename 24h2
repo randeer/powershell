@@ -1,70 +1,16 @@
-PS C:\> Get-ChildItem "HKLM:\SOFTWARE\WOW6432Node\Citrix\" -ErrorAction SilentlyContinue | Select-Object pschildname
-
-PSChildName
------------
-Audio
-CdmWorkStation
-Client Hosted Apps
-CtxExceptionHandler
-CtxHook
-CtxUiMon
-DefaultToolBar
-Euem
-GroupPolicy
-HDXMediaStream
-Ica
-ICA Client
-IcaAgentInfo
-Install
-Location
-MSLicensing
-PortICA
-ProcessMetaData
-SpeedScreenMultimedia
-StackAgentInfo
-VIP
-WebSocketService
-XenDesktop
+PS C:\> Get-ItemProperty "HKLM:\SOFTWARE\Citrix\VirtualDesktopAgent\" | Format-list *
 
 
-PS C:\> Get-ChildItem "HKLM:\SOFTWARE\Citrix\" -ErrorAction SilentlyContinue | Select-Object pschildname
-
-PSChildName
------------
-Audio
-CdfCaptureService
-Citrix Desktop Delivery Controller
-Citrix Session Recording
-Citrix Virtual Desktop Agent
-Configuration
-CtxExceptionHandler
-CtxHook
-Director
-FileTransfer
-Graphics
-GroupPolicy
-HDXMediaStream
-Ica
-ICA Client
-IcaConfigTool
-Icak2m
-ImageAnalysis
-Install
-Location
-MachineIdentityServiceAgent
-MetaInstall
-Optimizer
-Portica
-Print
-Reconnect
-ServerFTA
-StackAgentInfo
-SvcHost
-Telemetry
-UniversalPrintDrivers
-VdaCEIP
-Versions
-VirtualDesktopAgent
-WebAuthnAllowedProcesses
-XDMISAgent
-XenDesktop
+ProductInstalled            : 8 
+ResyncTimeOnFailedRegister  : 1
+StartMenuScanExe            : C:\Program Files\Citrix\Virtual Desktop Agent\StartMenuScan.exe
+HaModeTimeEnd               : 0
+HaModeComputerName          :
+ControllerRegistrarPort     : 80
+RegistryOverridesAutoUpdate : 1
+ListOfDDCs                  : wz-oc-cc01.wzllp.local wz-la-cc01.wzllp.local
+PSPath                      : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Citrix\VirtualDesktopAgent\
+PSParentPath                : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Citrix
+PSChildName                 : VirtualDesktopAgent
+PSDrive                     : HKLM
+PSProvider                  : Microsoft.PowerShell.Core\Registry
