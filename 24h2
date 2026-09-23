@@ -1,7 +1,265 @@
-Get-Partition | Select-Object DiskNumber, PartitionNumber, DriveLetter, Size, Type
+PS C:\> Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\PvsVmAgent\" | format-list *
+ 
 
-Get-Volume | Select-Object DriveLetter, FileSystemLabel, FileSystem, Size, Path
+Type         : 16
+Start        : 2
+ErrorControl : 0
+ImagePath    : "C:\Program Files\Citrix\PvsVm\Service\PvsVmAgent.exe"
+DisplayName  : Citrix Pvs for VMs agent
+ObjectName   : LocalSystem
+Description  : Pvs for VMs agent machine password update service
+PSPath       : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PvsVmAgent\
+PSParentPath : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services
+PSChildName  : PvsVmAgent
+PSDrive      : HKLM
+PSProvider   : Microsoft.PowerShell.Core\Registry
 
-Get-Disk -Number 2 | Format-List *
 
-Get-Disk | Format-Table Number,FriendlyName,OperationalStatus,IsBoot,IsSystem,IsReadOnly,IsOffline,Size
+
+PS C:\> Get-Disk | Select-Object Number, FriendlyName, SerialNumber, BusType, Size
+
+
+Number       : 0
+SerialNumber :
+BusType      : SAS
+Size         : 128849018880
+
+Number       : 1
+FriendlyName : VMware Virtual disk
+SerialNumber :
+BusType      : SAS
+Size         : 4294967296
+
+
+
+PS C:\> hostname
+WZ-BASE-2019-ND
+PS C:\> Get-Partition | Select-Object DiskNumber, PartitionNumber, DriveLetter, Size, Type
+
+
+DiskNumber      : 0
+PartitionNumber : 1
+DriveLetter     :
+Size            : 575668224
+Type            : IFS
+
+DiskNumber      : 0
+PartitionNumber : 2
+DriveLetter     : C
+Size            : 128271253504
+Type            : IFS
+DiskNumber      : 1
+PartitionNumber : 1
+DriveLetter     : E
+Size            : 4292870144
+Type            : IFS
+
+
+PS C:\> Get-Volume | Select-Object DriveLetter, FileSystemLabel, FileSystem, Size, Path
+
+
+DriveLetter     : D
+FileSystemLabel :
+FileSystem      :
+Size            : 0
+
+DriveLetter     :
+FileSystemLabel : System Reserved
+FileSystem      : NTFS
+Size            : 575664128
+Path            : \\?\Volume{42ca5703-0000-0000-0000-100000000000}\
+
+DriveLetter     : C
+FileSystemLabel :
+FileSystem      : NTFS
+Size            : 128271249408
+Path            : \\?\Volume{42ca5703-0000-0000-0000-602200000000}\
+
+DriveLetter     : E
+FileSystemLabel : Cache
+FileSystem      : NTFS
+Size            : 4292866048
+Path            : \\?\Volume{62579507-0000-0000-0000-100000000000}\
+
+
+
+PS C:\> Get-Disk -Number 2 | Format-List *
+Get-Disk : No MSFT_Disk objects found with property 'Number' equal to '2'.  Verify the value of the property and retry.
+At line:1 char:1
++ Get-Disk -Number 2 | Format-List *
++ ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (2:UInt32) [Get-Disk], CimJobException
+    + FullyQualifiedErrorId : CmdletizationQuery_NotFound_Number,Get-Disk
+ 
+PS C:\> Get-Disk | Format-Table Number,FriendlyName,OperationalStatus,IsBoot,IsSystem,IsReadOnly,IsOffline,Size
+
+Number FriendlyName        OperationalStatus IsBoot IsSystem IsReadOnly IsOffline         Size
+------ ------------        ----------------- ------ -------- ---------- ---------         ----
+     0 VMware Virtual disk Online              True     True      False     False 128849018880
+     1 VMware Virtual disk Online             False    False      False     False   4294967296
+
+
+PS C:\> hostname
+WZ-BASE-2019-ND
+--------------------------
+PS C:\> hostname
+WZ-CTXND001
+PS C:\> Get-Partition | Select-Object DiskNumber, PartitionNumber, DriveLetter, Size, Type
+
+
+DiskNumber      : 0
+PartitionNumber : 1
+DriveLetter     :
+Size            : 575668224
+Type            : IFS
+
+DiskNumber      : 0
+PartitionNumber : 2
+DriveLetter     : C
+Size            : 128271253504
+Type            : IFS
+
+DiskNumber      : 1
+PartitionNumber : 1
+DriveLetter     :
+Size            : 13631488
+Type            : IFS
+
+DiskNumber      : 2
+PartitionNumber : 1
+DriveLetter     : D
+Size            : 128847970304
+Type            : IFS
+ 
+ 
+PS C:\> Get-Volume | Select-Object DriveLetter, FileSystemLabel, FileSystem, Size, Path
+
+
+DriveLetter     : E
+FileSystemLabel :
+FileSystem      :
+Size            : 0
+Path            : \\?\Volume{296e276d-a60b-11ee-bfe1-806e6f6e6963}\
+
+DriveLetter     :
+FileSystemLabel : System Reserved
+FileSystem      : NTFS
+Size            : 575664128
+Path            : \\?\Volume{42ca5703-0000-0000-0000-100000000000}\
+
+DriveLetter     : C
+FileSystemLabel :
+FileSystem      : NTFS
+Size            : 128271249408
+Path            : \\?\Volume{42ca5703-0000-0000-0000-602200000000}\
+
+DriveLetter     : D
+FileSystemLabel : MCSWCDisk
+FileSystem      : NTFS
+Size            : 128847966208
+Path            : \\?\Volume{4d435357-0000-0000-0000-100000000000}\
+
+DriveLetter     :
+FileSystemLabel : New Volume
+FileSystem      : NTFS
+Size            : 13627392
+Path            : \\?\Volume{589e6702-0000-0000-0000-010000000000}\
+
+
+
+PS C:\> Get-Disk -Number 2 | Format-List *
+
+
+DiskNumber            : 2 
+PartitionStyle        : MBR
+ProvisioningType      : Thin
+OperationalStatus     : Online
+HealthStatus          : Healthy
+BusType               : SAS
+UniqueIdFormat        : Vendor Specific
+OfflineReason         :
+ObjectId              : {1}\\WZ-CTXND001\root/Microsoft/Windows/Storage/Providers_v2\WSP_Disk.ObjectId="{296e274e-a60b-11ee-bfe1-806e6f6e6963}:DI:\\?\scsi#disk&ven_vmware&prod_virtual_disk#5&1ec51bf7&0&000200#{ 
+PassThroughClass      :
+PassThroughIds        :
+PassThroughNamespace  :
+PassThroughServer     :
+UniqueId              : SCSI\DISK&VEN_VMWARE&PROD_VIRTUAL_DISK\5&1EC51BF7&0&000200:WZ-CTXND001
+AdapterSerialNumber   :
+AllocatedSize         : 128849018880
+BootFromDisk          : False
+FirmwareVersion       : 2.0
+FriendlyName          : VMware Virtual disk
+Guid                  :
+IsBoot                : False
+IsClustered           : False
+IsHighlyAvailable     : False
+IsOffline             : False
+IsReadOnly            : False
+IsScaleOut            : False
+IsSystem              : False
+LargestFreeExtent     : 0
+Location              : SCSI0
+LogicalSectorSize     : 512
+Manufacturer          : VMware
+Model                 : Virtual disk
+Number                : 2
+NumberOfPartitions    : 1
+Path                  : \\?\scsi#disk&ven_vmware&prod_virtual_disk#5&1ec51bf7&0&000200#{53f56307-b6bf-11d0-94f2-00a0c91efb8b}
+PhysicalSectorSize    : 512
+SerialNumber          :
+Signature             : 1296257879
+Size                  : 128849018880
+PSComputerName        :
+CimClass              : ROOT/Microsoft/Windows/Storage:MSFT_Disk
+CimInstanceProperties : {ObjectId, PassThroughClass, PassThroughIds, PassThroughNamespace...}
+CimSystemProperties   : Microsoft.Management.Infrastructure.CimSystemProperties
+
+
+
+PS C:\> Get-Disk | Format-Table Number,FriendlyName,OperationalStatus,IsBoot,IsSystem,IsReadOnly,IsOffline,Size
+
+Number FriendlyName        OperationalStatus IsBoot IsSystem IsReadOnly IsOffline         Size 
+------ ------------        ----------------- ------ -------- ---------- ---------         ----
+     0 VMware Virtual disk Online              True     True      False     False 128849018880
+     1 VMware Virtual disk Online             False    False      False     False     16777216
+     2 VMware Virtual disk Online             False    False      False     False 128849018880
+
+PS C:\> Get-ItemProperty -Path "HKLM:\SOFTWARE\Citrix\MachineIdentityServiceAgent\VdaStateMirror\" 
+
+
+Registered               : 50
+SessionSupport           : MultiSession
+ProductLicenseName       : XDT
+LicensingModel           : UD
+LicenseBurnInDate        : 2023.1015
+LicenseServerName        : localhost
+LicenseServerPort        : 3604530
+HasValidLicense          : 49
+DesktopKind              : Shared
+DesktopGroupName         : WZ-DeliveryGroup-ND
+DesktopGroupId           : b0e1ddb4-3a13-4a5e-af54-55ce56fd2aef
+FarmName                 : cloudxdsite
+FarmId                   : 7debbb01-b414-407d-bc48-2112c82364dd
+BrokerVersion            : 7.49.0.0
+DesktopCatalogId         : 98435785-1385-4a55-816b-0c8def778085
+DesktopCatalogName       : WZ-MCS-Server2019-ND-NEW
+HypervisorConnectionName : WZ-OC-VCSA
+HypervisorConnectionId   : af0c330b-dd5c-4720-885b-0f874a1071bc
+AssignmentType           : None
+DefinedFeatures          : {AccountWorkerNameCacheJitter, ActBackupRestoreUi, actlogupload, ActScheduledBackups...}
+ImageOutOfDate           : 48
+AgentOperationalMode     : 49
+PersistUserChanges       : Discard
+RoutingTemplateUri       : https://[service]-us.citrixworkspacesapi.net/[customer]
+DesktopId                : 6E281A5C
+RegisteredTime           : 09/22/2026 12:14:03
+CbpVersion               : 50
+RegisteredDdcFqdn        : wz-oc-cc02.wzllp.local
+BrokeredSessionMode      : 50
+SiteDiscoveryMethod      : 51
+PSPath                   : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Citrix\MachineIdentityServiceAgent\VdaStateMirror\
+PSParentPath             : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Citrix\MachineIdentityServiceAgent
+PSChildName              : VdaStateMirror
+PSDrive                  : HKLM
+PSProvider               : Microsoft.PowerShell.Core\Registry
+
