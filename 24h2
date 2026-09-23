@@ -1,5 +1,1 @@
-The affected DC VM is running Windows Server 2022 and received the following September 2026 updates:
-KB5122882 – Windows Server 2022 Cumulative Update, OS Build 20348.5622
-KB5122881 – Servicing Stack Update, version 10.0.20348.5614
-KB5126050 – .NET Framework 3.5 and 4.8 cumulative update
-Therefore, no documented Microsoft known issue has been identified that directly explains the current incident.
+https://support.citrix.com/external/article/CTX697101/issues-with-microsoft-windows-september.html
