@@ -28,3 +28,14 @@ I also found that Windows Update is disabled on the CTXND servers, and these ser
 Based on my findings, the CTXND servers appear to be part of an MCS non-persistent Citrix VDI environment. Therefore, if the September update is required, we may need to apply the relevant OOB patch to the MCS master image and then update the VDIs, rather than patching the individual CTXND servers.
 
 I will pass this to my team for further investigation and confirmation of the Citrix configuration, and I’ll keep you updated with our findings.
+
+
+Hi Mark,
+
+The Citrix VDI environment is a bit challenging to understand. The CTXND servers appear to be part of an MCS non-persistent environment. The Windows Update service on the CTXND servers is disabled, and we are not patching these servers through Datto RMM. As these servers are built from a master image, they are not patched individually.
+
+I checked the CTXND servers and could not find the update mentioned in the Citrix advisory (KB5122876) installed.
+
+I’ve updated my findings in the ticket. If the issue persists, we may need to investigate the Citrix configuration further and apply the OOB patch mentioned in the Citrix advisory through the appropriate MCS master image.
+
+Could you please advise how you would like us to proceed?
