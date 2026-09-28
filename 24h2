@@ -1,2 +1,5 @@
 $txtrequest = Get-ExchangeCertificate -Thumbprint 5D21CA44E692032304D2984973F368E40F528608 |
     New-ExchangeCertificate -GenerateRequest
+
+
+https://www.alitajran.com/create-certificate-exchange-server/
