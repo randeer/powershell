@@ -1,109 +1,21 @@
-http://windowsupdate.microsoft.com is not reachable.
-http://www.windowsupdate.microsoft.com is not reachable.
-https://www.windowsupdate.microsoft.com is not reachable.
-http://www.update.microsoft.com is not reachable.
-https://www.update.microsoft.com is not reachable.
-http://www.windowsupdate.com is not reachable.
-http://download.windowsupdate.com is reachable.
-http://download.microsoft.com is reachable.
-http://www.download.windowsupdate.com is reachable.
-http://wustat.windows.com is not reachable.
-http://ntservicepack.microsoft.com is reachable.
+Reviewed Datto backup logs and identified repeated VSS snapshot errors for the D: volume, including Win32 Error 22 ("The device does not recognize the command").
+Confirmed the D: volume is a healthy 120 GB NTFS VMware virtual disk with approximately 35 GB free space.
+Checked VSS providers; Microsoft Software Shadow Copy Provider is present.
+Checked VSS shadow storage; D: has 12 GB (10%) allocated as the maximum shadow copy storage.
+Manually tested VSS snapshot creation for D: using wmic shadowcopy call create Volume=D:\; the snapshot was created successfully with ReturnValue = 0.
+Checked VSS writers using vssadmin list writers; all writers are in a Stable state with "No error".
+The Datto log also shows the Datto CBT driver is installed/running (version 0.6.0.0) and the Datto Agent version is 3.0.18.25.
+Based on the above, Windows VSS and the D: volume appear to be functioning normally. Further investigation is required into the Datto Agent/CBT backup process and the reported Agent Export error during data transfer.
 
 
-HResult      : 0x8024401C
-Message Id   : WU_E_PT_HTTP_STATUS_REQUEST_TIMEOUT
-Message Text : Same as HTTP status 408 - the server timed out waiting for the request.
-Update Source        : Microsoft
-
-HResult      : 0x80240438
-Message Id   : WU_E_PT_ENDPOINT_UNREACHABLE
-Message Text : There is no route or network connectivity to the endpoint.
-Update Source        : Microsoft
-
-
-HResult      : 0x8024002E
-Message Id   : WU_E_WU_DISABLED
-Message Text : Access to an unmanaged server is not allowed.
-Update Source        : Microsoft
- 
-
-
-net stop wuauserv
-net stop cryptSvc
-net stop bits
-net stop msiserver
-ren C:\Windows\SoftwareDistribution SoftwareDistribution.old
-ren C:\Windows\System32\catroot2 catroot2.old
-net start wuauserv
-net start cryptSvc
-net start bits
-net start msiserver
-
-netsh winhttp show proxy
-
-
-PS C:\> Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" | Format-List
-
-
-WUServer                                     :
-WUStatusServer                               :
-UpdateServiceUrlAlternate                    :
-TargetGroupEnabled                           : 1
-TargetGroup                                  : NC-DAAS-SR
-SetDisablePauseUXAccess                      : 1
-NoAutoUpdate                                 : 1
-DisableWindowsUpdateAccess                   : 1
-TargetReleaseVersion                         : 1
-ProductVersion                               : Windows 10
-TargetReleaseVersionInfo                     :
-DoNotConnectToWindowsUpdateInternetLocations :
-PSPath                                       : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
-PSParentPath                                 : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows
-PSChildName                                  : WindowsUpdate
-PSDrive                                      : HKLM
-PSProvider                                   : Microsoft.PowerShell.Core\Registry
-
-
-Get-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate" -Name "DisableWindowsUpdateAccess"
-
-
-Set-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate" -Name "DisableWindowsUpdateAccess" -Value 0
-
-
-# Check Windows Update Policies
-Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -ErrorAction SilentlyContinue | Format-Table -AutoSize
-
-# Check AU (Automatic Updates) Settings
-Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -ErrorAction SilentlyContinue | Format-Table -AutoSize
-
-# Check BITS Settings
-Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\BITS" -ErrorAction SilentlyContinue | Format-Table -AutoSize
-
-# Check Windows Update Agent Settings
-Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" -ErrorAction SilentlyContinue | Format-Table -AutoSize
-
-# Check Network Settings
-Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" -ErrorAction SilentlyContinue | Format-Table -AutoSize
-
-# Check if specific problematic keys exist
-$paths = @(
-    "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate",
-    "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
-)
-
-$keysToCheck = @("WUServer", "WUStatusServer", "UseWUServer", "DisableWindowsUpdateAccess")
-
-foreach ($path in $paths) {
-    if (Test-Path $path) {
-        foreach ($key in $keysToCheck) {
-            $value = (Get-ItemProperty -Path $path -Name $key -ErrorAction SilentlyContinue).$key
-            if ($null -ne $value) {
-                Write-Host "Found $key in $path with value: $value"
-            }
-        }
-    }
-}
-
-
-
+Attempted to contact Datto Support several times, as there had been no response to the previous update. During the last call attempt, the issue was raised as urgent.
+Eventually contacted Datto Support and explained the urgency and impact of the backup failure.
+The Datto engineer initially advised that the issue appeared to be related to the VSS writers.
+Explained the VSS troubleshooting already completed, including the Event Viewer checks and confirmation that there were no VSS writer errors on the server. Also advised that a manual VSS shadow copy of the D: drive was successfully created.
+Based on the troubleshooting, the Datto engineer recommended uninstalling and reinstalling the Datto Agent and provided a guideline to follow.
+Followed the provided guideline and completed the Datto Agent uninstallation and reinstallation.
+After the reinstallation, verified that the Datto Agent was successfully installed and that the required Datto services were running, including the Datto Backup Agent service.
+The process required two server reboots: one following the agent uninstallation and another following the agent installation. Total reboot time was approximately 30 minutes.
+During the reboots and subsequent checks, noticeably low VM performance was observed.
+Manually initiated a backup job after the Datto Agent reinstallation. The backup took some time to initialise, but the backup job eventually started successfully and data transfer is now in progress. Previously, the backup job was not progressing to the data transfer stage.
+The current backup job will be monitored to confirm whether the backup completes successfully.
