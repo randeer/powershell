@@ -1,412 +1,68 @@
-Oct 07 1:09:42am - Backup operation completed.
-Oct 07 1:09:42am - Alert Service not enabled
-Oct 07 1:09:42am - Backup failed with exception. Transaction failed. Rolled back, Transaction failed. Rolled back, Agent Export error occurred mid transfer
-Oct 07 1:09:42am - Successfully rolled back stage
-Oct 07 1:09:42am - Releasing backup lock
-Oct 07 1:09:42am - Rolling back stage
-Oct 07 1:09:42am - Successfully rolled back stage
-Oct 07 1:09:42am - Rolling back to snapshot
-Oct 07 1:09:42am - Setting properties on storage
-Oct 07 1:09:42am - SnapRollback Started.. mode rollback
-Oct 07 1:09:42am - Rolling back stage
-Oct 07 1:09:42am - Successfully rolled back stage
-Oct 07 1:09:42am - Cleanup found no leaked loops.
-Oct 07 1:09:41am - Rolling back stage
-Oct 07 1:09:41am - Successfully rolled back stage
-Oct 07 1:09:41am - Rolling back stage
-Oct 07 1:09:41am - Successfully rolled back stage
-Oct 07 1:09:41am - Rolling back stage
-Oct 07 1:09:41am - Successfully rolled back stage
-Oct 07 1:09:41am - Rolling back stage
-Oct 07 1:09:41am - Successfully rolled back stage
-Oct 07 1:09:41am - Rolling back stage
-Oct 07 1:09:41am - Successfully rolled back stage
-Oct 07 1:09:41am - Rolling back stage
-Oct 07 1:09:41am - Successfully rolled back stage
-Oct 07 1:09:41am - Rolling back stage
-Oct 07 1:09:41am - Transaction failed. Rolling back ...
-Oct 07 1:09:41am - Failed to complete transaction stage
-Oct 07 1:09:41am - Successfully rolled back stage
-Oct 07 1:09:41am - DmCrypt device successfully detached.
-Oct 07 1:09:41am - Deleted loop device no longer exists.
-Oct 07 1:09:41am - Detaching backing file from loop device.
-Oct 07 1:09:41am - DmCrypt device successfully detached.
-Oct 07 1:09:41am - Deleted loop device no longer exists.
-Oct 07 1:09:41am - Detaching backing file from loop device.
-Oct 07 1:09:41am - DmCrypt device successfully detached.
-Oct 07 1:09:41am - Deleted loop device no longer exists.
-Oct 07 1:09:41am - Detaching backing file from loop device.
-Oct 07 1:09:41am - Cleaning up DmCrypt devices.
-Oct 07 1:09:41am - Failed to complete stage PrepareAgentVolumes, rolling back
-Oct 07 1:09:41am - Rolling back stage
-Oct 07 1:09:41am - Successfully rolled back stage
-Oct 07 1:09:41am - Rolling back stage
-Oct 07 1:09:41am - Transaction failed. Rolling back ...
-Oct 07 1:09:41am - Failed to complete transaction stage
-Oct 07 1:09:41am - 1791360575 [] SleepPolicyNever is no longer controlling sleep state.
-Oct 07 1:09:41am - 1791360575 [] Backup run finished
-Oct 07 1:09:41am - 1791360575 [] Backup b736341b-ee9e-40bf-b5a2-c0f520a80cd5 FAILED!
-Oct 07 1:09:41am - 1791360575 [] Finished execution of the Transition To Incremental phase.
-Oct 07 1:09:41am - 1791360575 [] Snapshot never took place, there is nothing to roll forward
-Oct 07 1:09:41am - 1791360575 [] Backup completion handling failed.
-Oct 07 1:09:41am - 1791360575 [] BackupComplete failed A function call was made when the object was in an incorrect statefor that function | ERROR(HRESULT) -2147212543 (0x80042301)
-Oct 07 1:09:41am - 1791360575 [] Backup failed. Informing writers of unsuccessful backup.
-Oct 07 1:09:41am - 1791360575 [] Beginning execution of the Transition To Incremental phase.
-Oct 07 1:09:41am - 1791360575 [] Backup error occurred during backup run VSS failed to prepare snapshots for backup. (SNAPSHOT_VSS)
-Oct 07 1:09:41am - 1791360575 [] Failed to finalize backup pass. Reason Operation canceled.
-Oct 07 1:09:41am - 1791360575 [] A pending cancelation request was received at the cancelation point after the execution of the Backup Pass Finalization phase. Reason UserRequested
-Oct 07 1:09:41am - 1791360575 [] PendingSnapshotDataProvider Setting pending snapshot id to '' for volume 'd3526e82-0000-0000-0000-602200000000'.
-Oct 07 1:09:41am - 1791360571 [] Clearing pending snapshot id for volume d3526e82-0000-0000-0000-602200000000 (C\)
-Oct 07 1:09:41am - 1791360571 [] PendingSnapshotDataProvider Setting pending snapshot id to '' for volume 'ed769164-47bc-4fc6-acaf-734fe8124d65'.
-Oct 07 1:09:41am - 1791360568 [] Clearing pending snapshot id for volume ed769164-47bc-4fc6-acaf-734fe8124d65 (E\)
-Oct 07 1:09:41am - 1791360568 [] PendingSnapshotDataProvider Setting pending snapshot id to '' for volume '4018f032-ba1a-4013-a208-a089da6e32d6'.
-Oct 07 1:09:41am - 1791360564 [] Requesting cancelation of backup ID b736341b-ee9e-40bf-b5a2-c0f520a80cd5
-Oct 07 1:09:41am - 1791360564 [] Clearing pending snapshot id for volume 4018f032-ba1a-4013-a208-a089da6e32d6 (D\)
-Oct 07 1:09:41am - 1791360560 [] Beginning execution of the Backup Pass Finalization phase.
-Oct 07 1:09:41am - 1791360560 [] Exception caught trying to create snapshots VSS failed to prepare snapshots for backup.
-Oct 07 1:09:41am - 1791360560 [] Generic runtime error caught trying to take snapshot Could not configure snapshot volume \\?\Volume{4018f032-ba1a-4013-a208-a089da6e32d6}\ The device does not recognize the command. | ERROR(Win32) 22 (0x00000016)
-Oct 07 1:09:41am - 1791360560 [] Volume \\?\Volume{4018f032-ba1a-4013-a208-a089da6e32d6}\ has tracking state StateHealthyNotTracking
-Oct 07 1:09:41am - 1791360560 [] VSS snapshot set ID 1aab0186-07ff-4a7d-a7f8-536630186b5e
-Oct 07 1:09:41am - 1791360560 [] Trying to take VSS snapshot (attempt number 1)
-Oct 07 1:09:41am - 1791360560 [] Snapshot - type VSS
-Oct 07 1:09:41am - 1791360560 [] Validating snapshot session...
-Oct 07 1:09:41am - 1791360560 [] Driver validated...
-Oct 07 1:09:41am - 1791360560 [] Beginning execution of the Start Snapshotting phase.
-Oct 07 1:09:41am - 1791360560 [] Preload done, starting final backup b736341b-ee9e-40bf-b5a2-c0f520a80cd5
-Oct 07 1:09:41am - 1791360556 [] Finished execution of the Validate Remote Targets phase.
-Oct 07 1:09:41am - 1791360553 [] Found cached volume checksum 'bfb39add' for volume d3526e82-0000-0000-0000-602200000000
-Oct 07 1:09:41am - 1791360552 [] Found cached volume checksum '7fc4479d' for volume ed769164-47bc-4fc6-acaf-734fe8124d65
-Oct 07 1:09:41am - 1791360552 [] Found cached volume checksum 'f6804b8' for volume 4018f032-ba1a-4013-a208-a089da6e32d6
-Oct 07 1:09:41am - 1791360552 [] Beginning execution of the Validate Remote Targets phase.
-Oct 07 1:09:41am - 1791360552 [] Finished execution of the Validate Local Targets phase.
-Oct 07 1:09:41am - 1791360552 [] Beginning execution of the Validate Local Targets phase.
-Oct 07 1:09:41am - 1791360552 [] Finished execution of the Create Transports phase.
-Oct 07 1:09:41am - 1791360552 [] Backup transport interface iSCSI
-Oct 07 1:09:41am - 1791360552 [] Backup transport interface iSCSI
-Oct 07 1:09:41am - 1791360552 [] Backup transport interface iSCSI
-Oct 07 1:09:41am - 1791360552 [] Beginning execution of the Create Transports phase.
-Oct 07 1:09:41am - 1791360552 [] Finished execution of the Populate Volumes phase.
-Oct 07 1:09:41am - 1791360552 [] Beginning execution of the Populate Volumes phase.
-Oct 07 1:09:41am - 1791360552 [] Beginning running backup phases...
-Oct 07 1:09:41am - 1791360552 [] SleepPolicyNever is controlling sleep state.
-Oct 07 1:09:41am - 1791360552 [] Backup run beginning...
-Oct 07 1:09:41am - 1791360552 [] Launching backup thread...
-Oct 07 1:09:41am - 1791360552 [] Creating backup b736341b-ee9e-40bf-b5a2-c0f520a80cd5
-Oct 07 1:09:41am - 1791360552 [] Driver version 0.6.0.0, Agent version 3.0.18.25
-Oct 07 1:09:41am - 1791360552 [] Backup engine beginning creation of backup b736341b-ee9e-40bf-b5a2-c0f520a80cd5
-Oct 07 1:09:41am - 1791360545 [] Generated new backup ID b736341b-ee9e-40bf-b5a2-c0f520a80cd5
-Oct 07 1:09:41am - 1791360545 [] Backup transport interface iSCSI
-Oct 07 1:09:41am - 1791360545 [] Handling backup start call
-Oct 07 1:09:41am - 1791360437 [] SleepPolicyNever is no longer controlling sleep state.
-Oct 07 1:09:41am - 1791360437 [] Backup run finished
-Oct 07 1:09:41am - 1791360437 [] Backup 12ab9271-b85a-48bd-bf73-526e499f5418 FAILED!
-Oct 07 1:09:41am - 1791360437 [] Finished execution of the Transition To Incremental phase.
-Oct 07 1:09:41am - 1791360437 [] Snapshot never took place, there is nothing to roll forward
-Oct 07 1:09:41am - 1791360437 [] Backup completion handling failed.
-Oct 07 1:09:41am - 1791360437 [] BackupComplete failed A function call was made when the object was in an incorrect statefor that function | ERROR(HRESULT) -2147212543 (0x80042301)
-Oct 07 1:09:41am - 1791360437 [] Backup failed. Informing writers of unsuccessful backup.
-Oct 07 1:09:41am - 1791360437 [] Beginning execution of the Transition To Incremental phase.
-Oct 07 1:09:41am - 1791360437 [] Backup error occurred during backup run VSS failed to prepare snapshots for backup. (SNAPSHOT_VSS)
-Oct 07 1:09:41am - 1791360437 [] Failed to finalize backup pass. Reason Operation canceled.
-Oct 07 1:09:41am - 1791360437 [] A pending cancelation request was received at the cancelation point after the execution of the Backup Pass Finalization phase. Reason UserRequested
-Oct 07 1:09:41am - 1791360437 [] PendingSnapshotDataProvider Setting pending snapshot id to '' for volume 'd3526e82-0000-0000-0000-602200000000'.
-Oct 07 1:09:41am - 1791360434 [] Clearing pending snapshot id for volume d3526e82-0000-0000-0000-602200000000 (C\)
-Oct 07 1:09:41am - 1791360434 [] PendingSnapshotDataProvider Setting pending snapshot id to '' for volume 'ed769164-47bc-4fc6-acaf-734fe8124d65'.
-Oct 07 1:09:41am - 1791360433 [] Clearing pending snapshot id for volume ed769164-47bc-4fc6-acaf-734fe8124d65 (E\)
-Oct 07 1:09:41am - 1791360433 [] PendingSnapshotDataProvider Setting pending snapshot id to '' for volume '4018f032-ba1a-4013-a208-a089da6e32d6'.
-Oct 07 1:09:41am - 1791360430 [] Requesting cancelation of backup ID 12ab9271-b85a-48bd-bf73-526e499f5418
-Oct 07 1:09:41am - 1791360429 [] Clearing pending snapshot id for volume 4018f032-ba1a-4013-a208-a089da6e32d6 (D\)
-Oct 07 1:09:41am - 1791360424 [] Beginning execution of the Backup Pass Finalization phase.
-Oct 07 1:09:41am - 1791360424 [] Exception caught trying to create snapshots VSS failed to prepare snapshots for backup.
-Oct 07 1:09:41am - 1791360424 [] Generic runtime error caught trying to take snapshot Could not configure snapshot volume \\?\Volume{4018f032-ba1a-4013-a208-a089da6e32d6}\ The device does not recognize the command. | ERROR(Win32) 22 (0x00000016)
-Oct 07 1:09:41am - 1791360423 [] Volume \\?\Volume{4018f032-ba1a-4013-a208-a089da6e32d6}\ has tracking state StateHealthyNotTracking
-Oct 07 1:09:41am - 1791360423 [] VSS snapshot set ID ca25b179-2ec3-4dee-a98b-577079e7849e
-Oct 07 1:09:41am - 1791360408 [] Trying to take VSS snapshot (attempt number 1)
-Oct 07 1:09:41am - 1791360408 [] Snapshot - type VSS
-Oct 07 1:09:41am - 1791360408 [] Validating snapshot session...
-Oct 07 1:09:41am - 1791360408 [] Driver validated...
-Oct 07 1:09:41am - 1791360408 [] Beginning execution of the Start Snapshotting phase.
-Oct 07 1:09:41am - 1791360408 [] Preload done, starting final backup 12ab9271-b85a-48bd-bf73-526e499f5418
-Oct 07 1:09:41am - 1791360405 [] Finished execution of the Validate Remote Targets phase.
-Oct 07 1:09:41am - 1791360399 [] Found cached volume checksum 'bfb39add' for volume d3526e82-0000-0000-0000-602200000000
-Oct 07 1:09:41am - 1791360399 [] Found cached volume checksum '7fc4479d' for volume ed769164-47bc-4fc6-acaf-734fe8124d65
-Oct 07 1:09:41am - 1791360399 [] Found cached volume checksum 'f6804b8' for volume 4018f032-ba1a-4013-a208-a089da6e32d6
-Oct 07 1:09:41am - 1791360399 [] Beginning execution of the Validate Remote Targets phase.
-Oct 07 1:09:41am - 1791360399 [] Finished execution of the Validate Local Targets phase.
-Oct 07 1:09:41am - 1791360399 [] Beginning execution of the Validate Local Targets phase.
-Oct 07 1:09:41am - 1791360399 [] Finished execution of the Create Transports phase.
-Oct 07 1:09:41am - 1791360399 [] Backup transport interface iSCSI
-Oct 07 1:09:41am - 1791360399 [] Backup transport interface iSCSI
-Oct 07 1:09:41am - 1791360399 [] Backup transport interface iSCSI
-Oct 07 1:09:41am - 1791360399 [] Beginning execution of the Create Transports phase.
-Oct 07 1:09:41am - 1791360399 [] Finished execution of the Populate Volumes phase.
-Oct 07 1:09:41am - 1791360399 [] Beginning execution of the Populate Volumes phase.
-Oct 07 1:09:41am - 1791360399 [] Beginning running backup phases...
-Oct 07 1:09:41am - 1791360399 [] SleepPolicyNever is controlling sleep state.
-Oct 07 1:09:41am - 1791360399 [] Backup run beginning...
-Oct 07 1:09:41am - 1791360399 [] Launching backup thread...
-Oct 07 1:09:41am - 1791360399 [] Creating backup 12ab9271-b85a-48bd-bf73-526e499f5418
-Oct 07 1:09:41am - 1791360399 [] Driver version 0.6.0.0, Agent version 3.0.18.25
-Oct 07 1:09:41am - 1791360399 [] Backup engine beginning creation of backup 12ab9271-b85a-48bd-bf73-526e499f5418
-Oct 07 1:09:41am - 1791360391 [] Generated new backup ID 12ab9271-b85a-48bd-bf73-526e499f5418
-Oct 07 1:09:41am - 1791360391 [] Backup transport interface iSCSI
-Oct 07 1:09:41am - 1791360391 [] Handling backup start call
-Oct 07 1:09:41am - 1791360321 [] Requesting cancelation of backup ID 4e800df3-97d4-49e6-82a7-a07303375a38
-Oct 07 1:09:41am - 1791360320 [] SleepPolicyNever is no longer controlling sleep state.
-Oct 07 1:09:41am - 1791360320 [] Backup run finished
-Oct 07 1:09:41am - 1791360320 [] Backup 4e800df3-97d4-49e6-82a7-a07303375a38 FAILED!
-Oct 07 1:09:41am - 1791360320 [] Finished execution of the Transition To Incremental phase.
-Oct 07 1:09:41am - 1791360320 [] Snapshot never took place, there is nothing to roll forward
-Oct 07 1:09:41am - 1791360320 [] Backup completion handling failed.
-Oct 07 1:09:41am - 1791360320 [] BackupComplete failed A function call was made when the object was in an incorrect statefor that function | ERROR(HRESULT) -2147212543 (0x80042301)
-Oct 07 1:09:41am - 1791360319 [] Backup failed. Informing writers of unsuccessful backup.
-Oct 07 1:09:41am - 1791360319 [] Beginning execution of the Transition To Incremental phase.
-Oct 07 1:09:41am - 1791360319 [] Backup error occurred during backup run VSS failed to prepare snapshots for backup. (SNAPSHOT_VSS)
-Oct 07 1:09:41am - 1791360319 [] Finished execution of the Backup Pass Finalization phase.
-Oct 07 1:09:41am - 1791360319 [] PendingSnapshotDataProvider Setting pending snapshot id to '' for volume 'd3526e82-0000-0000-0000-602200000000'.
-Oct 07 1:09:41am - 1791360317 [] Clearing pending snapshot id for volume d3526e82-0000-0000-0000-602200000000 (C\)
-Oct 07 1:09:41am - 1791360317 [] PendingSnapshotDataProvider Setting pending snapshot id to '' for volume 'ed769164-47bc-4fc6-acaf-734fe8124d65'.
-Oct 07 1:09:41am - 1791360315 [] Clearing pending snapshot id for volume ed769164-47bc-4fc6-acaf-734fe8124d65 (E\)
-Oct 07 1:09:41am - 1791360315 [] PendingSnapshotDataProvider Setting pending snapshot id to '' for volume '4018f032-ba1a-4013-a208-a089da6e32d6'.
-Oct 07 1:09:41am - 1791360313 [] Clearing pending snapshot id for volume 4018f032-ba1a-4013-a208-a089da6e32d6 (D\)
-Oct 07 1:09:41am - 1791360308 [] Beginning execution of the Backup Pass Finalization phase.
-Oct 07 1:09:41am - 1791360308 [] Exception caught trying to create snapshots VSS failed to prepare snapshots for backup.
-Oct 07 1:09:41am - 1791360308 [] Generic runtime error caught trying to take snapshot Could not configure snapshot volume \\?\Volume{4018f032-ba1a-4013-a208-a089da6e32d6}\ The device does not recognize the command. | ERROR(Win32) 22 (0x00000016)
-Oct 07 1:09:41am - 1791360307 [] Volume \\?\Volume{4018f032-ba1a-4013-a208-a089da6e32d6}\ has tracking state StateHealthyNotTracking
-Oct 07 1:09:41am - 1791360306 [] VSS snapshot set ID 23cc00e0-8c8c-4910-848f-15c7bd07dab0
-Oct 07 1:09:41am - 1791360279 [] Trying to take VSS snapshot (attempt number 1)
-Oct 07 1:09:41am - 1791360279 [] Snapshot - type VSS
-Oct 07 1:09:41am - 1791360278 [] Validating snapshot session...
-Oct 07 1:09:41am - 1791360278 [] Driver validated...
-Oct 07 1:09:41am - 1791360278 [] Beginning execution of the Start Snapshotting phase.
-Oct 07 1:09:41am - 1791360278 [] Preload done, starting final backup 4e800df3-97d4-49e6-82a7-a07303375a38
-Oct 07 1:09:41am - 1791360273 [] Finished execution of the Validate Remote Targets phase.
-Oct 07 1:09:41am - 1791360267 [] Found cached volume checksum 'bfb39add' for volume d3526e82-0000-0000-0000-602200000000
-Oct 07 1:09:41am - 1791360267 [] MercuryFTPTransport is connected to mercury//h9tp2thqfy.dattolocal.net3262/iqn.2007-01.net.datto.dev.temp.mcllp-la-bcdr01.agent4ebc3f0f91d94204a43aa8954f12a6f3/4 using TLS Transport version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-Oct 07 1:09:41am - 1791360267 [] Found cached volume checksum '7fc4479d' for volume ed769164-47bc-4fc6-acaf-734fe8124d65
-Oct 07 1:09:41am - 1791360267 [] MercuryFTPTransport is connected to mercury//h9tp2thqfy.dattolocal.net3262/iqn.2007-01.net.datto.dev.temp.mcllp-la-bcdr01.agent4ebc3f0f91d94204a43aa8954f12a6f3/2 using TLS Transport version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-Oct 07 1:09:41am - 1791360267 [] Found cached volume checksum 'f6804b8' for volume 4018f032-ba1a-4013-a208-a089da6e32d6
-Oct 07 1:09:41am - 1791360267 [] MercuryFTPTransport is connected to mercury//h9tp2thqfy.dattolocal.net3262/iqn.2007-01.net.datto.dev.temp.mcllp-la-bcdr01.agent4ebc3f0f91d94204a43aa8954f12a6f3/0 using TLS Transport version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-Oct 07 1:09:41am - 1791360267 [] Beginning execution of the Validate Remote Targets phase.
-Oct 07 1:09:41am - 1791360267 [] Finished execution of the Validate Local Targets phase.
-Oct 07 1:09:41am - 1791360267 [] Beginning execution of the Validate Local Targets phase.
-Oct 07 1:09:41am - 1791360267 [] Finished execution of the Create Transports phase.
-Oct 07 1:09:41am - 1791360267 [] Backup transport interface MercuryFTP (TLS)
-Oct 07 1:09:41am - 1791360267 [] Backup transport interface MercuryFTP (TLS)
-Oct 07 1:09:41am - 1791360267 [] Backup transport interface MercuryFTP (TLS)
-Oct 07 1:09:41am - 1791360267 [] Beginning execution of the Create Transports phase.
-Oct 07 1:09:41am - 1791360267 [] Finished execution of the Populate Volumes phase.
-Oct 07 1:09:41am - 1791360267 [] Beginning execution of the Populate Volumes phase.
-Oct 07 1:09:41am - 1791360267 [] Beginning running backup phases...
-Oct 07 1:09:41am - 1791360267 [] SleepPolicyNever is controlling sleep state.
-Oct 07 1:09:41am - 1791360267 [] Backup run beginning...
-Oct 07 1:09:41am - 1791360267 [] Launching backup thread...
-Oct 07 1:09:41am - 1791360267 [] Creating backup 4e800df3-97d4-49e6-82a7-a07303375a38
-Oct 07 1:09:41am - 1791360267 [] Driver version 0.6.0.0, Agent version 3.0.18.25
-Oct 07 1:09:41am - 1791360267 [] Backup engine beginning creation of backup 4e800df3-97d4-49e6-82a7-a07303375a38
-Oct 07 1:09:41am - 1791360251 [] Generated new backup ID 4e800df3-97d4-49e6-82a7-a07303375a38
-Oct 07 1:09:41am - 1791360251 [] Backup transport interface mercuryftp
-Oct 07 1:09:41am - 1791360251 [] Handling backup start call
-Oct 07 1:09:41am - 1791360242 [] Datto CBT Driver installed and running
-Oct 07 1:09:41am - 1791360242 [] Datto CBT Driver installed and running
-Oct 07 1:09:41am - Agent logs from this backup attempt below
-Oct 07 1:09:41am - iSCSI target removed successfully.
-Oct 07 1:09:41am - Deleted loop device no longer exists.
-Oct 07 1:09:41am - Detaching backing file from loop device.
-Oct 07 1:09:41am - Found loop at
-Oct 07 1:09:41am - Deleted loop device no longer exists.
-Oct 07 1:09:41am - Detaching backing file from loop device.
-Oct 07 1:09:41am - Found loop at
-Oct 07 1:09:40am - Deleted loop device no longer exists.
-Oct 07 1:09:40am - Detaching backing file from loop device.
-Oct 07 1:09:40am - Found loop at
-Oct 07 1:09:40am - Removing iSCSI target iqn.2007-01.net.datto.dev.temp.mcllp-la-bcdr01agent4ebc3f0f91d94204a43aa8954f12a6f3
-Oct 07 1:09:40am - End of backup attempt 3 of 3
-Oct 07 1:09:40am - Not sending email because there are no recipients.
-Oct 07 1:09:40am - Critical Notice will be sent
-Oct 07 1:09:40am - Critical Backup Error Email Requested
-Oct 07 1:09:40am - Critical backup failure during data transfer (Agent Export error occurred mid transfer).
-Oct 07 1:09:25am - Waiting 15 seconds after cancelling...
-Oct 07 1:09:25am - Successfully cancelled backup job b736341b-ee9e-40bf-b5a2-c0f520a80cd5
-Oct 07 1:09:25am - Datto Agent API request Cancel backup
-Oct 07 1:09:25am - Cancelling running backup b736341b-ee9e-40bf-b5a2-c0f520a80cd5 ...
-Oct 07 1:09:25am - Backup error occurred
-Oct 07 1:09:24am - End of backup attempt 3 of 3
-Oct 07 1:09:24am - Agent Export error occurred mid transfer
-Oct 07 1:09:12am - Transferring data, 0/-3 [ 0 ] Timeout Countdown 0-900
-Oct 07 1:09:05am - Datto Agent API request Start backup
-Oct 07 1:09:05am - VSS Export error occurred mid-transfer on previous attempt; falling back to DBD
-Oct 07 1:08:58am - Waiting 7 seconds for backup transport to setup targets
-Oct 07 1:08:58am - Created loop
-Oct 07 1:08:58am - ISCSI loop initiated
-Oct 07 1:08:58am - Creating lun for checksum file /home/agents/4ebc3f0f91d94204a43aa8954f12a6f3/d3526e82-0000-0000-0000-602200000000.checksum for volume d3526e82-0000-0000-0000-602200000000
-Oct 07 1:08:58am - Creating iscsi lun for backup image /dev/mapper/d3526e82-0000-0000-0000-602200000000-crypt-35fb5de6 for volume d3526e82-0000-0000-0000-602200000000
-Oct 07 1:08:58am - Created loop
-Oct 07 1:08:58am - ISCSI loop initiated
-Oct 07 1:08:58am - Creating lun for checksum file /home/agents/4ebc3f0f91d94204a43aa8954f12a6f3/ed769164-47bc-4fc6-acaf-734fe8124d65.checksum for volume ed769164-47bc-4fc6-acaf-734fe8124d65
-Oct 07 1:08:57am - Creating iscsi lun for backup image /dev/mapper/ed769164-47bc-4fc6-acaf-734fe8124d65-crypt-a9d6bc44 for volume ed769164-47bc-4fc6-acaf-734fe8124d65
-Oct 07 1:08:57am - Created loop
-Oct 07 1:08:57am - ISCSI loop initiated
-Oct 07 1:08:57am - Creating lun for checksum file /home/agents/4ebc3f0f91d94204a43aa8954f12a6f3/4018f032-ba1a-4013-a208-a089da6e32d6.checksum for volume 4018f032-ba1a-4013-a208-a089da6e32d6
-Oct 07 1:08:57am - Creating iscsi lun for backup image /dev/mapper/4018f032-ba1a-4013-a208-a089da6e32d6-crypt-2a5019ec for volume 4018f032-ba1a-4013-a208-a089da6e32d6
-Oct 07 1:08:56am - Adding CHAP credentials to iSCSI target iqn.2007-01.net.datto.dev.temp.mcllp-la-bcdr01agent4ebc3f0f91d94204a43aa8954f12a6f3
-Oct 07 1:08:56am - Creating iSCSI target iqn.2007-01.net.datto.dev.temp.mcllp-la-bcdr01agent4ebc3f0f91d94204a43aa8954f12a6f3
-Oct 07 1:08:56am - Attempting to start backup
-Oct 07 1:08:56am - Failing over from MercuryFTP to iSCSI transport
-Oct 07 1:08:56am - Backup transfer attempt
-Oct 07 1:07:26am - Waiting before next attempt
-Oct 07 1:07:26am - Rolling back to snapshot
-Oct 07 1:07:26am - Setting properties on storage
-Oct 07 1:07:26am - Rolling back live dataset before retry
-Oct 07 1:07:26am - iSCSI target removed successfully.
-Oct 07 1:07:26am - Deleted loop device no longer exists.
-Oct 07 1:07:26am - Detaching backing file from loop device.
-Oct 07 1:07:26am - Found loop at
-Oct 07 1:07:26am - Deleted loop device no longer exists.
-Oct 07 1:07:26am - Detaching backing file from loop device.
-Oct 07 1:07:26am - Found loop at
-Oct 07 1:07:25am - Deleted loop device no longer exists.
-Oct 07 1:07:25am - Detaching backing file from loop device.
-Oct 07 1:07:25am - Found loop at
-Oct 07 1:07:25am - Removing iSCSI target iqn.2007-01.net.datto.dev.temp.mcllp-la-bcdr01agent4ebc3f0f91d94204a43aa8954f12a6f3
-Oct 07 1:07:10am - Waiting 15 seconds after cancelling...
-Oct 07 1:07:10am - Successfully cancelled backup job 12ab9271-b85a-48bd-bf73-526e499f5418
-Oct 07 1:07:10am - Datto Agent API request Cancel backup
-Oct 07 1:07:10am - Cancelling running backup 12ab9271-b85a-48bd-bf73-526e499f5418 ...
-Oct 07 1:07:10am - Backup error occurred
-Oct 07 1:07:10am - End of backup attempt 2 of 3
-Oct 07 1:07:10am - Agent Export error occurred mid transfer
-Oct 07 1:06:59am - Transferring data, 0/-3 [ 0 ] Timeout Countdown 20-900
-Oct 07 1:06:49am - Transferring data, 0/-3 [ 0 ] Timeout Countdown 10-900
-Oct 07 1:06:39am - Transferring data, 0/-3 [ 0 ] Timeout Countdown 0-900
-Oct 07 1:06:32am - Datto Agent API request Start backup
-Oct 07 1:06:25am - Waiting 7 seconds for backup transport to setup targets
-Oct 07 1:06:25am - Created loop
-Oct 07 1:06:25am - ISCSI loop initiated
-Oct 07 1:06:25am - Creating lun for checksum file /home/agents/4ebc3f0f91d94204a43aa8954f12a6f3/d3526e82-0000-0000-0000-602200000000.checksum for volume d3526e82-0000-0000-0000-602200000000
-Oct 07 1:06:24am - Creating iscsi lun for backup image /dev/mapper/d3526e82-0000-0000-0000-602200000000-crypt-35fb5de6 for volume d3526e82-0000-0000-0000-602200000000
-Oct 07 1:06:24am - Created loop
-Oct 07 1:06:24am - ISCSI loop initiated
-Oct 07 1:06:24am - Creating lun for checksum file /home/agents/4ebc3f0f91d94204a43aa8954f12a6f3/ed769164-47bc-4fc6-acaf-734fe8124d65.checksum for volume ed769164-47bc-4fc6-acaf-734fe8124d65
-Oct 07 1:06:24am - Creating iscsi lun for backup image /dev/mapper/ed769164-47bc-4fc6-acaf-734fe8124d65-crypt-a9d6bc44 for volume ed769164-47bc-4fc6-acaf-734fe8124d65
-Oct 07 1:06:24am - Created loop
-Oct 07 1:06:24am - ISCSI loop initiated
-Oct 07 1:06:24am - Creating lun for checksum file /home/agents/4ebc3f0f91d94204a43aa8954f12a6f3/4018f032-ba1a-4013-a208-a089da6e32d6.checksum for volume 4018f032-ba1a-4013-a208-a089da6e32d6
-Oct 07 1:06:23am - Creating iscsi lun for backup image /dev/mapper/4018f032-ba1a-4013-a208-a089da6e32d6-crypt-2a5019ec for volume 4018f032-ba1a-4013-a208-a089da6e32d6
-Oct 07 1:06:23am - Adding CHAP credentials to iSCSI target iqn.2007-01.net.datto.dev.temp.mcllp-la-bcdr01agent4ebc3f0f91d94204a43aa8954f12a6f3
-Oct 07 1:06:23am - Creating iSCSI target iqn.2007-01.net.datto.dev.temp.mcllp-la-bcdr01agent4ebc3f0f91d94204a43aa8954f12a6f3
-Oct 07 1:06:23am - Attempting to start backup
-Oct 07 1:06:23am - Failing over from MercuryFTP to iSCSI transport
-Oct 07 1:06:23am - Backup transfer attempt
-Oct 07 1:05:38am - Waiting before next attempt
-Oct 07 1:05:38am - Rolling back to snapshot
-Oct 07 1:05:38am - Setting properties on storage
-Oct 07 1:05:38am - Rolling back live dataset before retry
-Oct 07 1:05:38am - Leftover MercuryFTP target cleaned successfully.
-Oct 07 1:05:37am - executing firewall-cmd
-Oct 07 1:05:37am - executing firewall-cmd
-Oct 07 1:05:37am - executing firewall-cmd
-Oct 07 1:05:37am - Removing MercuryFTP target.
-Oct 07 1:05:22am - Waiting 15 seconds after cancelling...
-Oct 07 1:05:21am - Datto Agent API request Cancel backup
-Oct 07 1:05:21am - Cancelling running backup 4e800df3-97d4-49e6-82a7-a07303375a38 ...
-Oct 07 1:05:21am - Backup error occurred
-Oct 07 1:05:13am - End of backup attempt 1 of 3
-Oct 07 1:05:13am - Agent Export error occurred mid transfer
-Oct 07 1:04:58am - Transferring data, 0/-3 [ 0 ] Timeout Countdown 31-900
-Oct 07 1:04:48am - Transferring data, 0/-3 [ 0 ] Timeout Countdown 21-900
-Oct 07 1:04:38am - Transferring data, 0/-3 [ 0 ] Timeout Countdown 11-900
-Oct 07 1:04:27am - Transferring data, 0/-3 [ 0 ] Timeout Countdown 0-900
-Oct 07 1:04:11am - Datto Agent API request Start backup
-Oct 07 1:04:04am - Waiting 7 seconds for backup transport to setup targets
-Oct 07 1:04:03am - executing firewall-cmd
-Oct 07 1:04:03am - executing firewall-cmd
-Oct 07 1:04:03am - executing firewall-cmd
-Oct 07 1:04:03am - Creating MercuryFTP target.
-Oct 07 1:04:03am - Adding lun for checksum file
-Oct 07 1:04:03am - Adding mercuryFTP lun for backup image
-Oct 07 1:04:03am - Adding lun for checksum file
-Oct 07 1:04:03am - Adding mercuryFTP lun for backup image
-Oct 07 1:04:03am - Adding lun for checksum file
-Oct 07 1:04:03am - Adding mercuryFTP lun for backup image
-Oct 07 1:04:03am - Using mercuryFTP as data transport
-Oct 07 1:04:03am - Attempting to start backup
-Oct 07 1:04:03am - Backup transfer attempt
-Oct 07 1:04:03am - Committing transaction stage
-Oct 07 1:04:03am - Finished transaction stage
-Oct 07 1:04:03am - Created loop
-Oct 07 1:04:03am - DM Crypt Loop Launched
-Oct 07 1:04:03am - Agent version
-Oct 07 1:04:03am - Created loop
-Oct 07 1:04:03am - DM Crypt Loop Launched
-Oct 07 1:04:03am - Agent version
-Oct 07 1:04:03am - Created loop
-Oct 07 1:04:03am - DM Crypt Loop Launched
-Oct 07 1:04:03am - Agent version
-Oct 07 1:04:03am - Committing transaction stage
-Oct 07 1:04:03am - Committing transaction stage
-Oct 07 1:04:03am - Finished transaction stage
-Oct 07 1:04:03am - Committing transaction stage
-Oct 07 1:04:03am - Finished transaction stage
-Oct 07 1:04:03am - Committing transaction stage
-Oct 07 1:04:03am - Finished transaction stage
-Oct 07 1:04:03am - Agent info update complete.
-Oct 07 1:04:02am - Datto Agent API request Get host
-Oct 07 1:04:02am - Starting agent info update
-Oct 07 1:04:02am - Committing transaction stage
-Oct 07 1:04:02am - Finished transaction stage
-Oct 07 1:04:02am - Agent is responding on given port
-Oct 07 1:04:02am - Agent status Agent is active port and port 25568 is open
-Oct 07 1:04:02am - Checking connectivity for existing agent
-Oct 07 1:04:02am - Committing transaction stage
-Oct 07 1:04:02am - Finished transaction stage
-Oct 07 1:04:02am - Committing transaction stage
-Oct 07 1:04:02am - Finished transaction stage
-Oct 07 1:04:02am - Cleanup found no leaked loops.
-Oct 07 1:04:02am - Committing transaction stage
-Oct 07 1:04:02am - Finished transaction stage
-Oct 07 1:04:02am - Rolling back to snapshot
-Oct 07 1:04:02am - Setting properties on storage
-Oct 07 1:04:02am - Committing transaction stage
-Oct 07 1:04:02am - Finished transaction stage
-Oct 07 1:04:02am - Acquiring backup lock
-Oct 07 1:04:02am - Committing transaction stage
-Oct 07 1:04:02am - Backup operation started.
-Oct 07 1:04:02am - Snapshot requested
-Oct 07 1:04:02am - Starting scheduled backup and clearing needsBackup flag
-Oct 07 1:04:02am - Starting screen.
-Oct 07 1:04:02am - Starting scheduled backup in screen
-Oct 07 1:00:26am - Deleted orphaned recovery points (Preserved if exists offsite).
-Oct 07 1:00:26am - Cleaning up screenshots for removed snapshot
-Oct 07 1:00:26am - Cleaning up filesystem integrity check reports for removed snapshot
-Oct 07 1:00:26am - Destroying snapshot
-Oct 07 1:00:26am - Removing ZFS snapshot
-Oct 07 1:00:26am - Cleaning up screenshots for removed snapshot
-Oct 07 1:00:26am - Cleaning up filesystem integrity check reports for removed snapshot
-Oct 07 1:00:26am - Destroying snapshot
-Oct 07 1:00:26am - Removing ZFS snapshot
-Oct 07 1:00:26am - Cleaning up screenshots for removed snapshot
-Oct 07 1:00:26am - Cleaning up filesystem integrity check reports for removed snapshot
-Oct 07 1:00:26am - Destroying snapshot
-Oct 07 1:00:26am - Removing ZFS snapshot
-Oct 07 1:00:26am - Cleaning up screenshots for removed snapshot
-Oct 07 1:00:26am - Cleaning up filesystem integrity check reports for removed snapshot
-Oct 07 1:00:26am - Destroying snapshot
-Oct 07 1:00:26am - Removing ZFS snapshot
-Oct 07 1:00:26am - Cleaning up screenshots for removed snapshot
-Oct 07 1:00:26am - Cleaning up filesystem integrity check reports for removed snapshot
-Oct 07 1:00:26am - Destroying snapshot
-Oct 07 1:00:26am - Removing ZFS snapshot
-Oct 07 1:00:15am - Destroy request for snapshots
-Oct 07 1:00:15am - Deleting local points in need of retention
-Oct 07 1:00:15am - Total point count to check against retention schedule 67
-Oct 07 1:00:15am - Computed retention window thresholds are intra-daily 09/30/2026 10015 AM [1790755215], daily 09/30/2026 10015 AM [1790755215], weekly 09/30/2026 10015 AM [1790755215], monthly 09/30/2026 10015 AM [1790755215]
-Oct 07 1:00:15am - Removed outdated screenshot files.
-Oct 07 1:00:15am - Running Retention Operations
-Oct 07 1:00:15am - Starting Retention
-Oct 07 1:00:01am - Checking if any snapshots need to be verified for asset ...
-Oct 07 1:00:01am - Backup successfully queued
-Oct 07 1:00:01am - screenshots are disabled, skipping agent 10.100.35.11
-Oct 07 1:00:01am - checking agent 10.100.35.11
-Oct 07 12:59:39am - Updated recovery points.
-Oct 07 12:00:01am - Checking if any snapshots need to be verified for asset ...
+C:\Windows\system32>vssadmin list providers
+vssadmin 1.1 - Volume Shadow Copy Service administrative command-line tool
+(C) Copyright 2001-2013 Microsoft Corp.
+
+Provider name: 'Microsoft File Share Shadow Copy provider'
+   Provider type: Fileshare
+   Provider Id: {89300202-3cec-4981-9171-19f59559e0f2}
+   Version: 1.0.0.1
+
+Provider name: 'Microsoft Software Shadow Copy provider 1.0'
+   Provider type: System
+   Provider Id: {b5946137-7b9f-4925-af80-51abd60b20d5}
+   Version: 1.0.0.7
+
+
+C:\Windows\system32>vssadmin list shadowstorage
+vssadmin 1.1 - Volume Shadow Copy Service administrative command-line tool
+(C) Copyright 2001-2013 Microsoft Corp.
+
+Shadow Copy Storage association
+   For volume: (D:)\\?\Volume{4018f032-ba1a-4013-a208-a089da6e32d6}\
+   Shadow Copy Storage volume: (D:)\\?\Volume{4018f032-ba1a-4013-a208-a089da6e32d6}\
+   Used Shadow Copy Storage space: 0 bytes (0%)
+   Allocated Shadow Copy Storage space: 0 bytes (0%)
+   Maximum Shadow Copy Storage space: 12.0 GB (10%)
+
+Shadow Copy Storage association
+   For volume: (E:)\\?\Volume{ed769164-47bc-4fc6-acaf-734fe8124d65}\
+   Shadow Copy Storage volume: (E:)\\?\Volume{ed769164-47bc-4fc6-acaf-734fe8124d65}\
+   Used Shadow Copy Storage space: 0 bytes (0%)
+   Allocated Shadow Copy Storage space: 0 bytes (0%)
+   Maximum Shadow Copy Storage space: 11.0 GB (10%)
+
+Shadow Copy Storage association
+   For volume: (C:)\\?\Volume{d3526e82-0000-0000-0000-602200000000}\
+   Shadow Copy Storage volume: (C:)\\?\Volume{d3526e82-0000-0000-0000-602200000000}\
+   Used Shadow Copy Storage space: 0 bytes (0%)
+   Allocated Shadow Copy Storage space: 0 bytes (0%)
+   Maximum Shadow Copy Storage space: 7.95 GB (10%)
+
+
+C:\Windows\system32>get-volume
+'get-volume' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Windows\system32>powershell
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\Windows\system32> get-volume
+
+DriveLetter FriendlyName    FileSystemType DriveType HealthStatus OperationalStatus SizeRemaining      Size
+----------- ------------    -------------- --------- ------------ ----------------- -------------      ----
+D           Program Files   NTFS           Fixed     Healthy      OK                     35.13 GB 119.98 GB
+A                           Unknown        Removable Healthy      Unknown                     0 B       0 B
+            System Reserved NTFS           Fixed     Healthy      OK                    513.73 MB    549 MB
+C                           NTFS           Fixed     Healthy      OK                      15.3 GB  79.46 GB
+E           CoyoteData      NTFS           Fixed     Healthy      OK                     80.33 GB 109.98 GB
+
+
+PS C:\Windows\system32> get-disk
+
+Number Friendly Name                                                             Serial Number                    HealthStatus         OperationalStatus      Total Size Partition
+                                                                                                                                                                         Style
+------ -------------                                                             -------------                    ------------         -----------------      ---------- ----------
+0      VMware Virtual disk                                                       6000c295970f66025376dff68773ec5a Healthy              Online                      80 GB MBR
+1      VMware Virtual disk                                                       6000c29ff434424f98a232430fa66656 Healthy              Online                     120 GB GPT
+2      VMware Virtual disk                                                       6000c296aa9af2e3303df31e129c7b0e Healthy              Online                     110 GB GPT
