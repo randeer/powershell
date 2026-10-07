@@ -1,1 +1,10 @@
-wmic shadowcopy call create Volume=D:\
+C:\Windows\system32>wmic shadowcopy call create Volume=D:\
+Executing (Win32_ShadowCopy)->create()
+Method execution successful.
+Out Parameters:
+instance of __PARAMETERS
+{
+        ReturnValue = 0;
+        ShadowID = "{69F5FDAD-DA77-4CE9-A26A-A49A120814F7}";
+};
+
